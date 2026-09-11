@@ -1,5 +1,5 @@
 // Mi Skincare · service worker: permite abrir la app sin conexión. No toca tus datos (están en el almacenamiento de la app, no en esta caché).
-const CACHE = 'mi-skincare-0.3.1';
+const CACHE = 'mi-skincare-0.4.0';
 const VCACHE = 'mi-skincare-vendor-1'; // lector de etiquetas: se conserva entre versiones para no volver a descargar 17 MB
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting())); });

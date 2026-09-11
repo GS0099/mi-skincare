@@ -328,6 +328,21 @@ details.fold>summary{font-weight:700;cursor:pointer}
 .sources a{color:var(--pink-ink);font-weight:600;overflow-wrap:anywhere}
 .sources p{overflow-wrap:anywhere}
 
+/* escaneo v0.4 */
+.slots{display:flex;flex-direction:column;gap:10px}
+.slot{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;align-items:start;background:var(--card);border-radius:var(--r-md);padding:10px}
+.slot-b{display:flex;flex-direction:column;gap:6px}
+.slot-b .row{gap:8px}
+.scan-ph.empty{display:grid;place-items:center;color:var(--muted);border:1.5px dashed var(--line);background:var(--card-2)}
+.rd{font-size:.84rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.rd.ok{color:var(--ok)} .rd.warn{color:var(--warn);font-weight:600}
+.qbox{background:var(--card);border-radius:var(--r-md);padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.facts{margin:0;display:flex;flex-direction:column;gap:6px;background:var(--card-2);border-radius:var(--r-sm);padding:10px 12px}
+.facts div{display:grid;grid-template-columns:minmax(0,8.5rem) minmax(0,1fr);gap:8px;font-size:.88rem}
+.facts dt{font-weight:700} .facts dd{margin:0;overflow-wrap:anywhere}
+@media (max-width:360px){.facts div{grid-template-columns:1fr}}
+.pcard.match{box-shadow:inset 0 0 0 2px var(--both),var(--shadow)}
+
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding-left:var(--safe-l);padding-right:var(--safe-r);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
 .tabbar ul{list-style:none;margin:0 auto;padding:0 2px;max-width:620px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:var(--tab-h)}
@@ -377,7 +392,7 @@ details.fold>summary{font-weight:700;cursor:pointer}
 (function(){
 /* ===== Mi Skincare · núcleo: fechas, almacenamiento y reglas de datos ===== */
 'use strict';
-const APP_VERSION = '0.3.1';
+const APP_VERSION = '0.4.0';
 const KEY = 'miSkincare.v1';
 const CATS = ['Limpiador','Desmaquillante','Tónico','Esencia','Sérum','Tratamiento','Contorno de ojos','Hidratante','Aceite','Protector solar','Exfoliante','Mascarilla','Otro'];
 const SLOTS = { am:{label:'Rutina de mañana', short:'Mañana', emoji:'☀️'}, pm:{label:'Rutina de noche', short:'Noche', emoji:'🌙'} };
@@ -712,11 +727,24 @@ const XT = (() => {
     ['Exfoliante', /\b(exfoliante|peeling|scrub|gommage|exfoliant)\b/],
     ['Mascarilla', /\b(mascarilla|mask|masque)\b/],
     ['Aceite', /\b(aceite|oil|huile)\b/],
-    ['Hidratante', /\b(hidratante|crema|moisturi[sz]er|moisturi[sz]ing|balsamo|baume|emulsion|fluido|cream|creme|gel-crema|gel crema)\b/],
+    ['Hidratante', /\b(hidratante|moisturi[sz]er|moisturi[sz]ing|hydrating|hydratant|hydratante)\b/], // «crema» a secas no basta para decidir la categoría
     ['Tratamiento', /\b(tratamiento|corrector|anti-?imperfecciones|anti-?manchas|treatment)\b/]
   ];
 
-  const tokens = s => norm(s).replace(/[^a-z0-9%+]+/g, ' ').split(' ').filter(t => t.length >= 3 && !STOP.has(t) && !/^\d+$/.test(t));
+  // Palabras de cosmética en varios idiomas → una forma común, para que «crème réparatrice» encuentre «crema reparadora»
+  const CANON = {};
+  [['crema', 'crema cremas creme cremes cream creams crema'], ['reparador', 'reparador reparadora reparadoras reparadores reparatrice reparatrices reparateur repairing repair repairs riparatrice reparing'],
+   ['protector', 'protector protectora protectoras protectores protectrice protecteur protective protecting protection proteccion'],
+   ['limpiador', 'limpiador limpiadora limpiadores nettoyant nettoyante cleanser cleansing detergente'], ['calmante', 'calmante calmantes apaisant apaisante soothing lenitiva'],
+   ['hidratante', 'hidratante hidratantes hydratant hydratante moisturizing moisturising moisturiser moisturizer hydrating'], ['serum', 'serum serums'],
+   ['balsamo', 'balsamo baume balm'], ['labial', 'labial labiales labios levres lip lips'], ['manos', 'manos mains hand hands'], ['ojos', 'ojos yeux eye eyes'],
+   ['aceite', 'aceite huile oil'], ['espuma', 'espuma espumoso espumosa mousse moussant foam foaming'], ['locion', 'locion lotion'], ['agua', 'agua eau water'],
+   ['micelar', 'micelar micellaire micellar'], ['mascarilla', 'mascarilla masque mask'], ['exfoliante', 'exfoliante gommage scrub exfoliant exfoliating'],
+   ['solar', 'solar solaire sun sunscreen'], ['color', 'color teinte tinted coloree'], ['fluido', 'fluido fluide fluid'], ['intensivo', 'intensivo intensiva intense intensif intensive'],
+   ['purificante', 'purificante purifiant purifying'], ['secante', 'secante assechant asechante drying'], ['matificante', 'matificante matifiant mattifying'],
+   ['contorno', 'contorno contour'], ['noche', 'noche nuit night'], ['dia', 'dia jour day']].forEach(([k, v]) => v.split(' ').forEach(w => { CANON[w] = k; }));
+  ['peaux', 'pieles', 'irritated', 'irritee', 'irritees', 'irritadas', 'irritada', 'protege', 'apaise', 'repare', 'repairs', 'soothes', 'protects', 'les', 'aux'].forEach(w => STOP.add(w));
+  const tokens = s => norm(s).replace(/[^a-z0-9%+]+/g, ' ').split(' ').filter(t => t.length >= 3 && !STOP.has(t) && !/^\d+$/.test(t)).map(t => CANON[t] || t);
   function lev1(a, b) { // ¿distancia de edición <= 1?
     if (a === b) return true; if (Math.abs(a.length - b.length) > 1) return false;
     let i = 0, j = 0, e = 0;
@@ -728,10 +756,24 @@ const XT = (() => {
   // ----- marca -----
   function detectBrand(text, extra = []) {
     const t = ' ' + norm(text).replace(/[^a-z0-9]+/g, ' ') + ' ';
+    const compact = t.replace(/ /g, '');
+    const words = t.trim().split(' ').filter(w => w.length >= 4);
     const found = [];
-    for (const [name, aliases, domain] of BRANDS) for (const a of aliases) { const i = t.indexOf(' ' + a + ' '); if (i >= 0) { found.push({ name, domain, pos: i }); break; } }
+    for (const [name, aliases, domain] of BRANDS) {
+      let pos = -1, how = '';
+      for (const a of aliases) { const i = t.indexOf(' ' + a + ' '); if (i >= 0) { pos = i; how = 'exacta'; break; } }
+      if (pos < 0) for (const a of aliases) { const c = a.replace(/ /g, ''); if (c.length >= 5 && compact.includes(c)) { pos = t.indexOf(c.slice(0, 3)); how = 'junta'; break; } }
+      if (pos < 0) for (const a of aliases) { const c = a.replace(/ /g, ''); if (c.length < 5 || a.includes(' ')) continue; const w = words.find(x => x !== c && lev1(x, c)); if (w) { pos = t.indexOf(' ' + w + ' '); how = 'parecida'; break; } }
+      if (pos >= 0) found.push({ name, domain, pos, how });
+    }
+    // dirección web impresa en el envase (p. ej. www.eau-thermale-avene.com)
+    for (const m of String(text || '').toLowerCase().matchAll(/(?:www\.)?([a-z0-9-]{3,})\.(?:com|es|fr|eu|net)\b/g)) {
+      const host = m[1].replace(/-/g, ' ');
+      for (const [name, aliases, domain] of BRANDS) if (!found.some(f => f.name === name) && aliases.some(a => a.length >= 5 && (' ' + host + ' ').includes(' ' + a + ' '))) found.push({ name, domain, pos: 9e9, how: 'web' });
+    }
     for (const b of extra) { const a = norm(b).replace(/[^a-z0-9]+/g, ' ').trim(); if (a.length >= 3 && t.includes(' ' + a + ' ') && !found.some(f => norm(f.name) === norm(b))) found.push({ name: b, domain: '', pos: t.indexOf(a) }); }
-    return found.sort((x, y) => x.pos - y.pos);
+    const rank = { exacta: 0, junta: 1, web: 2, parecida: 3 };
+    return found.sort((x, y) => (rank[x.how] ?? 0) - (rank[y.how] ?? 0) || x.pos - y.pos);
   }
   const brandInfo = name => { const n = norm(name); const b = BRANDS.find(x => norm(x[0]) === n || x[1].some(a => n.replace(/[^a-z0-9]+/g, ' ').trim() === a)); return b ? { name: b[0], domain: b[2], aliases: b[1] } : null; };
   const brandTag = name => norm(name).replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -753,6 +795,54 @@ const XT = (() => {
       for (const t of tokens(l.text)) weighted[t] = Math.max(weighted[t] || 0, w);
     });
     return { text: clean, pct: [...new Set(pct)], spf, pao: paoM.length ? paoM[0] : null, weighted, tokens: Object.keys(weighted) };
+  }
+
+  const NOT_NAME = /laborator|dermatolog|eau thermale|made in|fabricad|pierre fabre|www|\.com|http|ingredient|composici|lote|lot\b|exp\b|^\W*$/i;
+  const cleanName = s => String(s || '').replace(/[*®™©•|“”"«»]/g, ' ').replace(/^[^A-Za-zÀ-ÿ0-9+]+|[^A-Za-zÀ-ÿ0-9+)]+$/g, '').replace(/\s+/g, ' ').trim();
+  const letters = s => (String(s).match(/[A-Za-zÀ-ÿ]/g) || []).length;
+  const ES = /\b(veces|dia|día|piel|limpia|sobre|la|el|los|las|y|al|del|con|aplicar|aplique|apliquese|extender|masajear|evitar|contorno|ojos|mañana|noche|uso|utilizar|zona|suave|masaje|cara|rostro|cuello|agitar|enjuagar|aclarar|retirar|antes|despues|después)\b/g;
+  const NOT_ES = /\b(vezes|pele|limpa|e|volte|giorno|pelle|pulita|ed|sulla|applicare|fois|jour|peau|propre|sur|appliquer|et|apply|twice|day|skin|clean|dry|and|to|the|taglich|täglich|haut|maal|dag|huid|op|de\s+gereinigde|nao|não)\b/g;
+  const ES_VERB = /\b(aplicar|aplique|apliquese|aplíquese|extender|extienda|masajear|usar|utilizar|utilice|evitar|agitar|enjuagar|aclarar|retirar|dejar)\b/i;
+  function spanishInstructions(text) {
+    const flat = String(text || '').replace(/[“”"«»|]/g, ' ').replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ');
+    const out = [];
+    for (let sent of flat.split(/(?<=[.!?])\s+|(?=\bAplicar\b)/)) {
+      sent = sent.trim().replace(/^[^A-Za-zÁÉÍÓÚáéíóúñÑ]+/, '');
+      if (sent.length < 15 || sent.length > 320 || !ES_VERB.test(sent)) continue;
+      const n = norm(sent); const es = (n.match(ES) || []).length, other = (n.match(NOT_ES) || []).length;
+      if (es >= 3 && es > other * 1.5) out.push(sent.replace(/\s+([.,])/g, '$1'));
+    }
+    return [...new Set(out)].slice(0, 3).join(' ');
+  }
+  // photos = [{ role: 'front'|'back', lines: [{ text, h, conf, y }] }]
+  function readLabel(photos, knownBrands = []) {
+    const all = photos.flatMap(p => p.lines || []);
+    const text = all.map(l => l.text).join('\n');
+    const base = parseLabel(text, all);
+    const brands = detectBrand(text, knownBrands);
+    const brand = brands[0] || null;
+    const bAliases = brand ? (brandInfo(brand.name)?.aliases || [norm(brand.name)]) : [];
+    const isBrandLine = l => { const n = ' ' + norm(l.text).replace(/[^a-z0-9]+/g, ' ') + ' '; return bAliases.some(a => n.includes(' ' + a + ' ') || n.replace(/ /g, '').includes(a.replace(/ /g, ''))) || (brand?.how === 'parecida' && n.split(' ').some(w => w.length >= 4 && bAliases.some(a => lev1(w, a.replace(/ /g, ''))))); };
+    const front = (photos.find(p => p.role === 'front') || photos[0] || { lines: [] }).lines || [];
+    const cands = front.filter(l => /[A-Za-zÀ-ÿ]{4,}/.test(l.text) && (l.conf ?? 90) >= 70 && !NOT_NAME.test(l.text) && !isBrandLine(l) && l.text.trim().split(/\s+/).length <= 5 && !/\d{2,}\s?(ml|g)\b/i.test(l.text) && !/,\s*\S/.test(l.text));
+    let name = '', descriptor = '';
+    if (cands.length) {
+      const best = cands.slice().sort((a, b) => (b.h * (b.conf || 80)) - (a.h * (a.conf || 80)))[0];
+      name = cleanName(best.text);
+      // descripción: líneas siguientes, de tamaño parecido entre sí (p. ej. «CRÈME RÉPARATRICE / PROTECTRICE»)
+      const below = front.filter(l => l !== best && (l.y ?? 0) > (best.y ?? 0) && letters(l.text) >= 4 && !isBrandLine(l) && !NOT_NAME.test(l.text)).sort((a, b) => (a.y ?? 0) - (b.y ?? 0));
+      const d = []; let ref = null, lastY = null;
+      const upper = t => { const L = t.match(/[A-Za-zÀ-ÿ]/g) || []; return L.length ? L.filter(c => c === c.toUpperCase()).length / L.length > 0.7 : false; };
+      for (const l of below) {
+        if (!ref) { if (l.text.split(/\s+/).length > 5 || /,/.test(l.text)) break; ref = l; d.push(l); lastY = l.y + l.h; continue; }
+        if (Math.abs(l.h - ref.h) <= ref.h * 0.35 && l.y - lastY < ref.h * 1.6 && l.text.split(/\s+/).length <= 5 && !/,/.test(l.text) && upper(l.text) === upper(ref.text)) { d.push(l); lastY = l.y + l.h; } else break;
+        if (d.length >= 3) break;
+      }
+      descriptor = cleanName(d.map(l => l.text).join(' '));
+    }
+    const q = text.match(/(?:^|[^A-Za-z0-9])(\d{1,4}(?:[.,]\d{1,2})?)\s?(ml|mL|ML|g|gr|G)(?![A-Za-z])/);
+    const quantity = q ? `${q[1].replace('.', ',')} ${q[2].toLowerCase().replace('gr', 'g')}` : '';
+    return { ...base, brand: brand ? { name: brand.name, how: brand.how } : null, name, descriptor, quantity, instructions: spanishInstructions(text) };
   }
 
   // ----- relevancia entre lo leído y un nombre/URL -----
@@ -805,36 +895,44 @@ const XT = (() => {
     return out.replace(/[ \t\u00a0\u200b]+/g, ' ').replace(/ *\n[\n ]*/g, '\n').trim();
   }
   const cut = (s, n) => { s = String(s || '').trim(); if (s.length <= n) return s; const c = s.slice(0, n); const i = Math.max(c.lastIndexOf('. '), c.lastIndexOf('.\n')); return (i > n * 0.5 ? c.slice(0, i + 1) : c + '…'); };
-  const looksInci = s => (String(s).match(/[,•●·]| - /g) || []).length >= 5 && /\b(aqua|water|eau|glycerin|alcohol|parfum)\b/i.test(s);
+  const looksInci = s => (String(s).match(/[,•●·]| - |\.\s+(?=[A-Z(\[])/g) || []).length >= 5 && /\b(aqua|water|eau|glycerin|alcohol|parfum)\b/i.test(s);
+  // Secciones de la ficha. Número = prioridad (1 = la mejor). «Aplicación» a secas suele ser un titular publicitario.
   const SEC = {
-    howto: /^(modo de (empleo|uso)|c[oó]mo (se )?(usar|aplicar|utilizar)(lo)?|instrucciones( de uso)?|aplicaci[oó]n|consejos de (uso|aplicaci[oó]n)|how to use|directions|mode d.emploi)\b/i,
-    inci: /^(ingredientes|lista de ingredientes|composici[oó]n|f[oó]rmula completa|inci|ingredients|composition)\b/i,
-    key: /^(ingredientes (clave|principales|activos|destacados)|activos( clave)?|principios activos|key ingredients|beneficios|benefits)\b/i
+    howto: [[/^(modo de (empleo|uso)|consejos de (uso|aplicaci[oó]n|utilizaci[oó]n)|c[oó]mo (se )?(usar|aplicar|utilizar)(lo)?|instrucciones( de uso)?)\b/i, 1], [/^(how to use|directions|mode d.emploi|conseils d.utilisation)\b/i, 2], [/^(aplicaci[oó]n|uso|utilizaci[oó]n)$/i, 3]],
+    inci: [[/^(composici[oó]n|lista de ingredientes|f[oó]rmula completa|inci|ingredients list|composition)\b/i, 1], [/^(ingredientes|ingredients)\b/i, 2]],
+    key: [[/^(ingredientes (clave|principales|activos|destacados)|activos( clave)?|principios activos|key ingredients)\b/i, 1], [/^(beneficios|benefits)\b/i, 2]]
   };
+  const secPri = (k, l) => { for (const [re, p] of SEC[k]) if (re.test(l)) return p; return 0; };
   function sections(doc) {
-    const found = { howto: '', inci: '', key: '' };
+    const cand = { howto: [], inci: [], key: [] };
     const label = el => (el.getAttribute('title') || el.getAttribute('aria-label') || el.getAttribute('data-title') || '').trim();
-    const setIf = (k, txt) => { txt = (txt || '').trim(); if (!found[k] && txt.length >= 12) found[k] = txt; };
+    const add = (k, txt, pri) => { txt = (txt || '').trim(); if (txt.length >= 12) cand[k].push({ txt, pri }); };
     // 1) contenedores con título (acordeones)
     doc.querySelectorAll('[title],[data-title]').forEach(el => {
       const l = label(el).replace(/[\u200b]/g, ''); if (!l || l.length > 60) return;
-      for (const k of Object.keys(SEC)) if (SEC[k].test(l)) setIf(k, textOf(el).replace(l, ''));
+      for (const k of Object.keys(SEC)) { const p = secPri(k, l); if (p) add(k, textOf(el).replace(l, ''), p); }
     });
     // 2) encabezados seguidos de contenido
     doc.querySelectorAll('h1,h2,h3,h4,h5,summary,dt,button,[role=tab],strong').forEach(h => {
       const l = (h.textContent || '').replace(/[\u200b]/g, '').replace(/\s+/g, ' ').trim(); if (!l || l.length > 60) return;
       for (const k of Object.keys(SEC)) {
-        if (!SEC[k].test(l) || found[k]) continue;
+        const p = secPri(k, l); if (!p) continue;
         let txt = '';
-        const ctl = h.getAttribute('aria-controls'); if (ctl) { const t = doc.getElementById(ctl); if (t) txt = textOf(t); }
+        const ctl = h.getAttribute('aria-controls') || h.querySelector('[aria-controls]')?.getAttribute('aria-controls'); if (ctl) { const t = doc.getElementById(ctl); if (t) txt = textOf(t); }
         if (!txt && h.tagName === 'SUMMARY') txt = textOf(h.parentElement).replace(l, '');
         if (!txt && h.tagName === 'DT') { const dd = h.nextElementSibling; if (dd) txt = textOf(dd); }
         if (!txt) { let n = h.nextElementSibling, acc = ''; while (n && !/^H\d$/.test(n.tagName) && acc.length < 1500) { acc += '\n' + textOf(n); n = n.nextElementSibling; } txt = acc; }
         if (!txt && h.parentElement) { const s = h.parentElement.nextElementSibling; if (s) txt = textOf(s); }
-        setIf(k, txt);
+        add(k, txt, p);
       }
     });
-    return found;
+    const best = (list, ok) => { const good = list.filter(c => ok(c.txt)); return (good.length ? good : list).sort((a, b) => a.pri - b.pri)[0]?.txt || ''; };
+    const inciTxt = best(cand.inci, looksInci);
+    return {
+      howto: best(cand.howto.filter(c => c.pri < 3 || ES_VERB.test(c.txt)), t => ES_VERB.test(t)),
+      inci: looksInci(inciTxt) ? inciTxt.split('\n').filter(looksInci).join(' ') || inciTxt : inciTxt,
+      key: best(cand.key, () => true)
+    };
   }
   function jsonLd(doc) {
     const out = [];
@@ -876,6 +974,14 @@ const XT = (() => {
     const h1 = (doc.querySelector('h1')?.textContent || '').replace(/\s+/g, ' ').trim();
     const h1ok = h1 && tokens(h1).some(t => slugT.some(s => tokMatch(s, t)));
     let name = decode(prod?.name || '').trim() || (crumbList.length > 1 ? crumbList[crumbList.length - 1] : '') || (h1ok ? h1 : '') || meta('og:title').split('|')[0].trim() || h1;
+    // Si la ficha dice «Crema reparadora protectora» y en la página aparece «Cicalfate+ Crema reparadora protectora», se usa el nombre completo
+    const bodyFlat = (doc.body?.textContent || '').replace(/\s+/g, ' ');
+    if (name && name.length < 60) {
+      const re = new RegExp('([A-ZÁÉÍÓÚ][\\wÀ-ÿ\\-]{2,}\\+?)\\s+' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      const cnt = {}; for (const m of bodyFlat.matchAll(re)) cnt[m[1]] = (cnt[m[1]] || 0) + 1;
+      const top = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+      if (top && top[1] >= 2 && slugT.some(t => tokMatch(t, tokens(top[0])[0] || '')) && !tokens(name).includes(tokens(top[0])[0])) name = top[0] + ' ' + name;
+    }
     const desc = cut(stripHtml(prod?.description || meta('og:description') || meta('description')), 420);
     const sec = sections(doc);
     let steps = '';
@@ -888,12 +994,14 @@ const XT = (() => {
     else { const m = html.match(/(AQUA|WATER|EAU|Aqua|Water)\s*(?:\/\s*(?:WATER|EAU|Water)\s*)*[\s\S]{0,40}?[,•●·-][^<"]{40,3000}/); if (m && looksInci(m[0])) inci = stripHtml(m[0]); }
     inci = cut(inci.replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' '), 3000);
     const keyTxt = [name, desc, sec.key && !looksInci(sec.key) ? sec.key : '', !looksInci(sec.inci) ? sec.inci : ''];
-    const hl = highlights(keyTxt);
+    const declared = [].concat(prod?.hasIngredient || []).map(x => cut(stripHtml(typeof x === 'string' ? x : x?.name || ''), 60)).filter(Boolean);
+    const hl = [...new Set([...declared, ...highlights(keyTxt)])];
+    const gtin = String(prod?.gtin13 || prod?.gtin || prod?.['@id'] || '').replace(/\D/g, '').replace(/^0(?=\d{13}$)/, '');
     const bodyTxt = textOf(doc.body || doc.documentElement);
     const pao = paoFrom([instructions, sec.inci, sec.key, bodyTxt.slice(0, 60000)].join('\n'));
     const crumbs = crumbList.join(' ');
     return {
-      url, name: name.replace(/\s+/g, ' '), brand: decode(brandName).trim() || brandHint, description: desc, instructions, inci, highlights: hl, pao,
+      url, name: name.replace(/\s+/g, ' '), brand: decode(brandName).trim() || brandHint, description: desc, instructions, inci, highlights: hl, pao, gtin: /^\d{8,14}$/.test(gtin) ? gtin : '',
       category: category(name, crumbs, desc), isProduct: !!prod || !!howto || !!inci
     };
   }
@@ -904,7 +1012,7 @@ const XT = (() => {
     const pao = p.periods_after_opening ? (String(p.periods_after_opening).match(/(\d{1,2})/) || [])[1] : null;
     const cats = (p.categories_tags || []).map(c => c.replace(/^\w\w:/, '').replace(/-/g, ' ')).join(' ');
     return {
-      code: p.code, name, brand: (p.brands || '').split(',')[0].trim(), inci: pick('ingredients_text_es', 'ingredients_text', 'ingredients_text_en', 'ingredients_text_fr').replace(/\s*\r?\n\s*/g, ' '),
+      code: p.code, name, brand: (p.brands || '').split(',')[0].trim(), quantity: String(p.quantity || '').trim(), inci: pick('ingredients_text_es', 'ingredients_text', 'ingredients_text_en', 'ingredients_text_fr').replace(/\s*\r?\n\s*/g, ' '),
       pao: pao ? Number(pao) : null, category: category(name, cats), image: p.image_front_small_url || '', url: p.url || (p.code ? `https://world.openbeautyfacts.org/product/${p.code}` : '')
     };
   }
@@ -916,10 +1024,11 @@ const XT = (() => {
     const s = matchScore(label.tokens, cand.name || '');
     out.push(s >= 0.5 ? { ok: true, t: 'Nombre: coincide con palabras de la etiqueta' } : { ok: false, t: 'Nombre: pocas palabras coinciden con la etiqueta; revisa que sea tu producto' });
     for (const p of label.pct) { const n = p.replace(' %', ''); const ok = new RegExp('\\b' + n.replace('.', '[.,]') + '\\s?%').test(nameTxt + ' ' + (cand.highlights || []).join(' ')); out.push(ok ? { ok: true, t: `Concentración ${p}: aparece también en la ficha` } : { ok: false, t: `La etiqueta muestra ${p} y la ficha no lo menciona: revisa la variante` }); }
+    if (label.quantity && cand.quantity) { const nq = x => norm(x).replace(/[^0-9a-z]/g, '').replace(/gr$/, 'g'); out.push(nq(label.quantity) === nq(cand.quantity) ? { ok: true, t: `Cantidad ${label.quantity}: coincide` } : { ok: false, t: `Tu envase parece de ${label.quantity} y esta versión es de ${cand.quantity}` }); }
     if (label.spf) { const ok = new RegExp('(spf|fps)\\s*' + label.spf.replace('+', '\\+?')).test(nameTxt); out.push(ok ? { ok: true, t: `SPF ${label.spf}: coincide` } : { ok: false, t: `La etiqueta indica SPF ${label.spf}: comprueba la variante` }); }
     return out;
   }
-  return { norm, tokens, coverage, detectBrand, brandInfo, brandTag, parseLabel, matchScore, rankUrls, sitemapLocs, isSitemapIndex, parseProductPage, fromOBF, verify, category, highlights, paoFrom, BRANDS };
+  return { norm, tokens, coverage, readLabel, spanishInstructions, cleanName, detectBrand, brandInfo, brandTag, parseLabel, matchScore, rankUrls, sitemapLocs, isSitemapIndex, parseProductPage, fromOBF, verify, category, highlights, paoFrom, BRANDS };
 })();
 
 /* ===== Mi Skincare · interfaz ===== */
@@ -1139,7 +1248,7 @@ function viewProducts() {
   const list = act.filter(p => !ui.cat || p.category === ui.cat).sort((a, b) => a.name.localeCompare(b.name, 'es'));
   const dr = SCAN_OK && typeof loadDraft === 'function' ? loadDraft() : null;
   return `<div class="page-h"><div><h1>Productos</h1><p class="sub">${act.length} en uso${arch.length ? ` · ${arch.length} archivados` : ''}</p></div><button class="btn soft sm" data-act="new-product">+ Añadir</button></div>
-    ${SCAN_OK ? `<button class="btn block scanbtn" data-act="scan-open">${I.camera} Escanear producto</button>` : '<p class="note small">«Escanear producto» funciona en la app publicada (tu dirección de GitHub Pages o el icono del iPhone), no en esta vista previa.</p>'}
+    ${SCAN_OK ? `<div class="stack" style="gap:4px"><button class="btn block scanbtn" data-act="scan-open">${I.camera} Escanear producto</button><button class="linkbtn" data-act="scan-open" data-focus="1" style="align-self:center">o buscar escribiendo la marca y el nombre</button></div>` : '<p class="note small">«Escanear producto» funciona en la app publicada (tu dirección de GitHub Pages o el icono del iPhone), no en esta vista previa.</p>'}
     ${dr && dr.photos?.length && dr.status !== 'done' ? `<div class="note pink row between"><span>Tienes un escaneo sin terminar${dr.status === 'offline' ? ' (pendiente de conexión)' : ''}.</span><button class="btn sm" data-act="scan-open">Continuar</button></div>` : ''}
     ${cats.length > 1 ? `<div class="search" role="toolbar" aria-label="Filtrar por categoría"><button class="chipbtn" aria-pressed="${!ui.cat}" data-act="cat" data-v="">Todos</button>${cats.map(c => `<button class="chipbtn" aria-pressed="${ui.cat === c}" data-act="cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
     <div class="plist">${list.length ? list.map(productCard).join('') : `<div class="card empty">Todavía no hay productos. Añade el primero para poder usarlo en tus rutinas.<button class="btn sm" data-act="new-product">Añadir producto</button></div>`}</div>
@@ -1206,14 +1315,14 @@ function scanSettingsHTML(inIframe) {
   const hs = !c.proxy ? 'Sin configurar: se usará solo Open Beauty Facts.' : !h ? 'Sin comprobar' : !h.ok ? 'No conecta: ' + h.msg : `Conectado · webs oficiales: sí · búsqueda general: ${h.search ? 'sí' : 'no'} · hoy ${h.used?.search ?? 0}/${h.limits?.search ?? '–'} búsquedas y ${h.used?.fetch ?? 0}/${h.limits?.fetch ?? '–'} consultas`;
   return `<section class="card"><ul class="menu">
     <li><div class="mi-h"><span class="mi-ic">${I.scan}</span><strong>Escanear productos</strong></div>
-      <p class="small muted">El texto de la etiqueta y el código de barras se leen en el teléfono. La foto nunca se envía.</p>
+      <p class="small muted">Las fotos se leen en el propio teléfono y nunca se envían. Para buscar se envían la marca y el nombre (y el código de barras, si aparece en la foto).</p>
       ${SCAN_OK ? `<div class="kv"><span>Lector sin conexión</span><span id="ocr-state">Comprobando…</span></div><button class="btn soft sm" data-act="y-offline-prep" style="align-self:flex-start">Descargar lector (≈ 17 MB) para usarlo sin conexión</button>` : '<p class="small muted">Disponible en la app publicada.</p>'}</li>
     <li><label class="row" style="justify-content:space-between;font-weight:650">Buscar en Open Beauty Facts <input type="checkbox" id="y-obf" ${c.obf ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--pink)"></label>
       <p class="small muted">Base de datos colaborativa y gratuita. Se envía el código de barras o la marca. No necesita cuenta.</p></li>
     <li><div class="field"><label for="y-proxy">Servicio de búsqueda (web oficial)</label><input type="text" id="y-proxy" inputmode="url" autocomplete="off" placeholder="https://mi-skincare-busqueda.tu-cuenta.workers.dev" value="${esc(c.proxy)}"></div>
       <div class="kv"><span>Estado</span><span id="proxy-state">${esc(hs)}</span></div>
       <button class="btn soft sm" data-act="y-proxy-check" style="align-self:flex-start">Comprobar conexión</button>
-      <details class="small"><summary>Qué se envía</summary><p class="muted" style="margin-top:6px">A tu servicio (Cloudflare, tu cuenta): la marca y palabras del nombre, y las direcciones de las páginas oficiales que se consultan. Si activas la búsqueda general, esas palabras se reenvían a Tavily. Nunca se envían fotos, notas ni registros. La clave del buscador está guardada en tu servicio, no en la app.</p></details></li>
+      <details class="small"><summary>Qué se envía</summary><p class="muted" style="margin-top:6px">A Open Beauty Facts: la marca (y el código de barras, si lo hay). A tu servicio (Cloudflare, tu cuenta): la marca y el nombre, y las direcciones de las páginas oficiales que se consultan. Si activas la búsqueda general, esas palabras se reenvían a Tavily. Nunca se envían fotos, notas ni registros. La clave del buscador está guardada en tu servicio, no en la app.</p></details></li>
   </ul></section>`;
 }
 function offlineState(inIframe) {
@@ -1273,16 +1382,17 @@ function viewYo() {
     <p class="small muted" style="text-align:center">Mi Skincare · versión ${APP_VERSION}</p>`;
 }
 
-/* ===== Mi Skincare · escanear producto =====
-   1) Lee la etiqueta en el propio teléfono (Tesseract, sin enviar la foto).
-   2) Busca el código de barras en la foto (ZXing, en el teléfono).
-   3) Con conexión, busca el producto: web oficial para España (a través de tu servicio de búsqueda),
-      buscador general opcional (Tavily, a través del mismo servicio) y Open Beauty Facts.
-   4) Rellena la ficha solo con lo que aparece en esas fuentes. */
+/* ===== Mi Skincare · escanear o buscar producto =====
+   1) Foto frontal (y trasera opcional): se leen en el propio teléfono (Tesseract). Las fotos no salen del teléfono.
+   2) De lo leído salen la marca, el nombre y datos del envase (cantidad, instrucciones, plazo tras apertura).
+      El código de barras es opcional: se usa solo si aparece.
+   3) Con la marca y el nombre (leídos o escritos a mano) se busca: web oficial para España (a través de tu servicio
+      de búsqueda), buscador general opcional (Tavily) y Open Beauty Facts.
+   4) Se propone la ficha solo con lo que aparece en esas fuentes o en tu envase, indicando la fuente. */
 const VENDOR = './vendor/';
 const SCAN_OK = (() => { try { return window.self === window.top && /^https?:$/.test(location.protocol); } catch (e) { return false; } })();
 const OBF = 'https://world.openbeautyfacts.org';
-const OBF_FIELDS = 'code,product_name,product_name_es,product_name_en,product_name_fr,brands,periods_after_opening,categories_tags,ingredients_text,ingredients_text_es,ingredients_text_en,ingredients_text_fr,url,image_front_small_url';
+const OBF_FIELDS = 'code,quantity,product_name,product_name_es,product_name_en,product_name_fr,brands,periods_after_opening,categories_tags,ingredients_text,ingredients_text_es,ingredients_text_en,ingredients_text_fr,url,image_front_small_url';
 const draftKey = () => `${KEY}.scan.${meta.mode}`;
 let SC = null;             // escaneo en curso
 let proxyHealth = null;    // última comprobación del servicio
@@ -1354,57 +1464,137 @@ async function offlineReady() {
 }
 
 /* ---------- imágenes ---------- */
-function fileToCanvas(file, max) {
+// Copias de trabajo en alta resolución (solo en memoria, nunca se guardan ni se envían)
+const WORK = new Map();
+const MAX_WORK = 2600, MAX_DRAFT = 1600;
+function decodeFile(file) {
   return new Promise((res, rej) => {
-    const fr = new FileReader();
-    fr.onerror = () => rej(new Error('No se pudo leer la foto.'));
-    fr.onload = () => { const img = new Image(); img.onload = () => { const sc = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c); }; img.onerror = () => rej(new Error('Formato de imagen no compatible.')); img.src = fr.result; };
-    fr.readAsDataURL(file);
+    const url = URL.createObjectURL(file); const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); res(img); };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      // segundo intento por otra vía (algunos navegadores no aceptan blob: en imágenes)
+      const fr = new FileReader(); fr.onerror = () => rej(new Error('No se pudo abrir la foto.'));
+      fr.onload = () => { const i2 = new Image(); i2.onload = () => res(i2); i2.onerror = () => rej(new Error('Este formato de imagen no se puede abrir aquí. En el iPhone: Ajustes › Cámara › Formatos › «Más compatible», o elige la foto desde la galería.')); i2.src = fr.result; };
+      fr.readAsDataURL(file);
+    };
+    img.src = url;
   });
 }
-function urlToCanvas(dataUrl, rotate = 0) {
-  return new Promise((res, rej) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const r = rotate % 180 !== 0; c.width = r ? img.height : img.width; c.height = r ? img.width : img.height; const x = c.getContext('2d'); x.translate(c.width / 2, c.height / 2); x.rotate(rotate * Math.PI / 180); x.drawImage(img, -img.width / 2, -img.height / 2); res(c); }; img.onerror = rej; img.src = dataUrl; });
+function toCanvas(img, max) {
+  const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  const sc = Math.min(1, max / Math.max(w, h));
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w * sc)); c.height = Math.max(1, Math.round(h * sc));
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); return c;
 }
-async function shrink(dataUrl, max = 480) { const c = await urlToCanvas(dataUrl); const sc = Math.min(1, max / Math.max(c.width, c.height)); const d = document.createElement('canvas'); d.width = Math.round(c.width * sc); d.height = Math.round(c.height * sc); d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); return d.toDataURL('image/jpeg', 0.8); }
+function urlToImage(dataUrl) { return new Promise((res, rej) => { const img = new Image(); img.onload = () => res(img); img.onerror = () => rej(new Error('No se pudo abrir la foto guardada.')); img.src = dataUrl; }); }
+async function shrink(dataUrl, max = 480) { const img = await urlToImage(dataUrl); return toCanvas(img, max).toDataURL('image/jpeg', 0.8); }
+const freeCanvas = c => { if (c) { c.width = 0; c.height = 0; } };
 
-/* ---------- lectura en el teléfono ---------- */
-async function ocrPhoto(w, dataUrl) {
-  // Dos lecturas (tamaño completo y reducido): el texto muy grande, como la marca, se lee mejor reducido.
-  const read = async (rot, scale) => {
-    await w.setParameters({ tessedit_pageseg_mode: scale < 1 ? '11' : '3' });
-    let c = await urlToCanvas(dataUrl, rot);
-    if (scale < 1) { const d = document.createElement('canvas'); d.width = Math.round(c.width * scale); d.height = Math.round(c.height * scale); d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); c = d; }
-    const { data } = await w.recognize(c, {}, { text: true, blocks: true });
-    const lines = [];
-    (data.blocks || []).forEach(b => (b.paragraphs || []).forEach(p => (p.lines || []).forEach(l => { if (l.confidence > 40 && l.text.trim()) lines.push({ text: l.text.trim(), h: (l.bbox.y1 - l.bbox.y0) / scale, conf: l.confidence }); })));
-    return lines;
-  };
-  const merge = (...sets) => {
-    const out = [];
-    for (const l of sets.flat()) { const k = XT.norm(l.text).replace(/[^a-z0-9]/g, ''); const prev = out.find(o => o.k === k); if (!prev) out.push({ ...l, k }); else if (l.conf > prev.conf) Object.assign(prev, l); }
-    return out;
-  };
-  const score = ls => ls.reduce((s, l) => s + l.conf * Math.min(l.text.length, 40), 0);
-  let best = merge(await read(0, 1), await read(0, 0.5));
-  if (XT.tokens(best.map(l => l.text).join(' ')).length < 3) for (const r of [90, 270]) { const x = merge(await read(r, 1), await read(r, 0.5)); if (score(x) > score(best)) best = x; }
-  return { text: best.map(l => l.text).join('\n'), lines: best };
+/* ---------- lectura en el teléfono ----------
+   Por qué fallaba: la foto entera se reducía a 1280 px y se leía de una vez. En una foto real el producto ocupa
+   una franja del centro y el resto es fondo (mano, teclado…): el texto quedaba demasiado pequeño y el lector se
+   perdía en el fondo. Ahora se lee primero la zona central, se localiza el texto del envase y se vuelve a leer
+   esa franja con más resolución. */
+function prepCrop(src, x, y, w, h, max, rot = 0) {
+  x = Math.max(0, x); y = Math.max(0, y); w = Math.min(src.width - x, w); h = Math.min(src.height - y, h);
+  const sc = Math.min(2, max / Math.max(w, h));
+  const cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+  const c = document.createElement('canvas'); const r = rot % 180 !== 0;
+  c.width = r ? ch : cw; c.height = r ? cw : ch;
+  const g = c.getContext('2d');
+  if (rot) { g.translate(c.width / 2, c.height / 2); g.rotate(rot * Math.PI / 180); g.drawImage(src, x, y, w, h, -cw / 2, -ch / 2, cw, ch); }
+  else g.drawImage(src, x, y, w, h, 0, 0, cw, ch);
+  // escala de grises y contraste suave (1 %–99 %): ayuda con reflejos y tintas de color
+  const d = g.getImageData(0, 0, c.width, c.height), a = d.data, hist = new Uint32Array(256), n = a.length / 4;
+  for (let i = 0; i < a.length; i += 4) { const v = (a[i] * 77 + a[i + 1] * 150 + a[i + 2] * 29) >> 8; a[i] = v; hist[v]++; }
+  let lo = 0, hi = 255, acc = 0; for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc <= n * 0.01) lo = i; if (acc <= n * 0.99) hi = i; }
+  const k = 255 / Math.max(32, hi - lo);
+  for (let i = 0; i < a.length; i += 4) { const v = Math.max(0, Math.min(255, (a[i] - lo) * k)); a[i] = a[i + 1] = a[i + 2] = v; }
+  g.putImageData(d, 0, 0);
+  return { c, sc, x, y, rot };
 }
-async function readBarcode(dataUrl) {
+async function ocrPass(w, o, psm) {
+  await w.setParameters({ tessedit_pageseg_mode: psm });
+  const { data } = await w.recognize(o.c, {}, { text: true, blocks: true });
+  const lines = [];
+  (data.blocks || []).forEach(b => (b.paragraphs || []).forEach(p => (p.lines || []).forEach(l => {
+    const t = (l.text || '').trim();
+    if (l.confidence > 50 && (t.match(/[A-Za-zÀ-ÿ0-9]/g) || []).length >= 2) lines.push({ text: t, conf: l.confidence, x0: o.x + l.bbox.x0 / o.sc, x1: o.x + l.bbox.x1 / o.sc, y: o.y + l.bbox.y0 / o.sc, h: (l.bbox.y1 - l.bbox.y0) / o.sc, rot: o.rot });
+  })));
+  freeCanvas(o.c);
+  return lines;
+}
+function mergeLines(...sets) {
+  const out = [];
+  for (const l of sets.flat()) {
+    const k = XT.norm(l.text).replace(/[^a-z0-9]/g, ''); if (k.length < 2) continue;
+    const same = out.find(o => o.k === k || ((o.k.includes(k) || k.includes(o.k)) && Math.abs(o.y - l.y) < Math.max(o.h, l.h) * 1.2 && !o.rot === !l.rot));
+    if (!same) out.push({ ...l, k });
+    else if (k.length > same.k.length || (k.length === same.k.length && l.conf > same.conf)) Object.assign(same, l, { k });
+  }
+  return out.sort((a, b) => a.y - b.y);
+}
+const realWord = t => /[A-Za-zÀ-ÿ]{4,}/.test(t);
+async function ocrImage(w, src, onPhase, dbg = null) {
+  const W = src.width, H = src.height;
+  onPhase && onPhase(1);
+  // 1) vistazo rápido a la zona central para localizar el texto del envase
+  const A = await ocrPass(w, prepCrop(src, W * 0.15, H * 0.03, W * 0.7, H * 0.94, 1800), '11');
+  const good = A.filter(l => l.conf >= 75 && realWord(l.text) && l.h < H * 0.08);
+  let B = [], box = null;
+  onPhase && onPhase(2);
+  if (good.length >= 2) {
+    // 2) caja del texto encontrado, ampliada (la marca suele estar encima del nombre)
+    let x0 = Math.min(...good.map(l => l.x0)), x1 = Math.max(...good.map(l => l.x1));
+    let y0 = Math.min(...good.map(l => l.y)), y1 = Math.max(...good.map(l => l.y + l.h));
+    const mx = Math.max((x1 - x0) * 0.5, W * 0.12), ry = y1 - y0;
+    x0 = Math.max(0, x0 - mx); x1 = Math.min(W, x1 + mx);
+    y0 = Math.max(0, y0 - Math.max(ry, H * 0.12)); y1 = Math.min(H, y1 + Math.max(ry * 0.5, H * 0.08));
+    box = [x0, y0, x1 - x0, y1 - y0];
+    // 3) lectura de cerca: la caja se divide en franjas para leer el texto pequeño con más resolución
+    const bh = y1 - y0, n = Math.max(1, Math.ceil(bh / 1300)), step = bh / n, ov = n > 1 ? step * 0.12 : 0;
+    for (let i = 0; i < n; i++) {
+      const ty = Math.max(y0, y0 + i * step - ov), th = Math.min(y1, y0 + (i + 1) * step + ov) - ty;
+      B.push(...await ocrPass(w, prepCrop(src, x0, ty, x1 - x0, th, 2200), '3'));
+    }
+    B.push(...await ocrPass(w, prepCrop(src, ...box, 2200), '11'));
+    B = mergeLines(B);
+  } else {
+    B = await ocrPass(w, prepCrop(src, 0, 0, W, H, 2200), '11');
+  }
+  // lo leído fuera de la caja del envase suele ser fondo (pantallas, teclados…)
+  const inBox = l => !box || (l.x1 > box[0] && l.x0 < box[0] + box[2] && l.y + l.h > box[1] && l.y < box[1] + box[3]);
+  // excepción: cifras del envase que suelen estar apartadas del texto principal (plazo «12M», «40 ml»)
+  const fact = l => l.conf >= 70 && /^\W*\d{1,2}\s?M\W*$|\b\d+([.,]\d+)?\s?(ml|g)\b/i.test(l.text.trim());
+  let lines = mergeLines(B, A.filter(l => inBox(l) || fact(l))); // primero lo leído de cerca: absorbe los trozos del vistazo rápido
+  if (XT.tokens(lines.map(l => l.text).join(' ')).length < 3) {
+    onPhase && onPhase(3);
+    for (const rot of [90, 270]) {
+      const r = await ocrPass(w, prepCrop(src, W * 0.1, H * 0.02, W * 0.8, H * 0.96, 2000, rot), '11');
+      if (XT.tokens(r.map(l => l.text).join(' ')).length > XT.tokens(lines.map(l => l.text).join(' ')).length) lines = mergeLines(r);
+    }
+  }
+  if (dbg) { dbg.A = A; dbg.B = B; dbg.good = good.map(l => l.text); dbg.box = box && box.map(Math.round); }
+  return lines;
+}
+async function readBarcode(src) {
   const Z = await getZXing();
-  const c = await urlToCanvas(dataUrl); const id = c.getContext('2d').getImageData(0, 0, c.width, c.height);
-  const res = await Z.readBarcodes(id, { tryHarder: true, maxNumberOfSymbols: 2 });
+  const c = document.createElement('canvas'); const sc = Math.min(1, 1600 / Math.max(src.width, src.height));
+  c.width = Math.round(src.width * sc); c.height = Math.round(src.height * sc); c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+  const res = await Z.readBarcodes(c.getContext('2d').getImageData(0, 0, c.width, c.height), { tryHarder: true, maxNumberOfSymbols: 2 });
+  freeCanvas(c);
   const hit = res.find(r => r.isValid !== false && /^\d{8}$|^\d{12,14}$/.test(r.text || ''));
   return hit ? hit.text : '';
 }
-
 /* ---------- búsquedas ---------- */
 async function obfByCode(code) {
   const j = await net(`${OBF}/api/v2/product/${encodeURIComponent(code)}.json?fields=${OBF_FIELDS}`);
   return j.status === 1 && j.product ? XT.fromOBF(j.product) : null;
 }
-async function obfByBrand(brand, toks) {
-  const j = await net(`${OBF}/api/v2/search?brands_tags=${encodeURIComponent(XT.brandTag(brand))}&page_size=100&fields=${OBF_FIELDS}`);
-  return (j.products || []).map(XT.fromOBF).filter(p => p.name).map(p => ({ ...p, score: XT.matchScore(toks, p.name) })).filter(p => p.score >= 0.34).sort((a, b) => b.score - a.score).slice(0, 4);
+async function obfByBrand(brand) {
+  const j = await net(`${OBF}/api/v2/search?brands_tags=${encodeURIComponent(XT.brandTag(brand))}&page_size=200&fields=${OBF_FIELDS}`);
+  return (j.products || []).map(XT.fromOBF).filter(p => p.name);
 }
 async function siteUrls(domain) {
   const ck = `${KEY}.sm.${domain}`;
@@ -1432,129 +1622,203 @@ async function pageDetails(url, sig, brandName) {
 function isOfficial(url, bi) { try { const h = new URL(url).hostname; return !!bi && ((bi.domain && h.endsWith(bi.domain.replace(/^www\./, ''))) || bi.aliases.some(a => h.replace(/[^a-z0-9]/g, '').includes(a.replace(/[^a-z0-9]/g, '')))); } catch (e) { return false; } }
 const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
 
-/* ---------- flujo principal ---------- */
-function newScan(target = null) { return { id: uid(), target, photos: [], status: 'capture', steps: [], label: null, barcode: '', brand: null, candidates: [], chosen: null, error: '' }; }
+
+/* ---------- estado del escaneo ---------- */
+function newScan(target = null) { return { id: uid(), target, photos: [], q: { brand: '', name: '' }, qEdited: {}, label: null, barcode: '', status: 'capture', steps: [], candidates: [], error: '', searched: false }; }
 function saveDraft() {
-  if (!SC) return;
+  if (!SC) return false;
   const d = { ...SC, steps: [], candidates: SC.candidates.map(c => ({ ...c, inci: c.inci ? c.inci.slice(0, 3000) : '' })) };
-  try { store.set(draftKey(), JSON.stringify(d)); return true; } catch (e) { return false; }
+  try { store.set(draftKey(), JSON.stringify(d)); return true; }
+  catch (e) { // sin espacio: se guarda sin fotos (se siguen usando mientras la app esté abierta)
+    try { store.set(draftKey(), JSON.stringify({ ...d, photos: d.photos.map(p => ({ ...p, data: '' })) })); } catch (e2) {}
+    return false;
+  }
 }
 function loadDraft() { try { return JSON.parse(store.get(draftKey()) || 'null'); } catch (e) { return null; } }
 function clearDraft() { store.del(draftKey()); }
+function discardWork() { for (const c of WORK.values()) freeCanvas(c); WORK.clear(); }
+const photoByRole = role => SC?.photos.find(p => p.role === role);
 
-let scanRunning = false;
-async function runScan(opts = {}) {
-  if (!SC || !SC.photos.length || scanRunning) return;
-  scanRunning = true;
-  try { await runScanInner(opts); } finally { scanRunning = false; }
+/* ---------- 1) fotos y lectura ---------- */
+async function addScanPhoto(file, role = 'front') {
+  if (!SC) return;
+  let img;
+  try { img = await decodeFile(file); } catch (e) { toast(e.message, 'error'); return; }
+  const work = toCanvas(img, MAX_WORK);
+  const data = toCanvas(img, MAX_DRAFT).toDataURL('image/jpeg', 0.82);
+  const old = photoByRole(role); if (old) { freeCanvas(WORK.get(old.id)); WORK.delete(old.id); SC.photos = SC.photos.filter(p => p !== old); }
+  const ph = { id: uid(), role, data, lines: null, read: 'pending', note: '' };
+  SC.photos.push(ph); SC.photos.sort((a, b) => (a.role === 'front' ? 0 : 1) - (b.role === 'front' ? 0 : 1));
+  WORK.set(ph.id, work);
+  if (!saveDraft()) toast('No queda espacio para guardar el borrador con fotos; seguirá disponible mientras la app esté abierta.', 'error');
+  SC.status = SC.status === 'choose' || SC.status === 'done' ? 'capture' : SC.status;
+  await readPhotos();
 }
-async function runScanInner({ reuseLabel = false } = {}) {
-  SC.status = 'working'; SC.steps = []; SC.candidates = []; SC.error = '';
+let reading = false;
+async function readPhotos() {
+  if (!SC || reading) return;
+  const pending = SC.photos.filter(p => !p.lines); if (!pending.length) return afterRead();
+  reading = true; SC.status = 'reading'; renderScanLive();
+  try {
+    let w;
+    try { w = await getOCR(); }
+    catch (e) { pending.forEach(p => { p.read = 'fail'; p.note = navigator.onLine ? e.message : 'El lector aún no está descargado en este teléfono y no hay conexión.'; }); }
+    if (w) for (const p of pending) {
+      p.read = 'run'; p.note = 'Preparando…'; renderScanLive();
+      try {
+        let src = WORK.get(p.id);
+        if (!src && p.data) { src = toCanvas(await urlToImage(p.data), MAX_WORK); WORK.set(p.id, src); }
+        if (!src) throw new Error('La foto ya no está disponible. Vuelve a hacerla.');
+        const phases = ['', 'Buscando el texto en la foto', 'Leyendo el envase de cerca', 'Probando la foto girada'];
+        ocrProgress = null;
+        const lines = await ocrImage(w, src, ph => { p.note = phases[ph] + '…'; renderScanLive(); });
+        p.lines = lines.map(({ text, h, conf, y, x0, x1 }) => ({ text, h: Math.round(h), conf: Math.round(conf), y: Math.round(y), x0: Math.round(x0), x1: Math.round(x1) }));
+        const words = XT.tokens(lines.map(l => l.text).join(' ')).length;
+        p.read = words ? 'ok' : 'fail';
+        p.note = words ? `${lines.length} líneas leídas` : 'No he encontrado texto legible en esta foto.';
+        try { const code = await readBarcode(src); if (code) { SC.barcode = code; p.note += ' · código de barras ' + code; } } catch (e) { /* el código de barras es opcional */ }
+      } catch (e) { p.read = 'fail'; p.note = 'No se ha podido leer: ' + (e.message || e); }
+      saveDraft(); renderScanLive();
+    }
+  } finally { reading = false; }
+  return afterRead();
+}
+function afterRead() {
+  const known = D.products.map(p => p.brand).filter(Boolean);
+  SC.label = XT.readLabel(SC.photos.filter(p => p.lines).map(p => ({ role: p.role, lines: p.lines })), known);
+  // rellena marca y nombre solo si no los ha escrito la persona
+  if (!SC.qEdited.brand && SC.label.brand) SC.q.brand = SC.label.brand.name;
+  if (!SC.qEdited.name && SC.label.name) SC.q.name = SC.label.name;
+  SC.status = 'ready'; saveDraft(); renderScanLive();
+  const anyOk = SC.photos.some(p => p.read === 'ok');
+  if (anyOk && ((SC.q.brand && SC.q.name) || SC.barcode) && !SC.searched) { if (navigator.onLine) return searchProduct(); SC.status = 'offline'; saveDraft(); renderScanLive(); }
+}
+
+/* ---------- 2) búsqueda con marca y nombre ---------- */
+let searching = false;
+async function searchProduct() {
+  if (!SC || searching) return;
+  const brandName = (SC.q.brand || '').trim(), name = (SC.q.name || '').trim();
+  if (!brandName && !name && !SC.barcode) { toast('Escribe al menos la marca o el nombre del producto.'); return; }
+  if (!navigator.onLine) { SC.status = 'offline'; saveDraft(); renderScanLive(); return; }
+  searching = true; SC.searched = true; SC.status = 'searching'; SC.steps = []; SC.candidates = []; SC.error = '';
   const step = label => { const s = { label, state: 'run', note: '' }; SC.steps.push(s); renderScanLive(); return s; };
   const done = (s, state, note = '') => { s.state = state; s.note = note; renderScanLive(); };
-
-  if (!reuseLabel || !SC.label || !SC.label.tokens.length) {
-    const s1 = step('Leyendo la etiqueta en el teléfono');
-    try {
-      const w = await getOCR(); let text = '', lines = [];
-      for (let i = 0; i < SC.photos.length; i++) {
-        ocrProgress = m => { s1.note = `${m.status === 'recognizing text' ? 'Foto ' + (i + 1) + ': ' : 'Preparando lector: '}${Math.round((m.progress || 0) * 100)} %`; renderScanLive(); };
-        const r = await ocrPhoto(w, SC.photos[i].data); text += '\n' + r.text; lines.push(...r.lines);
-      }
-      ocrProgress = null;
-      SC.label = XT.parseLabel(text.trim(), lines);
-      done(s1, SC.label.tokens.length ? 'ok' : 'fail', SC.label.tokens.length ? `${SC.label.tokens.length} palabras leídas` : 'No se ha podido leer texto. Prueba con más luz o más cerca.');
-    } catch (e) { SC.label = XT.parseLabel('', []); done(s1, 'fail', e.message); }
-    const s2 = step('Buscando el código de barras');
-    try { let code = ''; for (const p of SC.photos) { code = await readBarcode(p.data); if (code) break; } SC.barcode = code; done(s2, code ? 'ok' : 'skip', code || 'No aparece en las fotos (suele estar detrás)'); }
-    catch (e) { done(s2, 'fail', 'No disponible: ' + e.message); }
-    const known = D.products.map(p => p.brand).filter(Boolean);
-    const b = XT.detectBrand(SC.label.text, known)[0];
-    SC.brand = b ? { name: b.name } : null;
-    saveDraft();
-  }
-  if (!navigator.onLine) { SC.status = 'offline'; saveDraft(); renderScanLive(); return; }
-
-  const label = SC.label, cands = [];
-  const cfg = scanCfg();
-  let obfCode = null;
-  if (SC.barcode && cfg.obf) {
-    const s = step('Consultando el código en Open Beauty Facts');
-    try { obfCode = await obfByCode(SC.barcode); if (obfCode) { cands.push({ ...obfCode, source: 'obf', score: 0.9, why: 'Mismo código de barras' }); if (!SC.brand && obfCode.brand) SC.brand = { name: obfCode.brand }; done(s, 'ok', obfCode.name); } else done(s, 'skip', 'Este código no está en la base'); }
-    catch (e) { done(s, 'fail', e.message); }
-  }
-  const brandName = SC.brand?.name || '';
-  const bi = brandName ? (XT.brandInfo(brandName) || { name: brandName, domain: '', aliases: [XT.norm(brandName)] }) : null;
-  const toks = [...new Set([...label.tokens, ...(obfCode ? XT.tokens(obfCode.name) : [])])];
-  const px = proxyUrl();
-  let officialFound = false;
-
-  if (px && bi?.domain && toks.length) {
-    const s = step(`Buscando en la web oficial (${hostOf('https://' + bi.domain)})`);
-    try {
-      const urls = await siteUrls(bi.domain);
-      const ranked = XT.rankUrls(urls, toks, bi.aliases, 'es').slice(0, 3);
-      const pages = await Promise.all(ranked.map(r => pageDetails(r.url, '', bi.name).then(p => ({ ...p, urlScore: r.score })).catch(() => null)));
-      for (const p of pages) if (p && p.isProduct) { officialFound = true; cands.push({ ...p, source: 'official', score: 0.45 * p.urlScore + 0.55 * XT.matchScore(toks, p.name, null, bi.aliases) + 0.1 }); }
-      done(s, officialFound ? 'ok' : 'skip', officialFound ? `${pages.filter(p => p && p.isProduct).length} posibles` : (urls.length ? 'No he encontrado una página que coincida' : 'No he podido leer el catálogo de la web'));
-    } catch (e) { done(s, 'fail', e.message); }
-  }
-  if (px && !officialFound && toks.length && (proxyHealth?.search !== false)) {
-    const q = [brandName, ...Object.entries(label.weighted).sort((a, b) => b[1] - a[1]).map(x => x[0]).filter(t => !bi || !bi.aliases.some(a => a.includes(t))).slice(0, 5)].join(' ').trim();
-    const s = step('Buscando en internet');
-    try {
-      const dom = bi?.domain ? bi.domain.replace(/^www\./, '') : '';
-      const j = await net(`${px}/search?q=${encodeURIComponent(q)}${dom ? '&domain=' + encodeURIComponent(dom) : ''}`);
-      let res = j.results || [];
-      res.sort((a, b) => (isOfficial(b.url, bi) ? 1 : 0) - (isOfficial(a.url, bi) ? 1 : 0));
-      const pages = await Promise.all(res.slice(0, 3).map(r => pageDetails(r.url, r.sig, brandName).catch(() => null)));
-      let n = 0;
-      pages.forEach((p, i) => { if (p && p.isProduct && p.name) { n++; const off = isOfficial(p.url, bi); cands.push({ ...p, source: off ? 'official' : 'web', score: XT.matchScore(toks, p.name, null, bi ? bi.aliases : []) + (off ? 0.1 : -0.1) }); } });
-      done(s, n ? 'ok' : 'skip', n ? `${n} posibles` : 'Sin resultados útiles');
-    } catch (e) { done(s, e.code === 'search_not_configured' ? 'skip' : 'fail', e.code === 'search_not_configured' ? 'Búsqueda general no activada' : e.message); }
-  }
-  if (cfg.obf && brandName && !obfCode && toks.length) {
-    const s = step('Buscando en Open Beauty Facts');
-    try { const r = await obfByBrand(brandName, toks); r.forEach(p => cands.push({ ...p, source: 'obf', score: p.score * 0.8 })); done(s, r.length ? 'ok' : 'skip', r.length ? `${r.length} posibles` : 'Sin coincidencias'); }
-    catch (e) { done(s, 'fail', e.message); }
-  }
-  // quitar duplicados y ordenar
-  const seen = new Set();
-  SC.candidates = cands.filter(c => { const k = c.url || c.code || c.name; if (seen.has(k)) return false; seen.add(k); return true; }).sort((a, b) => b.score - a.score).slice(0, 5);
-  SC.obfCode = obfCode;
-  if (!SC.candidates.length) { SC.status = 'failed'; SC.error = !px && !cfg.obf ? 'No hay ninguna fuente de búsqueda activada.' : 'No he encontrado el producto.'; saveDraft(); renderScanLive(); return; }
-  const aliases = bi ? bi.aliases : [];
-  SC.candidates.forEach(c => { const cv = XT.coverage(label.tokens, c.name || '', aliases); c.cover = cv.cover; c.hits = cv.hits; });
-  const [a, b] = SC.candidates;
-  // Solo se elige sola si es inequívoca: mismo código de barras, o casi todas las palabras del nombre están en la etiqueta y destaca sobre la siguiente
-  const sure = x => x && (x.why === 'Mismo código de barras' || (x.cover >= 0.66 && x.hits >= Math.min(2, Math.max(1, Math.round(x.cover ? x.hits / x.cover : 1)))));
-  const clearGap = !b || (a.score - b.score >= 0.2 && !(b.cover >= 0.66 && b.hits >= a.hits));
-  if (sure(a) && clearGap) return chooseCandidate(0);
-  SC.status = 'choose'; saveDraft(); renderScanLive();
+  try {
+    const label = SC.label || XT.readLabel([], []);
+    const cfg = scanCfg(), px = proxyUrl(), cands = [];
+    const bi = brandName ? (XT.brandInfo(brandName) || { name: brandName, domain: '', aliases: [XT.norm(brandName).replace(/[^a-z0-9]+/g, ' ').trim()] }) : null;
+    const qTok = [...new Set([...XT.tokens(name), ...XT.tokens(label.descriptor || '')])];
+    const toks = qTok.length ? qTok : label.tokens;
+    const nTok = XT.tokens(name);
+    let obfList = [];
+    // Open Beauty Facts: por código (si lo hay) y por marca. Sirve también para completar cantidad e ingredientes por código.
+    let obfCode = null;
+    if (cfg.obf && SC.barcode) { try { obfCode = await obfByCode(SC.barcode); } catch (e) {} }
+    const obfP = cfg.obf && brandName ? obfByBrand(brandName) : Promise.resolve([]);
+    obfP.catch(() => {});
+    // Web oficial
+    let officialFound = false;
+    if (px && bi?.domain && toks.length) {
+      const s = step(`Buscando en la web oficial (${hostOf('https://' + bi.domain)})`);
+      try {
+        const urls = await siteUrls(bi.domain);
+        const ranked = XT.rankUrls(urls, toks, bi.aliases, 'es').slice(0, 4);
+        const pages = await Promise.all(ranked.map(r => pageDetails(r.url, '', bi.name).then(p => ({ ...p, urlScore: r.score })).catch(() => null)));
+        for (const p of pages) if (p && p.isProduct) { officialFound = true; cands.push({ ...p, source: 'official', score: 0.45 * p.urlScore + 0.55 * XT.matchScore(toks, p.name, null, bi.aliases) + 0.15 }); }
+        done(s, officialFound ? 'ok' : 'skip', officialFound ? `${cands.length} posibles` : (urls.length ? 'No he encontrado una página que coincida' : 'No he podido leer el catálogo de la web'));
+      } catch (e) { done(s, 'fail', e.message); }
+    } else if (!px && bi?.domain) {
+      const s = step('Web oficial'); done(s, 'skip', 'Sin configurar: hace falta el servicio de búsqueda (Yo › Escanear productos)');
+    }
+    // Buscador general (opcional)
+    if (px && !officialFound && (proxyHealth?.search !== false)) {
+      const qs = [brandName, name, label.descriptor].filter(Boolean).join(' ').slice(0, 150);
+      const s = step('Buscando en internet');
+      try {
+        const dom = bi?.domain ? bi.domain.replace(/^www\./, '') : '';
+        const j = await net(`${px}/search?q=${encodeURIComponent(qs)}${dom ? '&domain=' + encodeURIComponent(dom) : ''}`);
+        const res = (j.results || []).sort((a, b) => (isOfficial(b.url, bi) ? 1 : 0) - (isOfficial(a.url, bi) ? 1 : 0));
+        const pages = await Promise.all(res.slice(0, 3).map(r => pageDetails(r.url, r.sig, brandName).catch(() => null)));
+        let n = 0;
+        pages.forEach(p => { if (p && p.isProduct && p.name) { n++; const off = isOfficial(p.url, bi); cands.push({ ...p, source: off ? 'official' : 'web', score: XT.matchScore(toks, p.name, null, bi ? bi.aliases : []) + (off ? 0.15 : -0.1) }); } });
+        done(s, n ? 'ok' : 'skip', n ? `${n} posibles` : 'Sin resultados útiles');
+      } catch (e) { done(s, e.code === 'search_not_configured' ? 'skip' : 'fail', e.code === 'search_not_configured' ? 'Búsqueda general no activada' : e.message); }
+    }
+    if (cfg.obf && brandName) {
+      const s = step('Buscando en Open Beauty Facts');
+      try {
+        obfList = await obfP;
+        const scored = obfList.map(p => ({ ...p, score: XT.matchScore(toks, p.name, null, bi ? bi.aliases : []) })).filter(p => p.score >= 0.34).sort((a, b) => b.score - a.score);
+        // completa las fichas oficiales con cantidad / INCI / plazo de la misma referencia (mismo código)
+        for (const c of cands) { const o = c.gtin && obfList.find(x => x.code === c.gtin); if (o) c.obf = o; }
+        const extra = scored.filter(o => !cands.some(c => c.gtin && c.gtin === o.code)).slice(0, officialFound ? 2 : 5);
+        extra.forEach(p => cands.push({ ...p, source: 'obf', score: p.score * 0.8 }));
+        done(s, scored.length ? 'ok' : 'skip', scored.length ? `${scored.length} posibles` : 'Sin coincidencias');
+      } catch (e) { done(s, 'fail', e.message); }
+    }
+    if (obfCode && !cands.some(c => c.gtin === obfCode.code || c.code === obfCode.code)) cands.push({ ...obfCode, source: 'obf', score: 0.9, why: 'Mismo código de barras' });
+    // cantidad de cada versión y coincidencia con el envase
+    const nq = x => XT.norm(x || '').replace(/[^0-9a-z]/g, '').replace(/gr$/, 'g');
+    for (const c of cands) {
+      c.quantity = c.quantity || c.obf?.quantity || '';
+      c.sameQty = !!(label.quantity && c.quantity && nq(label.quantity) === nq(c.quantity));
+      if (c.sameQty) c.score += 0.2;
+      const cv = XT.coverage(toks, c.name || '', bi ? bi.aliases : []); c.cover = cv.cover; c.hits = cv.hits;
+      // ¿contiene todas las palabras del nombre escrito/leído? (la descripción secundaria cuenta menos)
+      const bare = t => t.replace(/[^a-z0-9]/g, ''), ct = new Set(XT.tokens(c.name || '').map(bare)); c.hasName = !!nTok.length && nTok.every(t => ct.has(bare(t)));
+    }
+    // orden: nombre completo › web oficial › misma cantidad que el envase › parecido del texto
+    const tier = c => (c.hasName ? 4 : 0) + (c.source === 'official' ? 2 : 0) + (c.sameQty ? 1 : 0);
+    const seen = new Set();
+    SC.candidates = cands.filter(c => { const k = c.url || c.code || c.name; if (seen.has(k)) return false; seen.add(k); return true; }).sort((a, b) => tier(b) - tier(a) || b.score - a.score).slice(0, 6);
+    if (!SC.candidates.length) {
+      SC.status = 'failed';
+      SC.error = !px && !cfg.obf ? 'No hay ninguna fuente de búsqueda activada.' : !brandName ? 'Sin la marca no puedo buscar en la web oficial ni en Open Beauty Facts.' : 'No he encontrado este producto con esa marca y ese nombre.';
+      saveDraft(); renderScanLive(); return;
+    }
+    const [a, b] = SC.candidates;
+    // Solo se elige sola si no hay dudas: mismo código de barras, o nombre casi completo en la etiqueta y claramente mejor que la siguiente
+    const sure = x => x && (x.why === 'Mismo código de barras' || (x.cover >= 0.66 && x.hits >= Math.min(2, Math.round(x.hits / Math.max(0.01, x.cover)))));
+    const sameName = b && XT.norm(a.name) === XT.norm(b.name);
+    const clearGap = !b || (!sameName && a.score - b.score >= 0.2 && !(b.cover >= 0.66 && b.hits >= a.hits));
+    if (sure(a) && clearGap) return chooseCandidate(0);
+    SC.status = 'choose'; saveDraft(); renderScanLive();
+  } finally { searching = false; }
 }
 
+/* ---------- 3) propuesta de ficha ---------- */
 function chooseCandidate(i) {
   const c = SC.candidates[i]; if (!c) return;
-  SC.chosen = c;
-  const today = todayKey(), sources = [];
-  const f = { name: c.name || '', brand: c.brand || SC.brand?.name || '', category: c.category || '', description: c.description || '', mfrInstructions: c.instructions || '', highlights: (c.highlights || []).join('\n'), inci: c.inci || '', paoMonths: c.pao || '' };
+  const today = todayKey(), sources = [], label = SC.label || XT.readLabel([], []);
+  const f = { name: c.name || '', brand: c.brand || SC.q.brand || '', category: c.category || '', description: c.description || '', mfrInstructions: c.instructions || '', highlights: (c.highlights || []).join('\n'), inci: c.inci || '', paoMonths: c.pao || '', size: c.quantity && !c.obf ? c.quantity : '' };
   const srcName = c.source === 'official' ? `Web oficial (${hostOf(c.url)})` : c.source === 'web' ? `Otra web (${hostOf(c.url)})` : 'Open Beauty Facts (base colaborativa)';
-  sources.push({ name: srcName, url: c.url, date: today, fields: Object.entries({ nombre: f.name, marca: f.brand, categoría: f.category, descripción: f.description, instrucciones: f.mfrInstructions, 'ingredientes destacados': f.highlights, INCI: f.inci, 'plazo tras apertura': f.paoMonths }).filter(([, v]) => v).map(([k]) => k) });
-  // completar con Open Beauty Facts solo si es el mismo producto (mismo código y nombre coincidente)
-  const o = SC.obfCode;
-  if (o && c.source !== 'obf' && XT.matchScore(XT.tokens(o.name), c.name || '') >= 0.5) {
-    const add = [];
-    if (!f.inci && o.inci) { f.inci = o.inci; add.push('INCI'); }
-    if (!f.paoMonths && o.pao) { f.paoMonths = o.pao; add.push('plazo tras apertura'); }
-    if (add.length) sources.push({ name: 'Open Beauty Facts (base colaborativa)', url: o.url, date: today, fields: add });
+  const fieldsOf = o => Object.entries({ nombre: o.name, marca: o.brand, categoría: o.category, descripción: o.description, instrucciones: o.mfrInstructions, 'ingredientes destacados': o.highlights, INCI: o.inci, 'plazo tras apertura': o.paoMonths, cantidad: o.size }).filter(([, v]) => v).map(([k]) => k);
+  sources.push({ name: srcName, url: c.url, date: today, fields: fieldsOf(f) });
+  // misma referencia en Open Beauty Facts (mismo código): completa lo que falte
+  const o = c.obf;
+  if (o) {
+    const add = {};
+    if (!f.inci && o.inci) { f.inci = o.inci; add.INCI = 1; }
+    if (!f.paoMonths && o.pao) { f.paoMonths = o.pao; add['plazo tras apertura'] = 1; }
+    if (!f.size && o.quantity) { f.size = o.quantity; add.cantidad = 1; }
+    if (Object.keys(add).length) sources.push({ name: 'Open Beauty Facts (misma referencia)', url: o.url, date: today, fields: Object.keys(add) });
   }
-  const verifyList = XT.verify(SC.label || XT.parseLabel('', []), c, SC.brand?.name || '');
-  const prefill = { ...f, sources, verify: verifyList, labelPao: SC.label?.pao || null, labelText: SC.label?.text || '', scanPhoto: SC.photos[0]?.data || null };
+  // datos leídos en tu envase
+  const fromLabel = [];
+  if (!f.mfrInstructions && label.instructions) { f.mfrInstructions = label.instructions; fromLabel.push('instrucciones'); }
+  if (!f.size && label.quantity) { f.size = label.quantity; fromLabel.push('cantidad'); }
+  if (fromLabel.length) sources.push({ name: 'Tu foto del envase (lectura automática: compruébala)', url: '', date: today, fields: fromLabel });
+  const verifyList = XT.verify(label, c, label.brand?.name || '');
   SC.status = 'done'; saveDraft();
-  openProductFromScan(prefill);
+  openProductFromScan({ ...f, sources, verify: verifyList, labelPao: label.pao || null, labelText: label.text || '', scanPhoto: photoByRole('front')?.data || SC.photos[0]?.data || null });
 }
 function manualFromScan() {
-  openProductFromScan({ name: '', brand: SC.brand?.name || '', sources: [], verify: [], labelPao: SC.label?.pao || null, labelText: SC.label?.text || '', scanPhoto: SC.photos[0]?.data || null, manual: true });
+  const label = SC.label || XT.readLabel([], []); const today = todayKey(); const fromLabel = [];
+  const f = { name: SC.q.name || '', brand: SC.q.brand || '', mfrInstructions: label.instructions || '', size: label.quantity || '' };
+  if (f.name && !SC.qEdited.name) fromLabel.push('nombre'); if (f.brand && !SC.qEdited.brand) fromLabel.push('marca');
+  if (f.mfrInstructions) fromLabel.push('instrucciones'); if (f.size) fromLabel.push('cantidad');
+  openProductFromScan({ ...f, sources: fromLabel.length ? [{ name: 'Tu foto del envase (lectura automática: compruébala)', url: '', date: today, fields: fromLabel }] : [], verify: [], labelPao: label.pao || null, labelText: label.text || '', scanPhoto: photoByRole('front')?.data || null, manual: true });
 }
 async function openProductFromScan(prefill) {
   let small = null; if (prefill.scanPhoto) try { small = await shrink(prefill.scanPhoto, 480); } catch (e) {}
@@ -1568,54 +1832,81 @@ async function openProductFromScan(prefill) {
   } else {
     openSheet({ kind: 'product', id: null, draft: pickInfo(prefill, true), fromScan: true, pendingPhoto: small, pendingPhotoSmall: small });
   }
-  toast(prefill.manual ? 'Rellena la ficha a mano y pulsa Guardar.' : 'Ficha rellenada. Revísala y pulsa Guardar.');
+  discardWork();
+  toast(prefill.manual ? 'Completa la ficha y pulsa Guardar.' : 'Ficha propuesta. Revísala y pulsa Guardar.');
 }
 function pickInfo(p, all = false) {
-  const keys = ['name', 'brand', 'category', 'description', 'mfrInstructions', 'highlights', 'inci', 'paoMonths'];
+  const keys = ['name', 'brand', 'category', 'size', 'description', 'mfrInstructions', 'highlights', 'inci', 'paoMonths'];
   const o = {}; for (const k of keys) if (all || p[k]) o[k] = p[k] ?? '';
   o.sources = p.sources || []; o.verify = p.verify || []; o.labelPao = p.labelPao; o.labelText = p.labelText;
   return o;
 }
 
-/* ---------- interfaz del escaneo ---------- */
+/* ---------- interfaz ---------- */
 function scanStepIcon(s) { return s.state === 'ok' ? '✓' : s.state === 'fail' ? '!' : s.state === 'skip' ? '–' : '<span class="spin" aria-hidden="true"></span>'; }
+function photoSlotHTML(role) {
+  const p = photoByRole(role), front = role === 'front';
+  const title = front ? 'Frontal' : 'Trasera <span class="muted">(opcional)</span>';
+  const hint = front ? 'Con la marca y el nombre bien visibles.' : 'Instrucciones, cantidad y plazo tras apertura. El código de barras no es necesario.';
+  const busy = SC.status === 'reading' || SC.status === 'searching';
+  const inputs = `<label class="btn ${front && !p ? '' : 'soft'} sm filebtn">${p ? 'Repetir' : 'Hacer foto'}<input type="file" id="scan-cam-${role}" data-role="${role}" accept="image/*" capture="environment" ${busy ? 'disabled' : ''}></label><label class="btn soft sm filebtn">Galería<input type="file" id="scan-gal-${role}" data-role="${role}" accept="image/*" ${busy ? 'disabled' : ''}></label>`;
+  const state = !p ? '' : p.read === 'ok' ? `<span class="rd ok">✓ ${esc(p.note)}</span>` : p.read === 'fail' ? `<span class="rd warn">${esc(p.note)}</span>` : `<span class="rd"><span class="spin" aria-hidden="true"></span> ${esc(p.note || 'Esperando…')}</span>`;
+  return `<div class="slot" data-slot="${role}">
+    ${p ? `<div class="scan-ph"><img src="${p.data}" alt="Foto ${front ? 'frontal' : 'trasera'}">${busy ? '' : `<button class="iconbtn" data-act="scan-photo-del" data-role="${role}" aria-label="Quitar foto ${front ? 'frontal' : 'trasera'}">${I.close}</button>`}</div>` : `<div class="scan-ph empty" aria-hidden="true">${I.camera}</div>`}
+    <div class="slot-b"><b>${title}</b>${p ? state : `<span class="small muted">${hint}</span>`}<div class="row">${inputs}</div></div></div>`;
+}
 function scanSheetHTML() {
   const s = SC; if (!s) return '';
-  const photos = s.photos.map((p, i) => `<div class="scan-ph"><img src="${p.data}" alt="Foto ${i + 1}">${s.status === 'capture' || s.status === 'failed' || s.status === 'offline' ? `<button class="iconbtn" data-act="scan-photo-del" data-i="${i}" aria-label="Quitar foto ${i + 1}">${I.close}</button>` : ''}</div>`).join('');
-  const addBtns = (label) => `<div class="row"><label class="btn ${s.photos.length ? 'soft' : ''} filebtn">${label}<input type="file" id="scan-cam" accept="image/*" capture="environment"></label><label class="btn soft filebtn">Elegir de la galería<input type="file" id="scan-gal" accept="image/*"></label></div>`;
-  let body = '';
-  if (s.status === 'capture') body = `<p class="muted small">Haz una foto de la parte delantera, con la marca y el nombre bien visibles. La foto se analiza en el teléfono y no se envía a ningún sitio.</p>${photos ? `<div class="scan-phs">${photos}</div>` : ''}${addBtns(s.photos.length ? 'Hacer otra foto' : 'Hacer foto')}`;
-  if (s.status === 'working' || s.status === 'choose' || s.status === 'failed' || s.status === 'offline' || s.status === 'done') {
-    body += `<div class="scan-phs">${photos}</div><ol class="scan-steps" aria-live="polite">${s.steps.map(x => `<li class="st-${x.state}"><span class="si">${scanStepIcon(x)}</span><span><b>${esc(x.label)}</b>${x.note ? `<small>${esc(x.note)}</small>` : ''}</span></li>`).join('')}</ol>`;
-  }
-  if (s.status === 'choose') body += `<h3 class="scan-q">¿Cuál es tu producto?</h3><div class="plist">${s.candidates.map((c, i) => `<button class="pcard" data-act="scan-pick" data-i="${i}">${c.image ? `<div class="thumb"><img src="${esc(c.image)}" alt=""></div>` : `<div class="thumb">${esc((c.name || '?')[0])}</div>`}<span><strong>${esc(c.name || 'Sin nombre')}</strong><span class="meta">${esc([c.brand, c.category].filter(Boolean).join(' · '))}</span><span class="pao">${c.source === 'official' ? 'Web oficial' : c.source === 'web' ? 'Otra web' : 'Open Beauty Facts'} · ${esc(hostOf(c.url))}${c.why ? ' · ' + esc(c.why) : ''}</span></span><span class="muted">${I.right}</span></button>`).join('')}</div>
-    <div class="row"><button class="btn ghost sm" data-act="scan-more">Ninguno: añadir foto trasera</button><button class="linkbtn" data-act="scan-manual">Rellenar a mano</button></div>`;
-  if (s.status === 'failed' || s.status === 'offline') body += `<div class="note ${s.status === 'offline' ? '' : 'warn'}">${s.status === 'offline' ? (s.label?.tokens?.length ? 'Sin conexión: la etiqueta está leída y la foto guardada. Busca cuando vuelvas a tener conexión.' : 'Sin conexión y el lector aún no está descargado en este teléfono. La foto queda guardada y se analizará cuando vuelvas a tener conexión.') : esc(s.error) + ' Puedes añadir la etiqueta trasera, reintentar o rellenar la ficha a mano. La foto se conserva.'}</div>
-    ${s.label?.text ? `<details class="small"><summary>Texto leído en la etiqueta</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(s.label.text.slice(0, 1500))}</p></details>` : ''}
-    <div class="row"><button class="btn sm" data-act="scan-retry">${s.status === 'offline' ? 'Buscar ahora' : 'Reintentar'}</button><label class="btn soft sm filebtn">Añadir otra foto<input type="file" id="scan-back" accept="image/*"></label><button class="btn ghost sm" data-act="scan-manual">Rellenar a mano</button></div>`;
-  const busy = s.status === 'working';
-  return `${sheetHead(s.target ? 'Completar con escaneo' : 'Escanear producto', busy ? 'Analizando…' : '')}${body}
-    <div class="row between"><button class="linkbtn" data-act="scan-discard" ${busy ? 'disabled' : ''}>Descartar escaneo</button>${busy ? '' : '<button class="btn soft sm" data-act="sheet-close">Cerrar</button>'}</div>
-    <p class="small muted">Se envía a internet solo el texto necesario para buscar (marca, palabras del nombre o el código de barras). Nunca la foto.</p>`;
+  const L = s.label, busy = s.status === 'reading' || s.status === 'searching';
+  const frontFail = photoByRole('front')?.read === 'fail';
+  const facts = [];
+  if (L?.quantity) facts.push(['Cantidad', L.quantity]);
+  if (L?.pao) facts.push(['Plazo tras apertura', L.pao + ' meses (símbolo del tarro)']);
+  if (L?.instructions) facts.push(['Instrucciones', L.instructions]);
+  if (s.barcode) facts.push(['Código de barras', s.barcode]);
+  let body = `<div class="slots">${photoSlotHTML('front')}${photoSlotHTML('back')}</div>`;
+  body += `<section class="qbox" aria-label="Producto a buscar">
+    ${frontFail ? `<div class="note warn">No he podido leer la marca y el nombre en la foto. Suele pasar si el producto sale pequeño, con reflejos o con letra muy decorada. Puedes repetir la foto más cerca o escribirlos aquí.</div>` : ''}
+    ${!frontFail && s.status === 'ready' && photoByRole('front')?.read === 'ok' && !(s.q.brand && s.q.name) && !s.searched ? `<div class="note warn" data-hint="missing">He leído la foto, pero no reconozco ${!s.q.brand && !s.q.name ? 'la marca ni el nombre' : !s.q.brand ? 'la marca' : 'el nombre'}. Escríbelo aquí y pulsa «Buscar producto».</div>` : ''}
+    <div class="grid2"><div class="field"><label for="scan-brand">Marca</label><input type="text" id="scan-brand" value="${esc(s.q.brand)}" autocomplete="off" placeholder="p. ej. Avène" ${busy ? 'disabled' : ''}></div>
+      <div class="field"><label for="scan-name">Producto</label><input type="text" id="scan-name" value="${esc(s.q.name)}" autocomplete="off" placeholder="p. ej. Cicalfate+" ${busy ? 'disabled' : ''}></div></div>
+    ${L?.descriptor ? `<p class="small muted">También se lee: «${esc(L.descriptor)}»</p>` : ''}
+    ${facts.length ? `<dl class="facts"><span class="label">Leído en tu envase (compruébalo)</span>${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+    <button class="btn block" data-act="scan-search" ${busy ? 'disabled' : ''}>${s.status === 'searching' ? 'Buscando…' : 'Buscar producto'}</button>
+  </section>`;
+  if (s.steps.length) body += `<ol class="scan-steps" aria-live="polite">${s.steps.map(x => `<li class="st-${x.state}"><span class="si">${scanStepIcon(x)}</span><span><b>${esc(x.label)}</b>${x.note ? `<small>${esc(x.note)}</small>` : ''}</span></li>`).join('')}</ol>`;
+  if (s.status === 'choose') body += `<h3 class="scan-q">He encontrado varias versiones. ¿Cuál es la tuya?</h3><div class="plist">${s.candidates.map((c, i) => `<button class="pcard ${c.sameQty ? 'match' : ''}" data-act="scan-pick" data-i="${i}">${c.image ? `<div class="thumb"><img src="${esc(c.image)}" alt=""></div>` : `<div class="thumb">${esc((c.name || '?')[0])}</div>`}<span><strong>${esc(c.name || 'Sin nombre')}</strong><span class="meta">${esc([c.brand, c.quantity].filter(Boolean).join(' · '))}</span><span class="pao">${c.source === 'official' ? 'Web oficial' : c.source === 'web' ? 'Otra web' : 'Open Beauty Facts'} · ${esc(hostOf(c.url))}${c.why ? ' · ' + esc(c.why) : ''}</span>${c.sameQty ? '<span class="pill ok">Misma cantidad que tu envase</span>' : ''}</span><span class="muted">${I.right}</span></button>`).join('')}</div>
+    <p class="small muted">¿No es ninguna? Corrige la marca o el nombre y vuelve a buscar, o rellena la ficha a mano.</p>`;
+  if (s.status === 'failed') body += `<div class="note warn">${esc(s.error)} Revisa la marca y el nombre, prueba con otra foto o rellena la ficha a mano. Las fotos se conservan.</div>`;
+  if (s.status === 'offline') body += `<div class="note">Sin conexión: las fotos y lo leído quedan guardados. Pulsa «Buscar producto» cuando vuelvas a tener conexión.</div>`;
+  if (L?.text) body += `<details class="small"><summary>Texto leído en las fotos</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(L.text.slice(0, 2000))}</p></details>`;
+  return `${sheetHead(s.target ? 'Completar con escaneo' : 'Escanear o buscar producto', busy ? (s.status === 'reading' ? 'Leyendo las fotos…' : 'Buscando…') : '')}${body}
+    <div class="row between"><button class="linkbtn" data-act="scan-discard" ${busy ? 'disabled' : ''}>Descartar</button><button class="btn ghost sm" data-act="scan-manual" ${busy ? 'disabled' : ''}>Rellenar a mano</button></div>
+    <p class="small muted">Las fotos se leen en el propio teléfono y no se envían a ningún sitio. Para buscar se envían solo la marca y el nombre (y el código de barras, si aparece).</p>`;
 }
-function renderScanLive() { if (topSheet()?.kind === 'scan') renderSheets(); }
-async function addScanPhoto(file) {
-  try {
-    const c = await fileToCanvas(file, 1280);
-    SC.photos.push({ id: uid(), data: c.toDataURL('image/jpeg', 0.78) });
-    if (!saveDraft()) toast('No hay espacio para guardar el borrador del escaneo; seguirá mientras la app esté abierta.', 'error');
-    await runScan();
-  } catch (e) { toast(e.message || 'No se pudo usar la foto.', 'error'); renderScanLive(); }
+function renderScanLive() {
+  if (topSheet()?.kind !== 'scan') return;
+  const b = $('#scan-brand'), n = $('#scan-name');
+  if (b && !b.disabled) SC.q.brand = b.value; if (n && !n.disabled) SC.q.name = n.value;
+  const f = document.activeElement?.id; renderSheets();
+  if (f === 'scan-brand' || f === 'scan-name') $('#' + f)?.focus({ preventScroll: true });
 }
-function openScan(target = null) {
+function openScan(target = null, focusSearch = false) {
   if (!SCAN_OK) { toast('El escaneo funciona en la app publicada (tu dirección de GitHub Pages).', 'error'); return; }
   const d = loadDraft();
   SC = d && !target && d.status !== 'done' ? d : newScan(target);
-  if (d && SC === d && SC.status === 'working') SC.status = SC.photos.length ? 'failed' : 'capture';
+  if (SC === d) {
+    // borrador antiguo (versión 0.3): adaptar
+    SC.q = SC.q || { brand: SC.brand?.name || '', name: '' }; SC.qEdited = SC.qEdited || {};
+    SC.photos = (SC.photos || []).map((p, i) => ({ role: p.role || (i ? 'back' : 'front'), lines: p.lines || null, read: p.lines ? 'ok' : 'pending', note: p.note || '', ...p })).filter(p => p.data);
+    if (['reading', 'searching', 'working'].includes(SC.status)) SC.status = 'ready';
+  }
   if (target) SC.target = target;
   openSheet({ kind: 'scan' });
+  if (SC.photos.some(p => !p.lines)) readPhotos();
+  if (focusSearch) setTimeout(() => $('#scan-brand')?.focus(), 80);
 }
-window.addEventListener('online', () => { if (SC && SC.status === 'offline' && topSheet()?.kind === 'scan') runScan({ reuseLabel: true }); });
+window.addEventListener('online', () => { if (SC && SC.status === 'offline' && topSheet()?.kind === 'scan') { if (SC.photos.some(p => !p.lines)) readPhotos(); else if (SC.q.brand || SC.q.name) searchProduct(); } });
 
 /* ===== Mi Skincare · hojas, acciones y arranque ===== */
 const LIVE = new Set(['override', 'day']);
@@ -1662,6 +1953,7 @@ function sheetHTML(sh) {
       <div class="field"><label for="p-name">Nombre completo *</label><input type="text" id="p-name" value="${esc(dv('name'))}" autocomplete="off"></div>
       <div class="grid2"><div class="field"><label for="p-brand">Marca</label><input type="text" id="p-brand" value="${esc(dv('brand'))}" autocomplete="off"></div>
         <div class="field"><label for="p-cat">Categoría</label><select id="p-cat"><option value="">Sin categoría</option>${CATS.map(c => `<option ${dv('category') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div></div>
+      <div class="field"><label for="p-size">Cantidad</label><input type="text" id="p-size" value="${esc(dv('size'))}" autocomplete="off" placeholder="p. ej. 40 ml"></div>
       <details class="fold" ${infoFilled || sh.fromScan ? 'open' : ''}><summary>Ficha del fabricante</summary>
         <div class="stack" style="margin-top:10px">
         <div class="field"><label for="p-desc">Para qué sirve</label><textarea id="p-desc" placeholder="Descripción breve">${esc(dv('description'))}</textarea></div>
@@ -1984,13 +2276,13 @@ const A = {
     try { await navigator.clipboard.writeText(appUrl()); toast('Enlace copiado. Envíatelo al iPhone y ábrelo en Safari.'); }
     catch (e) { const r = document.createRange(); r.selectNodeContents($('#app-url')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('No se pudo copiar automáticamente. El enlace está seleccionado: cópialo a mano.', 'error'); }
   },
-  'scan-open'() { openScan(); },
+  'scan-open'(el) { openScan(null, el.dataset.focus === '1'); },
+  'scan-search'() { const b = $('#scan-brand'), n = $('#scan-name'); if (b) SC.q.brand = b.value.trim(); if (n) SC.q.name = n.value.trim(); searchProduct(); },
   'scan-pick'(el) { chooseCandidate(Number(el.dataset.i)); },
-  'scan-more'() { SC.status = 'capture'; saveDraft(); renderSheets(); },
   'scan-manual'() { manualFromScan(); },
-  'scan-retry'() { runScan({ reuseLabel: true }); },
-  'scan-photo-del'(el) { SC.photos.splice(Number(el.dataset.i), 1); if (!SC.photos.length) { SC.status = 'capture'; SC.label = null; } saveDraft(); renderSheets(); },
-  'scan-discard'() { clearDraft(); SC = null; ui.sheets = ui.sheets.filter(s => s.kind !== 'scan'); renderSheets(); render(false); toast('Escaneo descartado'); },
+  'scan-retry'() { searchProduct(); },
+  'scan-photo-del'(el) { const p = photoByRole(el.dataset.role); if (p) { freeCanvas(WORK.get(p.id)); WORK.delete(p.id); SC.photos = SC.photos.filter(x => x !== p); } afterRead(); },
+  'scan-discard'() { clearDraft(); discardWork(); SC = null; ui.sheets = ui.sheets.filter(s => s.kind !== 'scan'); renderSheets(); render(false); toast('Escaneo descartado'); },
   async 'y-proxy-check'() {
     const i = $('#y-proxy'); if (i) { scanCfg().proxy = i.value.trim(); save(); }
     if (!proxyUrl()) { toast('Escribe primero la dirección del servicio.'); return; }
@@ -2010,12 +2302,12 @@ function resetUi() { const t = todayKey(); Object.assign(ui, { date: t, hoyMonth
 // Conserva lo escrito en el formulario de producto al re-dibujar la hoja
 function collectProductForm() {
   const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : undefined; };
-  const o = { name: g('p-name'), brand: g('p-brand'), category: g('p-cat'), description: g('p-desc'), mfrInstructions: g('p-mfr'), highlights: g('p-hl'), inci: g('p-inci'), instructions: g('p-instr'), notes: g('p-notes'), opened: g('p-opened'), paoMonths: g('p-pao') };
+  const o = { name: g('p-name'), brand: g('p-brand'), category: g('p-cat'), size: g('p-size'), description: g('p-desc'), mfrInstructions: g('p-mfr'), highlights: g('p-hl'), inci: g('p-inci'), instructions: g('p-instr'), notes: g('p-notes'), opened: g('p-opened'), paoMonths: g('p-pao') };
   for (const k in o) if (o[k] === undefined) delete o[k];
   return o;
 }
 function keepForm(fn) {
-  const ids = ['p-name', 'p-brand', 'p-cat', 'p-desc', 'p-mfr', 'p-hl', 'p-inci', 'p-instr', 'p-notes', 'p-opened', 'p-pao'], v = {};
+  const ids = ['p-name', 'p-brand', 'p-cat', 'p-size', 'p-desc', 'p-mfr', 'p-hl', 'p-inci', 'p-instr', 'p-notes', 'p-opened', 'p-pao'], v = {};
   ids.forEach(i => { const el = document.getElementById(i); if (el) v[i] = el.value; });
   fn(); ids.forEach(i => { const el = document.getElementById(i); if (el && i in v) el.value = v[i]; });
 }
@@ -2031,6 +2323,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.sheets.
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.id === 'skin-notes') { const date = t.dataset.date; clearTimeout(skinTimer); skinTimer = setTimeout(() => { const L = D.logs[date] || (D.logs[date] = {}); (L.skin || (L.skin = {})).notes = t.value; save(); }, 400); }
+  if ((t.id === 'scan-brand' || t.id === 'scan-name') && SC) { const k = t.id === 'scan-brand' ? 'brand' : 'name'; SC.q[k] = t.value; SC.qEdited[k] = true; clearTimeout(nameTimer); nameTimer = setTimeout(saveDraft, 400); return; }
   if (t.id === 'y-name') { clearTimeout(nameTimer); nameTimer = setTimeout(() => { D.profile.name = t.value.trim(); save(); }, 400); }
 });
 document.addEventListener('change', async e => {
@@ -2044,7 +2337,7 @@ document.addEventListener('change', async e => {
   if (t.id === 'y-am' || t.id === 'y-pm') { if (t.value) { D.profile.reminders[t.id === 'y-am' ? 'am' : 'pm'] = t.value; save(); } return; }
   if (t.id === 'y-name') { clearTimeout(nameTimer); D.profile.name = t.value.trim(); save(); return; }
   if (t.id === 'skin-notes') { clearTimeout(skinTimer); const L = D.logs[t.dataset.date] || (D.logs[t.dataset.date] = {}); (L.skin || (L.skin = {})).notes = t.value; save(); return; }
-  if ((t.id === 'scan-cam' || t.id === 'scan-gal' || t.id === 'scan-back') && t.files[0]) { const f = t.files[0]; t.value = ''; addScanPhoto(f); return; }
+  if (/^scan-(cam|gal)-(front|back)$/.test(t.id) && t.files[0]) { const f = t.files[0]; t.value = ''; addScanPhoto(f, t.dataset.role); return; }
   if (t.id === 'y-proxy') { scanCfg().proxy = t.value.trim(); proxyHealth = null; save(); return; }
   if (t.id === 'y-obf') { scanCfg().obf = t.checked; save(); return; }
   if (t.id === 'p-photo' && t.files[0]) {
@@ -2079,7 +2372,7 @@ store.init(); loadMeta(); applyMeta(); loadData(meta.mode);
 ui.tab = 'hoy';
 render();
 // Acceso para pruebas automáticas (no visible en la interfaz)
-window.MiSkincare = { dayInfo: d => dayInfo(d), get data() { return D; }, get meta() { return meta; }, get scan() { return SC; }, todayKey, version: APP_VERSION };
+window.MiSkincare = { dayInfo: d => dayInfo(d), get data() { return D; }, get meta() { return meta; }, get scan() { return SC; }, async debugOCR(url) { const dbg = {}; const img = await urlToImage(url); const lines = await ocrImage(await getOCR(), toCanvas(img, MAX_WORK), null, dbg); return { lines, dbg }; }, todayKey, version: APP_VERSION };
 
 })();
 </script>
