@@ -1,0 +1,31 @@
+{
+  "name": "Mi Skincare",
+  "short_name": "Mi Skincare",
+  "lang": "es",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "description": "Mis rutinas de cuidado facial de mañana y noche",
+  "orientation": "portrait",
+  "display": "standalone",
+  "background_color": "#F4F2F6",
+  "theme_color": "#DD4674",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

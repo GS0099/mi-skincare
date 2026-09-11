@@ -1,0 +1,2092 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi Skincare</title>
+<meta name="description" content="Mis rutinas de cuidado facial de mañana y noche">
+<meta name="theme-color" content="#F4F2F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141116" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Skincare">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,0..100&display=swap">
+<style>
+/* ===== Mi Skincare · estilos ===== */
+:root{
+  --bg:#F4F2F6; --card:#FFFFFF; --card-2:#FAF8FB; --ink:#2B2530; --muted:#756E7D; --line:#ECE6EF;
+  --pink:#DD4674; --pink-ink:#C12D5C; --pink-soft:#FCE6EE; --pink-softer:#FFF3F7;
+  --hero-a:#F27CA2; --hero-b:#E45581; --on-pink:#FFFFFF;
+  --am:#F6D35B; --am-ink:#4A3A00; --pm:#90BBF3; --pm-ink:#0F3563; --both:#86D29F; --both-ink:#0D4424;
+  --warn:#B25B00; --warn-soft:#FFF1DE; --err:#B3261E; --err-soft:#FDE7E5; --ok:#1E7A45;
+  --hatch:#E7E2EA; --shadow:0 1px 2px rgba(60,30,50,.05),0 4px 16px rgba(60,30,50,.05);
+  --r-lg:22px; --r-md:16px; --r-sm:12px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --display:"Fraunces","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --tab-h:64px; --fs:16px;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px); --safe-l:env(safe-area-inset-left,0px); --safe-r:env(safe-area-inset-right,0px);
+  --tap:44px; --tap-sm:40px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not(.app-light){
+    --bg:#141116; --card:#1F1A22; --card-2:#262029; --ink:#F2ECF4; --muted:#A99FB0; --line:#332C37;
+    --pink:#EE6F97; --pink-ink:#F58CAE; --pink-soft:#3B1E2A; --pink-softer:#2A1820;
+    --hero-a:#C94E77; --hero-b:#A93A62; --on-pink:#FFFFFF;
+    --am:#E3BF46; --am-ink:#2A2000; --pm:#6F9EE0; --pm-ink:#07203F; --both:#5FBA7E; --both-ink:#062A13;
+    --warn:#F0A650; --warn-soft:#3A2710; --err:#FF8A80; --err-soft:#3D1B19; --ok:#6FD39A;
+    --hatch:#2C2630; --shadow:0 1px 2px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"], :root.app-dark{
+  --bg:#141116; --card:#1F1A22; --card-2:#262029; --ink:#F2ECF4; --muted:#A99FB0; --line:#332C37;
+  --pink:#EE6F97; --pink-ink:#F58CAE; --pink-soft:#3B1E2A; --pink-softer:#2A1820;
+  --hero-a:#C94E77; --hero-b:#A93A62; --on-pink:#FFFFFF;
+  --am:#E3BF46; --am-ink:#2A2000; --pm:#6F9EE0; --pm-ink:#07203F; --both:#5FBA7E; --both-ink:#062A13;
+  --warn:#F0A650; --warn-soft:#3A2710; --err:#FF8A80; --err-soft:#3D1B19; --ok:#6FD39A;
+  --hatch:#2C2630; --shadow:0 1px 2px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+:root.app-light{
+  --bg:#F4F2F6; --card:#FFFFFF; --card-2:#FAF8FB; --ink:#2B2530; --muted:#756E7D; --line:#ECE6EF;
+  --pink:#DD4674; --pink-ink:#C12D5C; --pink-soft:#FCE6EE; --pink-softer:#FFF3F7;
+  --hero-a:#F27CA2; --hero-b:#E45581; --on-pink:#FFFFFF;
+  --am:#F6D35B; --am-ink:#4A3A00; --pm:#90BBF3; --pm-ink:#0F3563; --both:#86D29F; --both-ink:#0D4424;
+  --warn:#B25B00; --warn-soft:#FFF1DE; --err:#B3261E; --err-soft:#FDE7E5; --ok:#1E7A45;
+  --hatch:#E7E2EA; --shadow:0 1px 2px rgba(60,30,50,.05),0 4px 16px rgba(60,30,50,.05);
+  color-scheme:light;
+}
+:root.ts-l{--fs:18px} :root.ts-xl{--fs:20px}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+
+html,body{max-width:100%}
+#app{max-width:620px;margin:0 auto;padding-left:max(16px,var(--safe-l));padding-right:max(16px,var(--safe-r));padding-top:calc(var(--safe-t) + 14px);padding-bottom:calc(var(--tab-h) + var(--safe-b) + 28px)}
+/* Regla general: ningún hijo de flex/grid impone su ancho mínimo de contenido */
+/* :where() no suma especificidad, así los mínimos de tamaño de botones siguen mandando */
+:where(#app,.sheet) *{min-width:0}
+.iconbtn,.check,.thumb,.info-btn,.avatar,.tab-ic,.si,.sw{flex:none}
+.row>input,.row>select{flex:1 1 11rem}
+#view>*{max-width:100%}
+#view{display:flex;flex-direction:column;gap:14px;outline:none}
+
+/* banners */
+.banner{border-radius:var(--r-md);padding:8px 8px 8px 14px;font-size:.8rem;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.banner.demo{background:repeating-linear-gradient(-45deg,var(--pink-soft) 0 10px,var(--pink-softer) 10px 20px);color:var(--pink-ink);font-weight:600;border:1px dashed var(--pink)}
+.banner.err{background:var(--err-soft);color:var(--err);font-weight:600}
+.banner.warn{background:var(--warn-soft);color:var(--warn)}
+.banner button{border:0;background:var(--card);color:var(--pink-ink);border-radius:999px;padding:6px 14px;font-weight:600;font-size:.85rem;min-height:var(--tap-sm)}
+
+/* page titles */
+.page-h{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 12px;padding:4px 2px 2px}
+.page-h h1{font-family:var(--display);font-weight:600;font-size:2rem;letter-spacing:-.01em;font-variation-settings:"SOFT" 100,"opsz" 72}
+.page-h .sub{color:var(--muted);font-size:.9rem}
+
+/* cards */
+.card{background:var(--card);border-radius:var(--r-lg);padding:16px;box-shadow:var(--shadow)}
+.card h2{font-size:1.08rem;font-weight:700}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;max-width:100%;padding:10px 18px;text-align:center;line-height:1.2;overflow-wrap:anywhere;border-radius:999px;border:0;font-weight:700;background:var(--pink);color:var(--on-pink);font-size:.98rem}
+.btn:active{transform:scale(.98)}
+.btn.soft{background:var(--pink-soft);color:var(--pink-ink)}
+.btn.ghost{background:transparent;color:var(--pink-ink);border:1.5px solid var(--line)}
+.btn.danger{background:var(--err-soft);color:var(--err)}
+.btn.block{width:100%}
+.btn.sm{min-height:var(--tap-sm);padding:8px 14px;font-size:.88rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.linkbtn{border:0;background:none;color:var(--pink-ink);font-weight:600;padding:6px 2px;min-height:var(--tap-sm);display:inline-flex;align-items:center;text-align:left;overflow-wrap:anywhere;font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
+.iconbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--card-2);display:inline-grid;place-items:center;color:var(--ink)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row.end{justify-content:flex-end}
+.row.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:10px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:700;background:var(--card-2);color:var(--muted);white-space:normal;line-height:1.25}
+.pill.pink{background:var(--pink-soft);color:var(--pink-ink)}
+.pill.next{background:var(--warn-soft);color:var(--warn)}
+.pill.ok{background:color-mix(in srgb,var(--both) 35%,transparent);color:var(--ok)}
+
+/* day header (Hoy) */
+.dayhead{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:var(--on-pink);border-radius:var(--r-lg);padding:14px 10px 16px;display:flex;flex-direction:column;gap:12px}
+.dh-row{display:grid;grid-template-columns:3.6rem minmax(0,1fr) 3.6rem;align-items:center}
+.dh-nav{border:0;background:transparent;color:inherit;opacity:.85;display:flex;flex-direction:column;align-items:center;padding:6px 0;border-radius:14px;min-height:52px;justify-content:center}
+.dh-nav:hover{background:rgba(255,255,255,.12)}
+.dh-nav b{font-size:.95rem;font-weight:600}
+.dh-nav span{font-size:.72rem;opacity:.9}
+.dh-center{text-align:center}
+.dh-center h1{font-family:var(--display);font-weight:600;font-size:2.15rem;line-height:1.05;font-variation-settings:"SOFT" 100,"opsz" 72}
+.dh-center p{font-size:.92rem;opacity:.95;margin-top:4px}
+.dh-center p::first-letter{text-transform:uppercase}
+.dh-sum{background:rgba(255,255,255,.17);border-radius:var(--r-md);padding:10px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-inline:6px}
+.dh-sum .grow{flex:1 1 9rem}
+.dh-sum strong{display:block;font-size:1rem}
+.dh-sum span{font-size:.86rem;opacity:.95}
+.dh-dots{display:flex;gap:6px}
+.dh-dots i{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center;font-style:normal}
+.dh-dots i.on{background:#fff;color:var(--hero-b)}
+.dh-dots i svg{width:15px;height:15px}
+.backtoday{border:0;background:#fff;color:var(--pink-ink);font-weight:700;border-radius:999px;padding:8px 14px;font-size:.85rem;min-height:var(--tap-sm);max-width:100%}
+.note{border-radius:var(--r-sm);padding:10px 12px;font-size:.88rem;background:var(--card-2);color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.pink{background:var(--pink-softer);color:var(--pink-ink)}
+
+/* routine cards */
+.routine .rt-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 10px}
+.rt-title{display:flex;align-items:center;gap:10px}
+.rt-emoji{font-size:1.5rem;line-height:1}
+.rt-title h2{font-size:1.15rem}
+.rt-meta{font-size:.82rem;color:var(--muted);margin-top:1px}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin:12px 0 4px}
+.bar i{display:block;height:100%;background:var(--pink);border-radius:99px;transition:width .25s ease}
+.routine.am.complete .bar i{background:var(--am)} .routine.pm.complete .bar i{background:var(--pm)}
+.steps{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:44px 48px minmax(0,1fr) 44px;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.step:first-child{border-top:0}
+.check{width:40px;height:40px;border-radius:50%;border:2px solid color-mix(in srgb,var(--pink) 55%,var(--line));background:var(--card);display:grid;place-items:center;color:transparent;padding:0;transition:background .15s}
+.check svg{width:22px;height:22px}
+.check[aria-checked="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.check[disabled]{opacity:.4;cursor:not-allowed}
+.thumb{width:48px;height:48px;border-radius:14px;background:var(--pink-soft);color:var(--pink-ink);display:grid;place-items:center;overflow:hidden;font-weight:800;font-size:1.05rem;position:relative;flex:none}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .ord{position:absolute;left:3px;top:3px;background:var(--card);color:var(--ink);font-size:.62rem;font-weight:800;border-radius:6px;padding:0 4px;line-height:1.4;box-shadow:0 0 0 1px var(--line)}
+.st-text{min-width:0}
+.st-text strong{display:block;font-weight:650;overflow-wrap:anywhere}
+.st-text span{display:block;font-size:.84rem;color:var(--muted);overflow-wrap:anywhere}
+.step.done .st-text strong{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--pink) 60%,transparent)}
+.info-btn{width:44px;height:44px;border-radius:50%;border:0;background:var(--card-2);color:var(--muted);display:grid;place-items:center}
+.info-btn[aria-expanded="true"]{background:var(--pink-soft);color:var(--pink-ink)}
+.st-info{grid-column:1/-1;background:var(--card-2);border-radius:var(--r-sm);padding:10px 12px;font-size:.9rem;display:flex;flex-direction:column;gap:6px;white-space:pre-wrap;overflow-wrap:anywhere}
+.st-info b{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block}
+.rt-foot{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
+.empty{padding:14px;border-radius:var(--r-sm);background:var(--card-2);color:var(--muted);font-size:.92rem;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+
+/* calendar */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.cal-nav h2{font-size:1.08rem}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal .wd{text-align:center;font-size:.74rem;font-weight:700;color:var(--muted);padding:2px 0 4px}
+.cell{position:relative;border:0;border-radius:12px;background:transparent;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;color:var(--ink);font-variant-numeric:tabular-nums;max-width:100%}
+.cal.big .cell{aspect-ratio:auto;min-height:58px;border-radius:14px}
+.cell .n{font-size:.95rem;font-weight:650;line-height:1}
+.cal.big .cell .n{font-size:1.1rem}
+.cell .sym{height:14px;display:grid;place-items:center}
+.cell .sym svg{width:13px;height:13px}
+.cal.big .cell .sym{height:16px} .cal.big .cell .sym svg{width:15px;height:15px}
+.cell .tl{font-size:.6rem;font-weight:700;line-height:1}
+.cell.past,.cell.today{background:var(--card-2)}
+.cell.fill-am{background:var(--am);color:var(--am-ink)}
+.cell.fill-pm{background:var(--pm);color:var(--pm-ink)}
+.cell.fill-both{background:var(--both);color:var(--both-ink)}
+.cell.future{color:color-mix(in srgb,var(--muted) 75%,transparent);background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.cell.before{color:color-mix(in srgb,var(--muted) 70%,transparent);background:repeating-linear-gradient(-45deg,var(--hatch) 0 3px,transparent 3px 8px)}
+.cell.missed .sym{color:var(--muted)}
+.cell.partial-only .sym{color:var(--pink-ink)}
+.cell .pdot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 1.5px var(--card)}
+.cell.today{box-shadow:inset 0 0 0 2.5px var(--pink)}
+.cell.selected:not(.today){box-shadow:inset 0 0 0 2px var(--ink)}
+.cell.today.selected{box-shadow:inset 0 0 0 2.5px var(--pink),0 0 0 2px var(--card),0 0 0 4px var(--ink)}
+.cell.blank{visibility:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:18px;border-radius:6px;display:inline-grid;place-items:center;flex:none}
+.sw svg{width:11px;height:11px}
+.sw.am{background:var(--am);color:var(--am-ink)} .sw.pm{background:var(--pm);color:var(--pm-ink)} .sw.both{background:var(--both);color:var(--both-ink)}
+.sw.part{background:var(--card-2);color:var(--pink-ink)} .sw.miss{background:var(--card-2);color:var(--muted)}
+.sw.fut{box-shadow:inset 0 0 0 1px var(--line)} .sw.bef{background:repeating-linear-gradient(-45deg,var(--hatch) 0 3px,transparent 3px 7px)}
+.sw.tod{box-shadow:inset 0 0 0 2.5px var(--pink)}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.2rem),1fr));gap:8px}
+.sum-tile{background:var(--card-2);border-radius:var(--r-sm);padding:10px;display:flex;flex-direction:column;gap:2px}
+.sum-tile b{font-size:1.35rem;font-variant-numeric:tabular-nums;line-height:1.1}
+.sum-tile small{color:var(--muted);font-size:.78rem}
+.sum-tile .k{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700}
+.goalbar{position:relative;height:10px;border-radius:99px;background:var(--line);margin-top:8px}
+.goalbar i{position:absolute;inset:0 auto 0 0;background:var(--pink);border-radius:99px}
+.goalbar u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:2px}
+
+/* products */
+.search{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chipbtn{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;min-height:var(--tap-sm);flex:none;font-size:.86rem;font-weight:600;white-space:nowrap;color:var(--ink)}
+.chipbtn[aria-pressed="true"]{background:var(--pink-soft);border-color:transparent;color:var(--pink-ink)}
+.plist{display:flex;flex-direction:column;gap:10px}
+.pcard{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border-radius:var(--r-md);padding:12px;border:0;text-align:left;box-shadow:var(--shadow);width:100%}
+.pcard .thumb{width:56px;height:56px}
+.pcard strong{display:block;font-weight:700;overflow-wrap:anywhere}
+.pcard .meta{font-size:.84rem;color:var(--muted);display:block}
+.pcard .pao{font-size:.78rem;margin-top:3px;display:block;color:var(--muted)}
+.pcard .pao.over{color:var(--warn);font-weight:700}
+.pcard.archived{opacity:.7;box-shadow:none;border:1.5px dashed var(--line)}
+
+/* routine planner */
+.daytabs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.daytab{border:0;border-radius:14px;background:var(--card-2);padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;color:var(--ink)}
+.daytab[aria-selected="true"]{background:var(--pink);color:var(--on-pink)}
+.daytab .dd{display:flex;gap:3px}
+.daytab .dd i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.daytab .dd i.a{background:var(--am)} .daytab .dd i.p{background:var(--pm)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--card-2);border-radius:999px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:999px;min-height:var(--tap-sm);line-height:1.2;overflow-wrap:anywhere;font-weight:700;color:var(--muted);font-size:.92rem;padding:0 8px}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--pink-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.edlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ed-step{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;align-items:center;background:var(--card-2);border-radius:var(--r-md);padding:10px}
+.ed-actions{grid-column:1/-1;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.ed-actions button{border:0;background:var(--card);border-radius:10px;min-height:var(--tap-sm);min-width:var(--tap-sm);padding:0 10px;font-weight:600;font-size:.85rem;color:var(--ink);display:inline-flex;align-items:center;gap:4px}
+.ed-actions button[disabled]{opacity:.35}
+.ed-actions .del{color:var(--err)}
+.vlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.vlist li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:.92rem}
+.vlist li:first-child{border-top:0}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field>.lbl{font-weight:650;font-size:.9rem}
+.field .hint{font-size:.8rem;color:var(--muted)}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{display:block;width:100%;max-width:100%;min-width:0;min-height:46px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--card);padding:10px 12px;font-size:1rem;color:var(--ink)}
+/* Fecha y hora: Safari en iPhone da a estos campos un ancho propio que no encoge y los saca de la tarjeta */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;text-align:left;line-height:1.3;background-clip:padding-box}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;margin:0;min-height:1.3em}
+input[type=date]::-webkit-datetime-edit,input[type=time]::-webkit-datetime-edit{padding:0;max-width:100%}
+input[type=date]::-webkit-calendar-picker-indicator{margin-left:auto}
+select{-webkit-appearance:none;appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;text-overflow:ellipsis}
+textarea{min-height:88px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--pink);outline:none}
+/* Dos campos por fila solo si caben; si no, uno debajo del otro */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:10px}
+.photo-edit{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.photo-edit .thumb{width:72px;height:72px;border-radius:18px}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+.levels{display:flex;gap:6px;flex-wrap:wrap}
+.lv{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:600;color:var(--ink);min-height:var(--tap-sm)}
+.lv[aria-pressed="true"]{background:var(--pink-soft);border-color:var(--pink);color:var(--pink-ink)}
+.skin-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.skin-row:first-of-type{border-top:0}
+.checklist{display:flex;flex-direction:column;gap:6px}
+.checklist label{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:var(--r-sm);background:var(--card-2);font-weight:600}
+.checklist input{width:20px;height:20px;accent-color:var(--pink)}
+
+/* Yo */
+.me{display:flex;gap:14px;align-items:center}
+.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:1.9rem;font-weight:600;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.menu{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.menu>li{padding:12px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.menu>li:first-child{border-top:0;padding-top:2px}
+.mi-h{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.mi-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--pink-soft);color:var(--pink-ink)}
+.mi-ic svg{width:19px;height:19px}
+.mi-h strong{flex:1 1 8rem;font-weight:650}
+.opt{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 10px;font-size:.88rem}
+.opt dt{font-weight:700}
+.opt dd{margin:0;color:var(--muted)}
+.kv{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 10px;font-size:.9rem}
+.kv span{overflow-wrap:anywhere}
+.kv span:last-child{color:var(--muted);text-align:right}
+
+.howto{margin:0;padding:0;list-style:none;counter-reset:h;display:flex;flex-direction:column;gap:10px;font-size:.95rem}
+.howto li{counter-increment:h;position:relative;padding-left:38px;min-height:26px;padding-top:1px}
+.howto li::before{content:counter(h);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--pink-soft);color:var(--pink-ink);font-weight:800;font-size:.82rem;display:grid;place-items:center}
+.howto li>span.muted{display:block;font-size:.85rem;margin-top:3px}
+
+/* escaneo */
+.scanbtn{min-height:54px;font-size:1.02rem}
+.scan-phs{display:flex;gap:8px;flex-wrap:wrap}
+.scan-ph{position:relative;width:88px;height:88px;border-radius:14px;overflow:hidden;background:var(--card-2)}
+.scan-ph img{width:100%;height:100%;object-fit:cover}
+.scan-ph .iconbtn{position:absolute;top:4px;right:4px;width:40px;height:40px;background:rgba(0,0,0,.55);color:#fff}
+.scan-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.scan-steps li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;background:var(--card);border-radius:var(--r-sm);padding:10px 12px}
+.scan-steps .si{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--card-2);color:var(--muted)}
+.scan-steps .st-ok .si{background:color-mix(in srgb,var(--both) 45%,transparent);color:var(--ok)}
+.scan-steps .st-fail .si{background:var(--err-soft);color:var(--err)}
+.scan-steps b{display:block;font-weight:650;font-size:.92rem}
+.scan-steps small{display:block;color:var(--muted);font-size:.8rem;overflow-wrap:anywhere}
+.spin{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--pink);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-q{font-size:1.05rem}
+.verify{background:var(--card);border-radius:var(--r-md);padding:12px 14px}
+.verify ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.88rem}
+.verify li.ok{color:var(--ok)} .verify li.warn{color:var(--warn);font-weight:600}
+details.fold{background:var(--card);border-radius:var(--r-md);padding:12px 14px}
+details.fold>summary{font-weight:700;cursor:pointer}
+.sources{display:flex;flex-direction:column;gap:6px}
+.sources a{color:var(--pink-ink);font-weight:600;overflow-wrap:anywhere}
+.sources p{overflow-wrap:anywhere}
+
+/* tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding-left:var(--safe-l);padding-right:var(--safe-r);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+.tabbar ul{list-style:none;margin:0 auto;padding:0 2px;max-width:620px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:var(--tab-h)}
+.tabbar button{width:100%;height:100%;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:11px;font-weight:650;padding:0 1px;line-height:1.1;text-align:center}
+/* La barra inferior mantiene tamaños fijos (como las apps de iPhone), así cabe con el texto ampliado */
+.tabbar svg{width:25px;height:25px}
+.tabbar button[aria-current="page"]{color:var(--pink-ink)}
+.tabbar button[aria-current="page"] .tab-ic{background:var(--pink-soft)}
+.tab-ic{border-radius:999px;padding:2px 12px;display:grid;place-items:center}
+
+/* sheet */
+.sheet-wrap{position:fixed;inset:0;z-index:40;background:rgba(20,10,20,.38);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:620px;max-height:92dvh;overflow:auto;border-radius:24px 24px 0 0;padding:8px max(16px,var(--safe-r)) calc(20px + var(--safe-b)) max(16px,var(--safe-l));display:flex;flex-direction:column;gap:14px;animation:up .22s ease}
+@media (min-width:700px){.sheet-wrap{align-items:center}.sheet{border-radius:24px;max-height:88vh}}
+.sheet .grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 0}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:var(--tap);position:sticky;top:-8px;background:var(--bg);padding:8px 0;z-index:2}
+.sheet-h h2{font-size:1.2rem;font-weight:750}
+@keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + var(--safe-b) + 14px);z-index:60;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-size:.9rem;font-weight:600;max-width:min(92vw,520px);box-shadow:0 6px 24px rgba(0,0,0,.2);pointer-events:none}
+.toast.error{background:var(--err);color:#fff}
+.toast[hidden]{display:none!important}
+.reduce *{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (min-width:900px){ .cal.big .cell{min-height:68px} }
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="banner"></div>
+  <main id="view" tabindex="-1" aria-live="off"></main>
+</div>
+<nav class="tabbar" aria-label="Secciones">
+  <ul>
+    <li><button data-act="tab" data-tab="hoy"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2c3.6 4.2 6 7.3 6 10.3a6 6 0 0 1-12 0c0-3 2.4-6.1 6-10.3z"/><path d="M9.2 14.2a2.9 2.9 0 0 0 2.8 2.6"/></svg></span>Hoy</button></li>
+    <li><button data-act="tab" data-tab="calendario"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><circle cx="8.5" cy="14.5" r="1" fill="currentColor"/><circle cx="12" cy="14.5" r="1" fill="currentColor"/></svg></span>Calendario</button></li>
+    <li><button data-act="tab" data-tab="productos"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.8h5v3.4h-5z"/><path d="M8 6.2h8a1.8 1.8 0 0 1 1.8 1.8v11.2a2 2 0 0 1-2 2H8.2a2 2 0 0 1-2-2V8A1.8 1.8 0 0 1 8 6.2z"/><path d="M6.2 11.5h11.6"/></svg></span>Productos</button></li>
+    <li><button data-act="tab" data-tab="rutina"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5h10M9.5 12h10M9.5 17.5h10"/><circle cx="5" cy="6.5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="5" cy="17.5" r="1.4"/></svg></span>Mi rutina</button></li>
+    <li><button data-act="tab" data-tab="yo"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.4 7.5-5.4s6.3 1.8 7.5 5.4"/></svg></span>Yo</button></li>
+  </ul>
+</nav>
+<div id="sheet-root"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p style="padding:20px">Mi Skincare necesita JavaScript activado.</p></noscript>
+
+<script>
+(function(){
+/* ===== Mi Skincare · núcleo: fechas, almacenamiento y reglas de datos ===== */
+'use strict';
+const APP_VERSION = '0.3.1';
+const KEY = 'miSkincare.v1';
+const CATS = ['Limpiador','Desmaquillante','Tónico','Esencia','Sérum','Tratamiento','Contorno de ojos','Hidratante','Aceite','Protector solar','Exfoliante','Mascarilla','Otro'];
+const SLOTS = { am:{label:'Rutina de mañana', short:'Mañana', emoji:'☀️'}, pm:{label:'Rutina de noche', short:'Noche', emoji:'🌙'} };
+const DAYS = ['', 'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const DSH = ['', 'L','M','X','J','V','S','D'];
+const SKIN = [['dry','Sequedad'],['oily','Sensación grasa'],['red','Rojeces'],['spots','Granitos'],['sens','Sensibilidad']];
+const LEVELS = ['No','Leve','Moderada','Intensa'];
+
+/* ---------- utilidades ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const clone = o => JSON.parse(JSON.stringify(o));
+const pad = n => String(n).padStart(2, '0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+const addDays = (k, n) => { const d = parseKey(k); d.setDate(d.getDate() + n); return keyOf(d); };
+const todayKey = () => keyOf(new Date());
+const dow = k => { const g = parseKey(k).getDay(); return g === 0 ? 7 : g; };
+const isKey = k => typeof k === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(k);
+const ymOf = k => k.slice(0, 7);
+const addMonths = (ym, n) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + n, 1, 12); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; };
+const fmt = (k, o) => new Intl.DateTimeFormat('es-ES', o).format(parseKey(k));
+const fmtLong = k => fmt(k, {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+const fmtShort = k => fmt(k, {day:'numeric', month:'short', year:'numeric'});
+const fmtDM = k => fmt(k, {weekday:'short', day:'numeric', month:'short'});
+const fmtMonth = ym => cap(new Intl.DateTimeFormat('es-ES', {month:'long', year:'numeric'}).format(parseKey(ym + '-01')));
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const emptyWeek = () => { const w = {}; for (let d = 1; d <= 7; d++) w[d] = {am: [], pm: []}; return w; };
+
+/* ---------- almacenamiento (localStorage con verificación) ---------- */
+const store = {
+  persistent: true, blocked: false, mem: new Map(),
+  init() {
+    try { const t = KEY + '.__test'; localStorage.setItem(t, '1'); const ok = localStorage.getItem(t) === '1'; localStorage.removeItem(t); this.persistent = ok; }
+    catch (e) { this.persistent = false; }
+  },
+  get(k) { if (!this.persistent) return this.mem.has(k) ? this.mem.get(k) : null; try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) {
+    if (!this.persistent) { this.mem.set(k, v); return; }
+    localStorage.setItem(k, v);
+    if (localStorage.getItem(k) !== v) throw new Error('la comprobación de lectura no coincide');
+  },
+  del(k) { if (!this.persistent) { this.mem.delete(k); return; } try { localStorage.removeItem(k); } catch (e) {} },
+  keys(prefix) {
+    if (!this.persistent) return [...this.mem.keys()].filter(k => k.startsWith(prefix));
+    const out = []; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(prefix)) out.push(k); } } catch (e) {} return out;
+  },
+  bytes(prefix) { let n = 0; for (const k of this.keys(prefix)) n += (k.length + (this.get(k) || '').length) * 2; return n; }
+};
+const dataKey = mode => `${KEY}.data.${mode}`;
+const photoPrefix = mode => `${KEY}.photo.${mode}.`;
+const metaKey = `${KEY}.meta`;
+
+/* ---------- estado ---------- */
+let meta = { mode: 'real', theme: 'system', text: 'normal', reduce: false };
+let D = null;            // conjunto de datos activo (real o demo)
+let photos = {};         // id -> dataURL
+let saveState = { ok: true, at: null, msg: '' };
+let loadProblem = null;  // texto si los datos guardados no se pudieron leer
+
+function emptyData() {
+  const t = todayKey();
+  return { schema: 1, createdAt: new Date().toISOString(), profile: { name: '', avatar: null, goal: 80, trackingStart: t, reminders: { am: '08:00', pm: '22:00' } },
+    products: [], plans: [], overrides: {}, logs: {}, lastExport: null };
+}
+function normalize(d) {
+  const e = emptyData();
+  d.schema = 1;
+  d.profile = Object.assign(e.profile, d.profile || {});
+  d.profile.reminders = Object.assign({ am: '08:00', pm: '22:00' }, d.profile.reminders || {});
+  d.products = Array.isArray(d.products) ? d.products : [];
+  d.plans = (Array.isArray(d.plans) ? d.plans : []).filter(p => isKey(p.from)).sort((a, b) => a.from < b.from ? -1 : a.from > b.from ? 1 : 0);
+  for (const p of d.plans) { const w = emptyWeek(); for (let i = 1; i <= 7; i++) { const src = p.week?.[i] || {}; w[i] = { am: Array.isArray(src.am) ? src.am : [], pm: Array.isArray(src.pm) ? src.pm : [] }; } p.week = w; }
+  d.overrides = d.overrides && typeof d.overrides === 'object' ? d.overrides : {};
+  d.logs = d.logs && typeof d.logs === 'object' ? d.logs : {};
+  return d;
+}
+function loadMeta() { try { const m = JSON.parse(store.get(metaKey) || 'null'); if (m) meta = Object.assign(meta, m); } catch (e) {} }
+function saveMeta() { try { store.set(metaKey, JSON.stringify(meta)); } catch (e) {} }
+function loadData(mode) {
+  loadProblem = null; store.blocked = false;
+  const raw = store.get(dataKey(mode));
+  if (!raw) { D = mode === 'demo' ? makeDemo() : emptyData(); if (mode === 'demo') save(); }
+  else {
+    try { D = normalize(JSON.parse(raw)); }
+    catch (e) { loadProblem = raw; store.blocked = true; D = emptyData(); }
+  }
+  photos = {};
+  for (const k of store.keys(photoPrefix(mode))) photos[k.slice(photoPrefix(mode).length)] = store.get(k);
+}
+function save() {
+  if (store.blocked) { saveState = { ok: false, at: null, msg: 'Los datos guardados no se pudieron leer, así que no se sobrescriben.' }; return false; }
+  try { store.set(dataKey(meta.mode), JSON.stringify(D)); saveState = { ok: true, at: new Date(), msg: '' }; return true; }
+  catch (e) {
+    const quota = e && (e.name === 'QuotaExceededError' || e.code === 22);
+    saveState = { ok: false, at: saveState.at, msg: quota ? 'No queda espacio de almacenamiento en este navegador.' : 'Error al guardar: ' + (e.message || e) };
+    if (typeof toast === 'function') toast('No se ha podido guardar. ' + saveState.msg, 'error');
+    return false;
+  }
+}
+function savePhoto(dataUrl) {
+  const id = 'ph_' + uid();
+  try { store.set(photoPrefix(meta.mode) + id, dataUrl); photos[id] = dataUrl; return id; }
+  catch (e) { toast('No se ha podido guardar la foto: no queda espacio. El resto de datos no cambia.', 'error'); return null; }
+}
+function deletePhoto(id) { if (!id) return; store.del(photoPrefix(meta.mode) + id); delete photos[id]; }
+
+/* ---------- reglas de planificación ---------- */
+const product = id => D.products.find(p => p.id === id);
+function planAt(date) { let p = null; for (const v of D.plans) { if (v.from <= date) p = v; else break; } return p; }
+function nextPlanAfter(date) { return D.plans.find(v => v.from > date) || null; }
+function weekSteps(plan, dayN, slot) { return plan?.week?.[dayN]?.[slot] || []; }
+
+// Pasos previstos para una fecha y rutina.
+// Prioridad: cambio de solo esa fecha > registro histórico (días pasados) > planificación semanal vigente en esa fecha.
+function resolve(date, slot) {
+  const ov = D.overrides[date];
+  if (ov && Array.isArray(ov[slot])) return { steps: ov[slot], source: 'override' };
+  return baseResolve(date, slot);
+}
+function baseResolve(date, slot) {
+  const lg = D.logs[date]?.[slot];
+  if (date < todayKey() && Array.isArray(lg?.snap)) return { steps: lg.snap, source: 'history' };
+  return { steps: weekSteps(planAt(date), dow(date), slot), source: 'plan' };
+}
+function slotStat(date, slot) {
+  const r = resolve(date, slot);
+  const done = D.logs[date]?.[slot]?.done || {};
+  let n = 0; for (const s of r.steps) if (done[s.id]) n++;
+  return { ...r, total: r.steps.length, done: n, doneMap: done, complete: r.steps.length > 0 && n === r.steps.length };
+}
+function dayInfo(date) {
+  const t = todayKey();
+  const when = date > t ? 'future' : date < D.profile.trackingStart ? 'before' : date === t ? 'today' : 'past';
+  const am = slotStat(date, 'am'), pm = slotStat(date, 'pm');
+  const fill = am.complete && pm.complete ? 'both' : am.complete ? 'am' : pm.complete ? 'pm' : null;
+  const partial = (am.done > 0 && !am.complete) || (pm.done > 0 && !pm.complete);
+  return { date, when, am, pm, fill, partial, any: am.done + pm.done > 0, scheduled: am.total + pm.total > 0 };
+}
+function canMark(date) { if (date > todayKey()) return 'future'; if (date < D.profile.trackingStart) return 'before'; return true; }
+
+function snapOf(steps) {
+  return steps.map(s => {
+    const p = product(s.productId);
+    const o = { id: s.id, productId: s.productId || null, title: s.title || '', instructions: s.instructions || '' };
+    const pn = s.pName ?? p?.name, pb = s.pBrand ?? p?.brand, pi = s.pInstr ?? p?.instructions;
+    if (s.productId) { o.pName = pn ?? '(producto eliminado)'; o.pBrand = pb ?? ''; o.pInstr = pi ?? ''; }
+    return o;
+  });
+}
+function setDone(date, slot, ids, value) {
+  const c = canMark(date);
+  if (c !== true) { toast(c === 'future' ? 'Las fechas futuras no se pueden marcar como realizadas.' : 'Esta fecha es anterior al inicio del seguimiento. Puedes adelantar el inicio en Yo.'); return false; }
+  const r = resolve(date, slot);
+  const L = D.logs[date] || (D.logs[date] = {});
+  const S = L[slot] || (L[slot] = { done: {} });
+  S.done = S.done || {};
+  if (r.source === 'plan') S.snap = snapOf(r.steps);     // guarda lo que figuraba ese día
+  for (const id of ids) { if (value) S.done[id] = Date.now(); else delete S.done[id]; }
+  return save();
+}
+function refreshTodaySnap() {
+  const t = todayKey();
+  for (const slot of ['am', 'pm']) { const S = D.logs[t]?.[slot]; if (!S) continue; const r = resolve(t, slot); if (r.source === 'plan') S.snap = snapOf(r.steps); }
+}
+// Tras cambiar la planificación desde una fecha: los días pasados SIN casillas marcadas pasan a mostrar la nueva planificación;
+// los que tienen algo marcado conservan lo que figuraba entonces.
+function afterPlanChange(from) {
+  const t = todayKey();
+  for (const [date, L] of Object.entries(D.logs)) {
+    if (date < from || date >= t) continue;
+    for (const slot of ['am', 'pm']) { const S = L[slot]; if (S && !Object.keys(S.done || {}).length) delete L[slot]; }
+  }
+  refreshTodaySnap();
+}
+function ensureVersion(from) {
+  // La primera planificación se aplica desde el inicio del seguimiento.
+  if (!D.plans.length && D.profile.trackingStart < from) from = D.profile.trackingStart;
+  let v = D.plans.find(p => p.from === from);
+  if (!v) {
+    const base = planAt(from);
+    v = { id: uid(), from, week: clone(base?.week || emptyWeek()), createdAt: new Date().toISOString() };
+    D.plans.push(v); D.plans.sort((a, b) => a.from < b.from ? -1 : 1);
+  }
+  return v;
+}
+// Al renombrar o cambiar instrucciones de un producto, se fija lo que figuraba en los días pasados.
+function freezeProductHistory(pid) {
+  const t = todayKey();
+  let start = D.profile.trackingStart;
+  if (D.plans[0] && D.plans[0].from < start) start = D.plans[0].from;
+  let guard = 0;
+  for (let d = start; d < t && guard < 1500; d = addDays(d, 1), guard++) {
+    for (const slot of ['am', 'pm']) {
+      const r = resolve(d, slot);
+      if (r.source === 'history') continue;
+      if (!r.steps.some(s => s.productId === pid && s.pName === undefined)) continue;
+      if (r.source === 'override') D.overrides[d][slot] = snapOf(r.steps);
+      else { const L = D.logs[d] || (D.logs[d] = {}); const S = L[slot] || (L[slot] = { done: {} }); S.snap = snapOf(r.steps); S.frozen = true; }
+    }
+  }
+}
+
+/* ---------- resumen mensual ---------- */
+function monthSummary(ym) {
+  const [y, m] = ym.split('-').map(Number);
+  const days = new Date(y, m, 0).getDate();
+  const s = { amC: 0, amT: 0, pmC: 0, pmT: 0, both: 0, counted: 0 };
+  for (let i = 1; i <= days; i++) {
+    const k = `${ym}-${pad(i)}`; const inf = dayInfo(k);
+    if (inf.when === 'future' || inf.when === 'before') continue;
+    s.counted++;
+    for (const slot of ['am', 'pm']) {
+      const st = inf[slot]; if (!st.total) continue;
+      if (inf.when === 'today' && !st.complete) continue; // hoy aún está en curso: no cuenta como incumplido
+      s[slot + 'T']++; if (st.complete) s[slot + 'C']++;
+    }
+    if (inf.fill === 'both') s.both++;
+  }
+  const T = s.amT + s.pmT; s.pct = T ? Math.round((s.amC + s.pmC) / T * 100) : null;
+  return s;
+}
+
+/* ---------- datos de demostración (ficticios) ---------- */
+function makeDemo() {
+  const t = todayKey(); const d = emptyData();
+  d.demo = true; d.profile.name = 'Usuaria demo'; d.profile.trackingStart = addDays(t, -24);
+  const P = (name, category, instructions = '') => { const p = { id: 'demo_' + uid(), name, brand: 'Marca ficticia', category, photo: null, instructions, notes: 'Producto de demostración: no es una recomendación.', opened: '', paoMonths: '', archived: false, createdAt: new Date().toISOString() }; d.products.push(p); return p; };
+  const a = P('DEMO Limpiador A', 'Limpiador', 'Texto de ejemplo. Aquí irán tus propias instrucciones.');
+  const b = P('DEMO Sérum B', 'Sérum');
+  const c = P('DEMO Crema C', 'Hidratante');
+  const e = P('DEMO Protector D', 'Protector solar');
+  const f = P('DEMO Tratamiento E', 'Tratamiento', 'Ejemplo de instrucciones personales.');
+  const g = P('DEMO Mascarilla F', 'Mascarilla');
+  g.opened = addDays(t, -400); g.paoMonths = 12;
+  c.opened = addDays(t, -40); c.paoMonths = 6;
+  const st = (p, title) => ({ id: uid(), productId: p.id, title, instructions: '' });
+  const week = emptyWeek();
+  for (let i = 1; i <= 7; i++) {
+    week[i].am = [st(a, 'Limpieza'), st(b, 'Sérum'), st(c, 'Hidratación'), st(e, 'Protección')];
+    week[i].pm = [st(a, 'Limpieza'), st(c, 'Hidratación')];
+  }
+  week[2].pm.splice(1, 0, st(f, 'Tratamiento')); week[5].pm.splice(1, 0, st(f, 'Tratamiento'));
+  week[7].pm.splice(1, 0, st(g, 'Mascarilla'));
+  d.plans.push({ id: uid(), from: d.profile.trackingStart, week, createdAt: new Date().toISOString() });
+  // registros ficticios para ver los colores del calendario
+  D = d;
+  const pattern = ['both', 'am', 'pm', 'both', 'partial', 'none', 'both', 'am', 'both', 'pm'];
+  for (let i = 24, j = 0; i >= 1; i--, j++) {
+    const k = addDays(t, -i); const kind = pattern[j % pattern.length];
+    const L = d.logs[k] = {};
+    for (const slot of ['am', 'pm']) {
+      const steps = weekSteps(planAt(k), dow(k), slot); const S = L[slot] = { snap: snapOf(steps), done: {} };
+      const full = kind === 'both' || kind === slot;
+      steps.forEach((s, idx) => { if (full || (kind === 'partial' && slot === 'am' && idx < 2)) S.done[s.id] = 1; });
+    }
+    if (j % 3 === 0) L.skin = { dry: j % 2, oily: 0, red: 0, spots: 0, sens: 0, notes: 'Nota de ejemplo.' };
+  }
+  D = null;
+  return d;
+}
+
+/* ===== Mi Skincare · extracción de datos (funciones puras, sin red) =====
+   Todo lo que devuelve sale literalmente de la etiqueta leída o de la página/base consultada.
+   Nada se deduce: si un dato no aparece, el campo queda vacío. */
+const XT = (() => {
+  const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const STOP = new Set(('para con sin por del las los una uno unos unas que the and for with your you des les pour avec sans aux die und von ' +
+    'piel skin peau facial face rostro cara visage corps body cuerpo ml fl oz gr mls tubo tube frasco envase new nuevo nueva nouveau formula ' +
+    'dermatologico dermatologica dermatological dermatologique hipoalergenico hypoallergenic sensible sensibles sensitive tolerance ' +
+    'made france spain espana hecho fabricado www com').split(' '));
+  // Marcas conocidas. domain = web oficial para España (se usa para buscar allí primero).
+  const BRANDS = [
+    ['La Roche-Posay', ['la roche posay', 'laroche posay', 'roche posay'], 'www.laroche-posay.es'],
+    ['CeraVe', ['cerave'], 'www.cerave.es'],
+    ['Vichy', ['vichy'], 'www.vichy.es'],
+    ['SkinCeuticals', ['skinceuticals'], 'www.skinceuticals.es'],
+    ["L'Oréal Paris", ['loreal paris', 'l oreal paris', 'loreal'], 'www.loreal-paris.es'],
+    ['Garnier', ['garnier'], 'www.garnier.es'],
+    ["Kiehl's", ['kiehls', 'kiehl s'], 'www.kiehls.es'],
+    ['Lancôme', ['lancome'], 'www.lancome.es'],
+    ['Eucerin', ['eucerin'], 'www.eucerin.es'],
+    ['Nivea', ['nivea'], 'www.nivea.es'],
+    ['Bioderma', ['bioderma'], 'www.bioderma.es'],
+    ['Avène', ['avene', 'eau thermale avene'], 'www.eau-thermale-avene.es'],
+    ['A-Derma', ['a derma', 'aderma'], 'www.aderma.es'],
+    ['ISDIN', ['isdin'], 'www.isdin.com'],
+    ['The Ordinary', ['the ordinary'], 'theordinary.com'],
+    ["Paula's Choice", ['paulas choice', 'paula s choice'], 'www.paulaschoice.es'],
+    ['Clinique', ['clinique'], 'www.clinique.es'],
+    ['Caudalie', ['caudalie'], 'es.caudalie.com'],
+    ['Neutrogena', ['neutrogena'], 'www.neutrogena.es'],
+    ['Sesderma', ['sesderma'], 'www.sesderma.com'],
+    ['Martiderm', ['martiderm'], 'www.martiderm.com'],
+    ['Uriage', ['uriage'], ''], ['Ducray', ['ducray'], ''], ['Heliocare', ['heliocare'], ''], ['Endocare', ['endocare'], ''],
+    ['Bella Aurora', ['bella aurora'], ''], ['Babaria', ['babaria'], ''], ['Deliplus', ['deliplus'], ''], ['Byoma', ['byoma'], ''],
+    ['COSRX', ['cosrx'], ''], ['Beauty of Joseon', ['beauty of joseon'], ''], ['Anua', ['anua'], ''], ['Round Lab', ['round lab'], ''],
+    ['Skin1004', ['skin1004', 'skin 1004'], ''], ['Isntree', ['isntree'], ''], ['Some By Mi', ['some by mi'], ''], ['Klairs', ['klairs'], ''],
+    ['Laneige', ['laneige'], ''], ['The Inkey List', ['inkey list'], ''], ['Olay', ['olay'], ''], ['Nuxe', ['nuxe'], ''], ['Filorga', ['filorga'], ''],
+    ['Shiseido', ['shiseido'], ''], ['Clarins', ['clarins'], ''], ['Estée Lauder', ['estee lauder'], ''], ['Weleda', ['weleda'], ''],
+    ['Erborian', ['erborian'], ''], ['Freshly Cosmetics', ['freshly cosmetics'], ''], ['Ziaja', ['ziaja'], ''], ['Mixa', ['mixa'], ''],
+    ['Rilastil', ['rilastil'], ''], ['Mustela', ['mustela'], ''], ['Cantabria Labs', ['cantabria labs'], ''], ['Medik8', ['medik8'], ''],
+    ['Dermalogica', ['dermalogica'], ''], ['Drunk Elephant', ['drunk elephant'], ''], ['Bioré', ['biore'], ''], ['Hada Labo', ['hada labo'], '']
+  ];
+  const ACTIVES = [
+    ['Niacinamida', 'niacinamida|niacinamide|vitamina b3|vitamin b3'],
+    ['Ácido hialurónico', 'acido hialuronico|hyaluronic acid|hialuronato sodico|sodium hyaluronate|acide hyaluronique'],
+    ['Retinol', 'retinol'], ['Retinal', 'retinal|retinaldehido|retinaldehyde'],
+    ['Ácido salicílico', 'acido salicilico|salicylic acid|acide salicylique'],
+    ['Ácido glicólico', 'acido glicolico|glycolic acid|acide glycolique'],
+    ['Ácido láctico', 'acido lactico|lactic acid'], ['Ácido mandélico', 'acido mandelico|mandelic acid'],
+    ['Ácido azelaico', 'acido azelaico|azelaic acid'], ['Ácido tranexámico', 'acido tranexamico|tranexamic acid'],
+    ['Ácido ferúlico', 'acido ferulico|ferulic acid'], ['Ácido poliglutámico', 'acido poliglutamico|polyglutamic acid'],
+    ['Vitamina C', 'vitamina c|vitamin c|acido ascorbico|ascorbic acid|ascorbyl glucoside|ascorbil glucosido'],
+    ['Vitamina E', 'vitamina e|vitamin e|tocoferol|tocopherol'],
+    ['Urea', 'urea'], ['Ceramidas', 'ceramidas|ceramides|ceramide'], ['Pantenol', 'pantenol|panthenol|provitamina b5|vitamina b5'],
+    ['Zinc', 'zinc pca|zinc'], ['Péptidos', 'peptidos|peptides|peptide'], ['Escualano', 'escualano|squalane'],
+    ['Centella asiática', 'centella asiatica|cica|madecassoside|madecasosido'], ['Alfa arbutina', 'alfa arbutina|alpha arbutin'],
+    ['Bakuchiol', 'bakuchiol'], ['Alantoína', 'alantoina|allantoin'], ['Cafeína', 'cafeina|caffeine'],
+    ['LHA', 'lha|lipo hidroxiacido|lipohydroxy acid'], ['Aloe vera', 'aloe vera|aloe barbadensis'],
+    ['Agua termal', 'agua termal|thermal water|eau thermale'], ['Probióticos', 'probioticos|probiotic']
+  ].map(([label, re]) => [label, new RegExp('\\b(' + re + ')\\b', 'i')]);
+  const CAT_RULES = [
+    ['Protector solar', /\b(protector solar|proteccion solar|fotoprotector|spf|fps|sunscreen|solaire|anthelios|fusion water)\b/],
+    ['Desmaquillante', /\b(agua micelar|micelar|micellar|desmaquillante|demaquillant|make-?up remover)\b/],
+    ['Limpiador', /\b(limpiador|limpiadora|gel limpiador|espuma limpiadora|cleanser|nettoyant|syndet|jabon|gel de limpieza|aceite limpiador)\b/],
+    ['Contorno de ojos', /\b(contorno de ojos|contorno ojos|eye cream|yeux|ojos)\b/],
+    ['Sérum', /\b(serum|serums|serum|concentrado|ampollas?|booster)\b/],
+    ['Tónico', /\b(tonico|locion tonica|toner|lotion tonique|astringente)\b/],
+    ['Esencia', /\b(esencia|essence)\b/],
+    ['Exfoliante', /\b(exfoliante|peeling|scrub|gommage|exfoliant)\b/],
+    ['Mascarilla', /\b(mascarilla|mask|masque)\b/],
+    ['Aceite', /\b(aceite|oil|huile)\b/],
+    ['Hidratante', /\b(hidratante|crema|moisturi[sz]er|moisturi[sz]ing|balsamo|baume|emulsion|fluido|cream|creme|gel-crema|gel crema)\b/],
+    ['Tratamiento', /\b(tratamiento|corrector|anti-?imperfecciones|anti-?manchas|treatment)\b/]
+  ];
+
+  const tokens = s => norm(s).replace(/[^a-z0-9%+]+/g, ' ').split(' ').filter(t => t.length >= 3 && !STOP.has(t) && !/^\d+$/.test(t));
+  function lev1(a, b) { // ¿distancia de edición <= 1?
+    if (a === b) return true; if (Math.abs(a.length - b.length) > 1) return false;
+    let i = 0, j = 0, e = 0;
+    while (i < a.length && j < b.length) { if (a[i] === b[j]) { i++; j++; continue; } if (++e > 1) return false; if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; } }
+    return e + (a.length - i) + (b.length - j) <= 1;
+  }
+  const tokMatch = (a, b) => a === b || (a.length >= 5 && b.length >= 5 && (a.startsWith(b) || b.startsWith(a) || lev1(a, b)));
+
+  // ----- marca -----
+  function detectBrand(text, extra = []) {
+    const t = ' ' + norm(text).replace(/[^a-z0-9]+/g, ' ') + ' ';
+    const found = [];
+    for (const [name, aliases, domain] of BRANDS) for (const a of aliases) { const i = t.indexOf(' ' + a + ' '); if (i >= 0) { found.push({ name, domain, pos: i }); break; } }
+    for (const b of extra) { const a = norm(b).replace(/[^a-z0-9]+/g, ' ').trim(); if (a.length >= 3 && t.includes(' ' + a + ' ') && !found.some(f => norm(f.name) === norm(b))) found.push({ name: b, domain: '', pos: t.indexOf(a) }); }
+    return found.sort((x, y) => x.pos - y.pos);
+  }
+  const brandInfo = name => { const n = norm(name); const b = BRANDS.find(x => norm(x[0]) === n || x[1].some(a => n.replace(/[^a-z0-9]+/g, ' ').trim() === a)); return b ? { name: b[0], domain: b[2], aliases: b[1] } : null; };
+  const brandTag = name => norm(name).replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  // ----- lectura de la etiqueta (OCR) -----
+  function parseLabel(text, lines = []) {
+    const clean = String(text || '').replace(/[|]/g, ' ');
+    const pct = [...clean.matchAll(/(\d{1,2}(?:[.,]\d{1,2})?)\s?%/g)].map(m => m[1].replace(',', '.') + ' %');
+    const spf = (clean.match(/\b(?:SPF|FPS)\s*(\d{2}\+?)/i) || [])[1] || '';
+    const paoM = [...clean.matchAll(/\b(3|6|9|12|18|24|36)\s?M\b/g)].map(m => Number(m[1]));
+    // palabras de líneas grandes (normalmente nombre y marca) valen más
+    const weighted = {};
+    const hs = lines.map(l => l.h || 0).filter(Boolean).sort((a, b) => b - a); const big = hs.length ? hs[Math.floor(hs.length * 0.25)] || hs[0] : 0;
+    let inIngr = false;
+    (lines.length ? lines : clean.split('\n').map(t => ({ text: t, h: 0 }))).forEach(l => {
+      if (/ingredient|ingr[eé]dients|composici[oó]n/i.test(l.text)) inIngr = true;
+      if (inIngr || (l.text.match(/,/g) || []).length >= 2 || /\b(aqua|water|glycerin)\b/i.test(l.text)) return; // la lista INCI no sirve para identificar
+      const w = big && l.h >= big ? 2 : 1;
+      for (const t of tokens(l.text)) weighted[t] = Math.max(weighted[t] || 0, w);
+    });
+    return { text: clean, pct: [...new Set(pct)], spf, pao: paoM.length ? paoM[0] : null, weighted, tokens: Object.keys(weighted) };
+  }
+
+  // ----- relevancia entre lo leído y un nombre/URL -----
+  function matchScore(labelTokens, targetText, idf = null, brandAliases = []) {
+    const bt = new Set(brandAliases.flatMap(a => a.split(' ')));
+    const tt = tokens(targetText).filter(t => !bt.has(t));
+    if (!tt.length) return 0;
+    let hit = 0, tot = 0;
+    for (const t of tt) {
+      const w = idf ? (idf[t] || 1) : 1; tot += w;
+      if (labelTokens.some(l => tokMatch(l, t))) hit += w;
+    }
+    return hit / tot * Math.min(1, hit / (idf ? 2 : 1.5));
+  }
+  function coverage(labelTokens, name, brandAliases = []) {
+    const bt = new Set(brandAliases.flatMap(a => a.split(' ')));
+    const nt = [...new Set(tokens(name))].filter(t => !bt.has(t));
+    const hits = nt.filter(t => labelTokens.some(l => tokMatch(l, t))).length;
+    return { cover: nt.length ? hits / nt.length : 0, hits, total: nt.length };
+  }
+  function rankUrls(urls, labelTokens, brandAliases = [], lang = 'es') {
+    const slugTok = u => { try { const p = new URL(u).pathname; return decodeURIComponent(p).split('/').filter(Boolean).slice(-2).join(' '); } catch (e) { return ''; } };
+    let list = urls.filter(u => !/\.(jpg|jpeg|png|webp|pdf)$/i.test(u) && !/\/(blog|article|articulo|noticias|sorteo|event|faq|politica|legal|cookies|tiendas|rutina|diagnostico|encuentra)/i.test(u));
+    const loc = list.filter(u => new RegExp('/(' + lang + '|' + lang + '-' + lang + ')(/|$)', 'i').test(u));
+    if (loc.length > 20) list = loc;
+    // misma página en varios idiomas: quedarse con la española
+    const bySlug = {}; for (const u of list) { const k = u.split('?')[0].replace(/\/$/, '').split('/').pop(); if (!bySlug[k] || new RegExp('/' + lang + '([-_]' + lang + ')?/', 'i').test(u)) bySlug[k] = u; }
+    list = Object.values(bySlug);
+    const df = {}; for (const u of list) for (const t of new Set(tokens(slugTok(u)))) df[t] = (df[t] || 0) + 1;
+    const idf = {}; for (const [t, n] of Object.entries(df)) idf[t] = Math.log(1 + list.length / n);
+    return list.map(u => ({ url: u, score: matchScore(labelTokens, slugTok(u), idf, brandAliases) })).filter(x => x.score > 0.15).sort((a, b) => b.score - a.score).slice(0, 6);
+  }
+  const sitemapLocs = xml => [...String(xml).matchAll(/<loc>\s*(?:<!\[CDATA\[)?([^<\]]+?)(?:\]\]>)?\s*<\/loc>/g)].map(m => m[1].replace(/&amp;/g, '&').trim());
+  const isSitemapIndex = xml => /<sitemapindex/i.test(xml);
+
+  // ----- página del fabricante -----
+  const decode = s => { const t = document.createElement('textarea'); t.innerHTML = String(s || ''); return t.value; };
+  const stripHtml = s => decode(String(s || '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|li|div|h\d)>/gi, '\n').replace(/<[^>]+>/g, ' ')).replace(/[ \t\u00a0\u200b]+/g, ' ').replace(/\s*\n\s*/g, '\n').trim();
+  function textOf(el) {
+    let out = '';
+    const walk = n => {
+      if (n.nodeType === 3) { out += n.nodeValue; return; }
+      if (n.nodeType !== 1) return;
+      const tag = n.tagName; if (/^(SCRIPT|STYLE|NOSCRIPT|SVG|BUTTON|TEMPLATE)$/.test(tag)) return;
+      const block = /^(P|LI|DIV|BR|H\d|TR|DT|DD|UL|OL|SECTION|ARTICLE)$/.test(tag);
+      if (block) out += '\n'; if (tag === 'LI') out += '• ';
+      n.childNodes.forEach(walk); if (block) out += '\n';
+    };
+    walk(el);
+    return out.replace(/[ \t\u00a0\u200b]+/g, ' ').replace(/ *\n[\n ]*/g, '\n').trim();
+  }
+  const cut = (s, n) => { s = String(s || '').trim(); if (s.length <= n) return s; const c = s.slice(0, n); const i = Math.max(c.lastIndexOf('. '), c.lastIndexOf('.\n')); return (i > n * 0.5 ? c.slice(0, i + 1) : c + '…'); };
+  const looksInci = s => (String(s).match(/[,•●·]| - /g) || []).length >= 5 && /\b(aqua|water|eau|glycerin|alcohol|parfum)\b/i.test(s);
+  const SEC = {
+    howto: /^(modo de (empleo|uso)|c[oó]mo (se )?(usar|aplicar|utilizar)(lo)?|instrucciones( de uso)?|aplicaci[oó]n|consejos de (uso|aplicaci[oó]n)|how to use|directions|mode d.emploi)\b/i,
+    inci: /^(ingredientes|lista de ingredientes|composici[oó]n|f[oó]rmula completa|inci|ingredients|composition)\b/i,
+    key: /^(ingredientes (clave|principales|activos|destacados)|activos( clave)?|principios activos|key ingredients|beneficios|benefits)\b/i
+  };
+  function sections(doc) {
+    const found = { howto: '', inci: '', key: '' };
+    const label = el => (el.getAttribute('title') || el.getAttribute('aria-label') || el.getAttribute('data-title') || '').trim();
+    const setIf = (k, txt) => { txt = (txt || '').trim(); if (!found[k] && txt.length >= 12) found[k] = txt; };
+    // 1) contenedores con título (acordeones)
+    doc.querySelectorAll('[title],[data-title]').forEach(el => {
+      const l = label(el).replace(/[\u200b]/g, ''); if (!l || l.length > 60) return;
+      for (const k of Object.keys(SEC)) if (SEC[k].test(l)) setIf(k, textOf(el).replace(l, ''));
+    });
+    // 2) encabezados seguidos de contenido
+    doc.querySelectorAll('h1,h2,h3,h4,h5,summary,dt,button,[role=tab],strong').forEach(h => {
+      const l = (h.textContent || '').replace(/[\u200b]/g, '').replace(/\s+/g, ' ').trim(); if (!l || l.length > 60) return;
+      for (const k of Object.keys(SEC)) {
+        if (!SEC[k].test(l) || found[k]) continue;
+        let txt = '';
+        const ctl = h.getAttribute('aria-controls'); if (ctl) { const t = doc.getElementById(ctl); if (t) txt = textOf(t); }
+        if (!txt && h.tagName === 'SUMMARY') txt = textOf(h.parentElement).replace(l, '');
+        if (!txt && h.tagName === 'DT') { const dd = h.nextElementSibling; if (dd) txt = textOf(dd); }
+        if (!txt) { let n = h.nextElementSibling, acc = ''; while (n && !/^H\d$/.test(n.tagName) && acc.length < 1500) { acc += '\n' + textOf(n); n = n.nextElementSibling; } txt = acc; }
+        if (!txt && h.parentElement) { const s = h.parentElement.nextElementSibling; if (s) txt = textOf(s); }
+        setIf(k, txt);
+      }
+    });
+    return found;
+  }
+  function jsonLd(doc) {
+    const out = [];
+    doc.querySelectorAll('script[type="application/ld+json"]').forEach(s => { try { const j = JSON.parse(s.textContent); (Array.isArray(j) ? j : [j]).forEach(o => { out.push(o); (o['@graph'] || []).forEach(g => out.push(g)); }); } catch (e) {} });
+    return out;
+  }
+  const typeIs = (o, t) => [].concat(o['@type'] || []).includes(t);
+  function highlights(texts) {
+    const out = []; const seen = new Set();
+    const joined = texts.filter(Boolean).join('\n');
+    const plain = norm(joined);
+    for (const [label, re] of ACTIVES) {
+      const m = plain.match(re); if (!m) continue;
+      const src = new RegExp('(\\d{1,2}(?:[.,]\\d{1,2})?)\\s?%\\s*(?:de\\s+)?(?:' + re.source.slice(3, -3) + ')|(?:' + re.source.slice(3, -3) + ')\\s*(?:al\\s+|\\(|:\\s*)?(\\d{1,2}(?:[.,]\\d{1,2})?)\\s?%', 'i');
+      const c = plain.match(src);
+      const conc = c ? (c[1] || c[2]).replace('.', ',') + ' %' : '';
+      if (!seen.has(label)) { seen.add(label); out.push(conc ? `${label} ${conc}` : label); }
+    }
+    return out;
+  }
+  function paoFrom(text) {
+    const m = norm(text).match(/(\d{1,2})\s*(?:meses|months|mois)\s*(?:despues de (?:su |la )?apertura|tras (?:su |la )?apertura|after opening|apres ouverture|una vez abierto)/)
+      || norm(text).match(/\bpao\s*:?\s*(\d{1,2})\s*m\b/);
+    return m ? Number(m[1]) : null;
+  }
+  function category(...texts) {
+    for (const t of texts) { const n = norm(t); if (!n) continue; for (const [c, re] of CAT_RULES) if (re.test(n)) return c; }
+    return '';
+  }
+  function parseProductPage(html, url, brandHint = '') {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const ld = jsonLd(doc);
+    const prod = ld.find(o => typeIs(o, 'Product')) || null;
+    const howto = ld.find(o => typeIs(o, 'HowTo'));
+    const meta = n => doc.querySelector(`meta[name="${n}"],meta[property="${n}"]`)?.getAttribute('content') || '';
+    const brandName = prod ? (typeof prod.brand === 'string' ? prod.brand : prod.brand?.name || '') : '';
+    const crumbList = ld.filter(o => typeIs(o, 'BreadcrumbList')).flatMap(o => (o.itemListElement || []).map(i => decode(i.name || i.item?.name || '').trim()));
+    const slugT = tokens(decodeURIComponent((url || '').split('/').filter(Boolean).pop() || ''));
+    const h1 = (doc.querySelector('h1')?.textContent || '').replace(/\s+/g, ' ').trim();
+    const h1ok = h1 && tokens(h1).some(t => slugT.some(s => tokMatch(s, t)));
+    let name = decode(prod?.name || '').trim() || (crumbList.length > 1 ? crumbList[crumbList.length - 1] : '') || (h1ok ? h1 : '') || meta('og:title').split('|')[0].trim() || h1;
+    const desc = cut(stripHtml(prod?.description || meta('og:description') || meta('description')), 420);
+    const sec = sections(doc);
+    let steps = '';
+    if (howto && Array.isArray(howto.step)) steps = howto.step.map(s => stripHtml(typeof s === 'string' ? s : s.text || s.name || '')).filter(Boolean).map(s => '• ' + s).join('\n');
+    const instructions = cut(steps || sec.howto, 900);
+    let inci = '';
+    const prop = [].concat(prod?.additionalProperty || []).find(p => /ingredient/i.test(p?.name || '') && looksInci(p.value || ''));
+    if (prop) inci = stripHtml(prop.value);
+    else if (looksInci(sec.inci)) inci = sec.inci;
+    else { const m = html.match(/(AQUA|WATER|EAU|Aqua|Water)\s*(?:\/\s*(?:WATER|EAU|Water)\s*)*[\s\S]{0,40}?[,•●·-][^<"]{40,3000}/); if (m && looksInci(m[0])) inci = stripHtml(m[0]); }
+    inci = cut(inci.replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' '), 3000);
+    const keyTxt = [name, desc, sec.key && !looksInci(sec.key) ? sec.key : '', !looksInci(sec.inci) ? sec.inci : ''];
+    const hl = highlights(keyTxt);
+    const bodyTxt = textOf(doc.body || doc.documentElement);
+    const pao = paoFrom([instructions, sec.inci, sec.key, bodyTxt.slice(0, 60000)].join('\n'));
+    const crumbs = crumbList.join(' ');
+    return {
+      url, name: name.replace(/\s+/g, ' '), brand: decode(brandName).trim() || brandHint, description: desc, instructions, inci, highlights: hl, pao,
+      category: category(name, crumbs, desc), isProduct: !!prod || !!howto || !!inci
+    };
+  }
+  // ----- Open Beauty Facts -----
+  function fromOBF(p) {
+    const pick = (...k) => { for (const x of k) if (p[x] && String(p[x]).trim()) return String(p[x]).trim(); return ''; };
+    const name = pick('product_name_es', 'product_name', 'product_name_en', 'product_name_fr');
+    const pao = p.periods_after_opening ? (String(p.periods_after_opening).match(/(\d{1,2})/) || [])[1] : null;
+    const cats = (p.categories_tags || []).map(c => c.replace(/^\w\w:/, '').replace(/-/g, ' ')).join(' ');
+    return {
+      code: p.code, name, brand: (p.brands || '').split(',')[0].trim(), inci: pick('ingredients_text_es', 'ingredients_text', 'ingredients_text_en', 'ingredients_text_fr').replace(/\s*\r?\n\s*/g, ' '),
+      pao: pao ? Number(pao) : null, category: category(name, cats), image: p.image_front_small_url || '', url: p.url || (p.code ? `https://world.openbeautyfacts.org/product/${p.code}` : '')
+    };
+  }
+  // ----- comprobación etiqueta ↔ ficha -----
+  function verify(label, cand, brandFromLabel) {
+    const out = [];
+    const nameTxt = norm((cand.name || '') + ' ' + (cand.description || ''));
+    if (cand.brand) out.push(brandFromLabel ? (norm(brandFromLabel) === norm(cand.brand) || norm(cand.brand).includes(norm(brandFromLabel)) ? { ok: true, t: `Marca: ${cand.brand} (coincide con la etiqueta)` } : { ok: false, t: `Marca: la etiqueta parece decir «${brandFromLabel}» y la ficha «${cand.brand}»` }) : { ok: null, t: `Marca: ${cand.brand} (no se ha leído en la foto)` });
+    const s = matchScore(label.tokens, cand.name || '');
+    out.push(s >= 0.5 ? { ok: true, t: 'Nombre: coincide con palabras de la etiqueta' } : { ok: false, t: 'Nombre: pocas palabras coinciden con la etiqueta; revisa que sea tu producto' });
+    for (const p of label.pct) { const n = p.replace(' %', ''); const ok = new RegExp('\\b' + n.replace('.', '[.,]') + '\\s?%').test(nameTxt + ' ' + (cand.highlights || []).join(' ')); out.push(ok ? { ok: true, t: `Concentración ${p}: aparece también en la ficha` } : { ok: false, t: `La etiqueta muestra ${p} y la ficha no lo menciona: revisa la variante` }); }
+    if (label.spf) { const ok = new RegExp('(spf|fps)\\s*' + label.spf.replace('+', '\\+?')).test(nameTxt); out.push(ok ? { ok: true, t: `SPF ${label.spf}: coincide` } : { ok: false, t: `La etiqueta indica SPF ${label.spf}: comprueba la variante` }); }
+    return out;
+  }
+  return { norm, tokens, coverage, detectBrand, brandInfo, brandTag, parseLabel, matchScore, rankUrls, sitemapLocs, isSitemapIndex, parseProductPage, fromOBF, verify, category, highlights, paoFrom, BRANDS };
+})();
+
+/* ===== Mi Skincare · interfaz ===== */
+const I = {
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  half: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>',
+  dash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 12h10"/></svg>',
+  info: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.2"/></svg>',
+  left: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  right: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  close: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  up: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg>',
+  tabHoy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2c3.6 4.2 6 7.3 6 10.3a6 6 0 0 1-12 0c0-3 2.4-6.1 6-10.3z"/><path d="M9.2 14.2a2.9 2.9 0 0 0 2.8 2.6"/></svg>',
+  tabCal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><circle cx="8.5" cy="14.5" r="1" fill="currentColor"/><circle cx="12" cy="14.5" r="1" fill="currentColor"/></svg>',
+  tabProd: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.8h5v3.4h-5z"/><path d="M8 6.2h8a1.8 1.8 0 0 1 1.8 1.8v11.2a2 2 0 0 1-2 2H8.2a2 2 0 0 1-2-2V8A1.8 1.8 0 0 1 8 6.2z"/><path d="M6.2 11.5h11.6"/></svg>',
+  tabRut: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5h10M9.5 12h10M9.5 17.5h10"/><circle cx="5" cy="6.5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="5" cy="17.5" r="1.4"/></svg>',
+  tabYo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.4 7.5-5.4s6.3 1.8 7.5 5.4"/></svg>',
+  bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>',
+  target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.4" stroke-linecap="round"/></svg>',
+  palette: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 1.9-1 1.4-2.1-.6-1.2.2-2.4 1.5-2.4h1.6a4 4 0 0 0 4-4c0-4.7-3.8-8.5-8.5-8.5z"/><circle cx="7.8" cy="11" r="1.2" fill="currentColor"/><circle cx="11" cy="7.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.8" r="1.2" fill="currentColor"/></svg>',
+  db: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></svg>',
+  camera: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>',
+  scan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M7 12h10"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>',
+  calPhone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>'
+};
+
+const ui = {
+  tab: 'hoy', date: todayKey(), hoyMonth: ymOf(todayKey()), calMonth: ymOf(todayKey()),
+  rDay: dow(todayKey()), rSlot: 'am', editFrom: todayKey(), open: {}, cat: '', showArchived: false,
+  skinOpen: false, sheets: [], lastToday: todayKey()
+};
+const confirmFns = new Map();
+
+/* ---------- ayudas de interfaz ---------- */
+let toastTimer = null;
+function toast(msg, kind = 'info') {
+  const el = $('#toast'); if (!el) return;
+  el.textContent = msg; el.className = 'toast' + (kind === 'error' ? ' error' : ''); el.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, kind === 'error' ? 6000 : 2600);
+}
+function thumbHTML(p, ord, fallback) {
+  const ph = p?.photo && photos[p.photo];
+  const initial = esc(((p?.name || fallback || '·').replace(/^DEMO\s+/, '')[0] || '·').toUpperCase());
+  return `<div class="thumb">${ph ? `<img src="${ph}" alt="">` : initial}${ord ? `<span class="ord">${ord}</span>` : ''}</div>`;
+}
+function stepView(s) {
+  const p = product(s.productId);
+  const name = s.productId ? (s.pName ?? p?.name ?? '(producto eliminado)') : (s.title || 'Paso');
+  const brand = s.productId ? (s.pBrand ?? p?.brand ?? '') : '';
+  const sub = [brand, s.productId && s.title ? s.title : ''].filter(Boolean).join(' · ');
+  return { p, name, sub, instr: s.instructions || '', pInstr: s.pInstr ?? p?.instructions ?? '', notes: p?.notes || '', mfr: p?.mfrInstructions || '', archived: !!p?.archived };
+}
+function dayTitle(k) {
+  const t = todayKey();
+  if (k === t) return 'Hoy'; if (k === addDays(t, -1)) return 'Ayer'; if (k === addDays(t, 1)) return 'Mañana';
+  return cap(fmt(k, { weekday: 'long' }));
+}
+function paoInfo(p) {
+  if (!p.opened || !p.paoMonths) return null;
+  const d = parseKey(p.opened); d.setMonth(d.getMonth() + Number(p.paoMonths)); const until = keyOf(d);
+  return { until, over: until < todayKey() };
+}
+
+/* ---------- calendario compartido (Hoy y Calendario usan esta misma función) ---------- */
+function cellHTML(k, ctx) {
+  const inf = dayInfo(k);
+  const cls = ['cell', inf.when];
+  let sym = '';
+  const aria = [fmt(k, { weekday: 'long', day: 'numeric', month: 'long' })];
+  if (inf.fill) { cls.push('fill-' + inf.fill); sym = inf.fill === 'both' ? I.check : inf.fill === 'am' ? I.sun : I.moon; }
+  if (inf.when === 'future') aria.push('fecha futura');
+  else if (inf.when === 'before') aria.push('antes del inicio del seguimiento');
+  else {
+    if (inf.fill === 'both') aria.push('mañana y noche completadas');
+    else if (inf.fill === 'am') aria.push('mañana completada');
+    else if (inf.fill === 'pm') aria.push('noche completada');
+    if (inf.partial) aria.push('algunos pasos realizados');
+    if (!inf.fill && inf.partial) { cls.push('partial-only'); sym = I.half; }
+    if (!inf.fill && !inf.partial && inf.when === 'past') {
+      if (inf.scheduled) { cls.push('missed'); sym = I.dash; aria.push('sin registro'); } else aria.push('sin pasos previstos');
+    }
+  }
+  if (k === ui.date && ctx === 'hoy') cls.push('selected');
+  if (inf.when === 'today') { cls.push('today'); aria.push('hoy'); }
+  const pdot = inf.fill && inf.partial ? '<i class="pdot"></i>' : '';
+  const tl = ctx === 'cal' && inf.when === 'today' ? '<span class="tl">Hoy</span>' : '';
+  return `<button class="${cls.join(' ')}" data-act="pick-date" data-ctx="${ctx}" data-date="${k}" data-fill="${inf.fill || 'none'}" aria-label="${esc(aria.join(', '))}" data-fk="cell-${ctx}-${k}"><span class="n">${Number(k.slice(8))}</span><span class="sym">${sym}</span>${tl}${pdot}</button>`;
+}
+function calGrid(ym, ctx) {
+  const [y, m] = ym.split('-').map(Number);
+  const lead = (new Date(y, m - 1, 1).getDay() + 6) % 7, days = new Date(y, m, 0).getDate();
+  let h = `<div class="cal ${ctx === 'cal' ? 'big' : ''}" data-cal="${ctx}">`;
+  for (let i = 1; i <= 7; i++) h += `<div class="wd" aria-hidden="true">${DSH[i]}</div>`;
+  for (let i = 0; i < lead; i++) h += '<div class="cell blank" aria-hidden="true"></div>';
+  for (let d = 1; d <= days; d++) h += cellHTML(`${ym}-${pad(d)}`, ctx);
+  return h + '</div>';
+}
+function legendHTML() {
+  return `<div class="legend" aria-label="Leyenda">
+    <span><i class="sw am">${I.sun}</i>Solo mañana</span><span><i class="sw pm">${I.moon}</i>Solo noche</span>
+    <span><i class="sw both">${I.check}</i>Ambas</span><span><i class="sw part">${I.half}</i>Algunos pasos</span>
+    <span><i class="sw miss">${I.dash}</i>Sin registro</span><span><i class="sw tod"></i>Hoy</span>
+    <span><i class="sw fut"></i>Futuro</span><span><i class="sw bef"></i>Antes del inicio</span></div>`;
+}
+
+/* ---------- vista HOY ---------- */
+function routineCard(date, slot) {
+  const st = slotStat(date, slot), S = SLOTS[slot], cm = canMark(date);
+  const pct = st.total ? Math.round(st.done / st.total * 100) : 0;
+  let body;
+  if (!st.total) {
+    body = `<div class="empty">No hay pasos previstos para esta ${slot === 'am' ? 'mañana' : 'noche'}.<button class="linkbtn" data-act="goto-rutina" data-slot="${slot}">Planificar en Mi rutina</button></div>`;
+  } else {
+    body = '<ol class="steps">' + st.steps.map((s, i) => {
+      const v = stepView(s), done = !!st.doneMap[s.id], ok = `${date}|${slot}|${s.id}`, open = !!ui.open[ok];
+      const info = open ? `<div class="st-info" id="inf-${esc(s.id)}-${slot}">
+          ${v.instr ? `<div><b>Instrucciones de este paso</b>${esc(v.instr)}</div>` : ''}
+          ${v.pInstr ? `<div><b>Mis instrucciones del producto</b>${esc(v.pInstr)}</div>` : ''}
+          ${v.mfr ? `<div><b>Instrucciones del fabricante</b>${esc(v.mfr)}</div>` : ''}
+          ${v.notes ? `<div><b>Notas</b>${esc(v.notes)}</div>` : ''}
+          ${!v.instr && !v.pInstr && !v.notes && !v.mfr ? '<div class="muted">Aún no has escrito instrucciones. Puedes añadirlas en Productos o en Mi rutina.</div>' : ''}
+        </div>` : '';
+      return `<li class="step ${done ? 'done' : ''}">
+        <button class="check" role="checkbox" aria-checked="${done}" ${cm !== true ? 'disabled' : ''} data-act="toggle" data-date="${date}" data-slot="${slot}" data-step="${esc(s.id)}" data-fk="chk-${slot}-${esc(s.id)}" aria-label="${esc(v.name)}">${I.check}</button>
+        ${thumbHTML(v.p, i + 1, v.name)}
+        <div class="st-text"><strong>${esc(v.name)}${v.archived ? ' <span class="pill">archivado</span>' : ''}</strong>${v.sub ? `<span>${esc(v.sub)}</span>` : ''}</div>
+        <button class="info-btn" data-act="info" data-key="${esc(ok)}" aria-expanded="${open}" aria-label="Ver instrucciones de ${esc(v.name)}" data-fk="inf-${slot}-${esc(s.id)}">${I.info}</button>
+        ${info}</li>`;
+    }).join('') + '</ol>';
+  }
+  const src = st.source === 'override' ? '<span class="pill pink">Solo este día</span>' : st.source === 'history' ? '<span class="pill">Registro guardado</span>' : '';
+  const actBtn = !st.total ? '' : st.complete
+    ? `<button class="btn ghost sm" data-act="complete" data-v="0" data-date="${date}" data-slot="${slot}" ${cm !== true ? 'disabled' : ''}>Desmarcar todo</button>`
+    : `<button class="btn sm" data-act="complete" data-v="1" data-date="${date}" data-slot="${slot}" ${cm !== true ? 'disabled' : ''}>Completar rutina</button>`;
+  return `<section class="card routine ${slot} ${st.complete ? 'complete' : ''}" aria-label="${S.label}" data-routine="${slot}">
+    <div class="rt-head"><div class="rt-title"><span class="rt-emoji" aria-hidden="true">${S.emoji}</span><div><h2>${S.label}</h2>
+      <div class="rt-meta" data-progress="${slot}">${st.complete ? 'Completada · ' : ''}${st.done} de ${st.total} pasos</div></div></div>${src}</div>
+    ${st.total ? `<div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>` : ''}
+    ${body}
+    <div class="rt-foot"><button class="linkbtn" data-act="open-override" data-date="${date}" data-slot="${slot}">Editar solo este día</button>${actBtn}</div>
+  </section>`;
+}
+function skinCard(date) {
+  const sk = D.logs[date]?.skin || {}, cm = canMark(date);
+  const has = SKIN.some(([k]) => sk[k] != null) || (sk.notes || '').trim();
+  if (!ui.skinOpen) {
+    const sum = SKIN.filter(([k]) => sk[k] > 0).map(([k, l]) => `${l}: ${LEVELS[sk[k]].toLowerCase()}`).join(' · ');
+    return `<section class="card"><div class="row between"><div><h2>¿Cómo notas tu piel hoy?</h2><p class="small muted">${has ? esc(sum || 'Registro guardado') : 'Registro opcional'}</p></div>
+      <button class="btn soft sm" data-act="skin-open" ${cm === 'future' ? 'disabled' : ''}>${has ? 'Ver o editar' : 'Anotar'}</button></div></section>`;
+  }
+  return `<section class="card"><div class="card-h"><h2>¿Cómo notas tu piel hoy?</h2><button class="iconbtn" data-act="skin-close" aria-label="Cerrar registro de piel">${I.close}</button></div>
+    <p class="small muted" style="margin-bottom:6px">Solo es un diario personal: no evalúa ni diagnostica, y cumplir la rutina no implica por sí mismo cambios en la piel.</p>
+    ${SKIN.map(([k, l]) => `<div class="skin-row"><span class="label">${l}</span><div class="levels">${LEVELS.map((lv, i) => `<button class="lv" aria-pressed="${sk[k] === i}" data-act="skin-lv" data-k="${k}" data-v="${i}" data-date="${date}" ${cm === 'future' ? 'disabled' : ''} data-fk="lv-${k}-${i}">${lv}</button>`).join('')}</div></div>`).join('')}
+    <div class="field" style="margin-top:8px"><label for="skin-notes">Notas</label><textarea id="skin-notes" data-date="${date}" placeholder="Lo que quieras recordar de hoy" ${cm === 'future' ? 'disabled' : ''}>${esc(sk.notes || '')}</textarea></div>
+  </section>`;
+}
+function viewHoy() {
+  const d = ui.date, t = todayKey(), inf = dayInfo(d);
+  const nSched = (inf.am.total ? 1 : 0) + (inf.pm.total ? 1 : 0), nDone = (inf.am.complete ? 1 : 0) + (inf.pm.complete ? 1 : 0);
+  const prev = addDays(d, -1), next = addDays(d, 1);
+  const onboarding = meta.mode === 'real' && !D.products.length && !D.plans.length ? `<section class="card stack"><h2>Empieza por aquí</h2>
+      <ol class="small" style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px"><li>Añade tus productos en <b>Productos</b>.</li><li>Planifica cada mañana y cada noche en <b>Mi rutina</b>.</li><li>Vuelve a <b>Hoy</b> para marcar lo que hagas.</li></ol>
+      <div class="row"><button class="btn sm" data-act="new-product">Añadir producto</button><button class="btn soft sm" data-act="demo-on">Ver demostración</button></div>
+      <p class="small muted">La demostración usa datos ficticios guardados aparte: no se mezclan con los tuyos.</p></section>` : '';
+  let note = '';
+  if (inf.when === 'future') note = '<div class="note">Fecha futura: puedes consultar lo previsto, pero no marcarlo como realizado.</div>';
+  else if (inf.when === 'before') note = '<div class="note warn">Esta fecha es anterior al inicio de tu seguimiento. Puedes cambiar el inicio en Yo.</div>';
+  else if (d !== t) note = '<div class="note pink">Estás corrigiendo un día anterior. Los cambios se guardan en esa fecha.</div>';
+  return `<header class="dayhead">
+      <div class="dh-row">
+        <button class="dh-nav" data-act="day" data-date="${prev}" aria-label="Día anterior, ${esc(fmtLong(prev))}">${I.left}<b>${esc(fmt(prev, { weekday: 'short' }))}</b><span>${esc(fmt(prev, { day: 'numeric', month: 'short' }))}</span></button>
+        <div class="dh-center"><h1 id="day-title">${dayTitle(d)}</h1><p id="day-date">${esc(fmtLong(d))}</p></div>
+        <button class="dh-nav" data-act="day" data-date="${next}" aria-label="Día siguiente, ${esc(fmtLong(next))}">${I.right}<b>${esc(fmt(next, { weekday: 'short' }))}</b><span>${esc(fmt(next, { day: 'numeric', month: 'short' }))}</span></button>
+      </div>
+      <div class="dh-sum"><div class="dh-dots" aria-hidden="true"><i class="${inf.am.complete ? 'on' : ''}">${I.sun}</i><i class="${inf.pm.complete ? 'on' : ''}">${I.moon}</i></div>
+        <div class="grow"><strong>${d === t ? 'Tu skincare de hoy' : 'Tu skincare de este día'}</strong><span id="routines-done">${nSched ? `${nDone} de ${nSched} rutinas completadas` : 'Sin rutinas previstas'}</span></div>
+        ${d !== t ? '<button class="backtoday" data-act="today">Volver a hoy</button>' : ''}</div>
+    </header>
+    ${note}${onboarding}
+    ${routineCard(d, 'am')}${routineCard(d, 'pm')}
+    <section class="card"><div class="cal-nav"><button class="iconbtn" data-act="hoy-month" data-v="-1" aria-label="Mes anterior">${I.left}</button><h2>${esc(fmtMonth(ui.hoyMonth))}</h2><button class="iconbtn" data-act="hoy-month" data-v="1" aria-label="Mes siguiente">${I.right}</button></div>
+      ${calGrid(ui.hoyMonth, 'hoy')}
+      <div class="row between" style="margin-top:10px"><span class="small muted">Amarillo: mañana · Azul: noche · Verde: ambas</span><button class="linkbtn" data-act="tab" data-tab="calendario">Ver calendario</button></div></section>
+    ${skinCard(d)}`;
+}
+
+/* ---------- vista CALENDARIO ---------- */
+function viewCal() {
+  const s = monthSummary(ui.calMonth), goal = Number(D.profile.goal) || 0;
+  const tile = (cls, ic, label, c, tt) => `<div class="sum-tile"><span class="k"><i class="sw ${cls}">${ic}</i>${label}</span><b>${c}${tt != null ? `<small> / ${tt}</small>` : ''}</b></div>`;
+  return `<div class="page-h"><h1>Calendario</h1>${ymOf(todayKey()) !== ui.calMonth ? '<button class="btn soft sm" data-act="cal-today">Hoy</button>' : ''}</div>
+    <section class="card"><div class="cal-nav"><button class="iconbtn" data-act="cal-month" data-v="-1" aria-label="Mes anterior">${I.left}</button><h2 id="cal-title">${esc(fmtMonth(ui.calMonth))}</h2><button class="iconbtn" data-act="cal-month" data-v="1" aria-label="Mes siguiente">${I.right}</button></div>
+      ${calGrid(ui.calMonth, 'cal')}${legendHTML()}</section>
+    <section class="card stack"><h2>Resumen del mes</h2>
+      <div class="summary">${tile('am', I.sun, 'Mañanas', s.amC, s.amT)}${tile('pm', I.moon, 'Noches', s.pmC, s.pmT)}${tile('both', I.check, 'Ambas', s.both, null)}</div>
+      ${s.pct != null ? `<div><div class="row between small"><span>Constancia: <b>${s.pct} %</b> de las rutinas previstas</span><span class="muted">Objetivo ${goal} %</span></div>
+        <div class="goalbar" aria-hidden="true"><i style="width:${s.pct}%"></i><u style="left:calc(${Math.min(goal, 100)}% - 1px)"></u></div></div>` : '<p class="small muted">Aún no hay días que contar en este mes.</p>'}
+      <p class="small muted">Solo cuentan los días desde el inicio del seguimiento hasta hoy. Las fechas futuras no cuentan, y hoy solo suma cuando completas una rutina.</p></section>`;
+}
+
+/* ---------- vista PRODUCTOS ---------- */
+function productCard(p) {
+  const pao = paoInfo(p);
+  return `<button class="pcard ${p.archived ? 'archived' : ''}" data-act="edit-product" data-id="${esc(p.id)}">
+    ${thumbHTML(p)}<span><strong>${esc(p.name)}</strong><span class="meta">${esc([p.brand, p.category].filter(Boolean).join(' · ') || 'Sin marca ni categoría')}</span>
+    ${pao ? `<span class="pao ${pao.over ? 'over' : ''}">${pao.over ? 'Plazo tras apertura superado' : 'Plazo tras apertura hasta'} ${esc(fmtShort(pao.until))}</span>` : ''}</span>
+    <span class="muted" aria-hidden="true">${I.right}</span></button>`;
+}
+function viewProducts() {
+  const act = D.products.filter(p => !p.archived), arch = D.products.filter(p => p.archived);
+  const cats = [...new Set(act.map(p => p.category).filter(Boolean))];
+  const list = act.filter(p => !ui.cat || p.category === ui.cat).sort((a, b) => a.name.localeCompare(b.name, 'es'));
+  const dr = SCAN_OK && typeof loadDraft === 'function' ? loadDraft() : null;
+  return `<div class="page-h"><div><h1>Productos</h1><p class="sub">${act.length} en uso${arch.length ? ` · ${arch.length} archivados` : ''}</p></div><button class="btn soft sm" data-act="new-product">+ Añadir</button></div>
+    ${SCAN_OK ? `<button class="btn block scanbtn" data-act="scan-open">${I.camera} Escanear producto</button>` : '<p class="note small">«Escanear producto» funciona en la app publicada (tu dirección de GitHub Pages o el icono del iPhone), no en esta vista previa.</p>'}
+    ${dr && dr.photos?.length && dr.status !== 'done' ? `<div class="note pink row between"><span>Tienes un escaneo sin terminar${dr.status === 'offline' ? ' (pendiente de conexión)' : ''}.</span><button class="btn sm" data-act="scan-open">Continuar</button></div>` : ''}
+    ${cats.length > 1 ? `<div class="search" role="toolbar" aria-label="Filtrar por categoría"><button class="chipbtn" aria-pressed="${!ui.cat}" data-act="cat" data-v="">Todos</button>${cats.map(c => `<button class="chipbtn" aria-pressed="${ui.cat === c}" data-act="cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
+    <div class="plist">${list.length ? list.map(productCard).join('') : `<div class="card empty">Todavía no hay productos. Añade el primero para poder usarlo en tus rutinas.<button class="btn sm" data-act="new-product">Añadir producto</button></div>`}</div>
+    ${arch.length ? `<button class="linkbtn" data-act="toggle-arch">${ui.showArchived ? 'Ocultar archivados' : `Ver archivados (${arch.length})`}</button>
+      ${ui.showArchived ? `<div class="plist">${arch.map(productCard).join('')}</div><p class="small muted">Los productos archivados siguen apareciendo en los días en que los usaste.</p>` : ''}` : ''}`;
+}
+
+/* ---------- vista MI RUTINA ---------- */
+function stepListHTML(ctx, list) {
+  if (!list.length) return '<div class="empty">Sin pasos. Añade el primero.</div>';
+  return '<ol class="edlist">' + list.map((s, i) => {
+    const v = stepView(s);
+    return `<li class="ed-step">${thumbHTML(v.p, i + 1, v.name)}<div class="st-text"><strong>${esc(v.name)}${v.archived ? ' <span class="pill">archivado</span>' : ''}</strong>${v.sub ? `<span>${esc(v.sub)}</span>` : ''}${v.instr ? `<span>${esc(v.instr.length > 70 ? v.instr.slice(0, 70) + '…' : v.instr)}</span>` : ''}</div>
+      <div class="ed-actions"><button data-act="st-move" data-ctx="${ctx}" data-i="${i}" data-v="-1" ${i === 0 ? 'disabled' : ''} aria-label="Subir paso ${i + 1}">${I.up}</button><button data-act="st-move" data-ctx="${ctx}" data-i="${i}" data-v="1" ${i === list.length - 1 ? 'disabled' : ''} aria-label="Bajar paso ${i + 1}">${I.down}</button>
+      <button data-act="st-edit" data-ctx="${ctx}" data-i="${i}">Editar</button><button class="del" data-act="st-del" data-ctx="${ctx}" data-i="${i}">Eliminar</button></div></li>`;
+  }).join('') + '</ol>';
+}
+function viewRutina() {
+  const from = ui.editFrom, t = todayKey(), plan = planAt(from), later = nextPlanAfter(from);
+  const list = weekSteps(plan, ui.rDay, ui.rSlot);
+  const ovs = Object.keys(D.overrides).filter(k => k >= addDays(t, -14) && (D.overrides[k].am || D.overrides[k].pm)).sort();
+  return `<div class="page-h"><div><h1>Mi rutina</h1><p class="sub">Se repite cada semana</p></div></div>
+    <section class="card stack"><div class="field"><label for="r-from">Aplicar cambios desde</label><input type="date" id="r-from" value="${from}"></div>
+      <p class="small muted">${from < t ? 'Cambiarás también días pasados. Los días en que marcaste algo conservan lo que hiciste.' : from === t ? 'Los días anteriores conservan su planificación y sus registros.' : 'Hasta esa fecha se mantiene la planificación actual.'}${later ? ` Hay otra planificación desde el ${esc(fmtShort(later.from))}: estos cambios se aplican hasta ese día.` : ''}</p></section>
+    <section class="card stack">
+      <div class="daytabs" role="tablist" aria-label="Día de la semana">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button class="daytab" role="tab" aria-selected="${ui.rDay === n}" data-act="r-day" data-v="${n}" aria-label="${DAYS[n]}" data-fk="rday-${n}">${DSH[n]}<span class="dd"><i class="${weekSteps(plan, n, 'am').length ? 'a' : ''}"></i><i class="${weekSteps(plan, n, 'pm').length ? 'p' : ''}"></i></span></button>`).join('')}</div>
+      <div class="seg" role="group" aria-label="Momento del día"><button aria-pressed="${ui.rSlot === 'am'}" data-act="r-slot" data-v="am">☀️ Mañana</button><button aria-pressed="${ui.rSlot === 'pm'}" data-act="r-slot" data-v="pm">🌙 Noche</button></div>
+      <h2>${DAYS[ui.rDay]} · ${SLOTS[ui.rSlot].short.toLowerCase()}</h2>
+      ${stepListHTML('plan', list)}
+      <div class="row"><button class="btn sm" data-act="st-add" data-ctx="plan">+ Añadir paso</button><button class="btn soft sm" data-act="copy-open" ${list.length ? '' : 'disabled'}>Copiar a otros días</button></div>
+    </section>
+    <section class="card stack"><h2>Cambiar solo una fecha</h2><p class="small muted">Modifica un día concreto sin tocar la semana.</p>
+      <div class="row"><input type="date" id="ov-date" value="${ui.date}" aria-label="Fecha que quieres cambiar"><button class="btn soft sm" data-act="ov-open-date">Editar esa fecha</button></div>
+      ${ovs.length ? `<ul class="vlist">${ovs.map(k => `<li><span>${esc(cap(fmtDM(k)))} · ${['am', 'pm'].filter(s => D.overrides[k][s]).map(s => SLOTS[s].short.toLowerCase()).join(' y ')}</span><button class="linkbtn" data-act="open-override" data-date="${k}" data-slot="${D.overrides[k].am ? 'am' : 'pm'}">Ver</button></li>`).join('')}</ul>` : ''}</section>
+    <section class="card stack"><h2>Historial de planificación</h2>
+      ${D.plans.length ? `<ul class="vlist">${D.plans.slice().reverse().map(v => { let n = 0; for (let i = 1; i <= 7; i++) n += v.week[i].am.length + v.week[i].pm.length; return `<li><span>Desde el ${esc(fmtShort(v.from))} · ${n} pasos por semana</span>${v.from === from ? '<span class="pill pink">Viendo</span>' : `<button class="linkbtn" data-act="r-from-set" data-v="${v.from}">Ver</button>`}</li>`; }).join('')}</ul>` : '<p class="small muted">Aún no has guardado ninguna planificación.</p>'}
+    </section>`;
+}
+
+/* ---------- vista YO ---------- */
+const isStandalone = () => { try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; } };
+const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const appUrl = () => location.href.split('#')[0].split('?')[0];
+function installHTML(inIframe) {
+  if (isStandalone()) return '';
+  let where = '';
+  if (inIframe) where = '<div class="note">Esta vista previa de Claude no se puede instalar. Abre en Safari el enlace de tu app publicada en GitHub Pages.</div>';
+  else if (!isIOS()) where = `<div class="note stack" style="gap:6px"><span>Estás en otro dispositivo. Abre esta dirección en Safari en tu iPhone:</span><b style="overflow-wrap:anywhere;color:var(--ink)" id="app-url">${esc(appUrl())}</b><button class="btn soft sm" data-act="copy-link" style="align-self:flex-start">Copiar enlace</button></div>`;
+  return `<section class="card stack" id="install-ios" aria-labelledby="install-h">
+    <div class="mi-h"><span class="mi-ic">${I.phone}</span><strong id="install-h">Cómo instalar en iPhone</strong></div>
+    ${where}
+    <ol class="howto">
+      <li>Abre la dirección de Mi Skincare en <b>Safari</b>.</li>
+      <li>Toca el botón <b>···</b> junto a la barra de direcciones y después <b>Compartir</b>. <span class="muted">En iOS 18 o anterior, toca directamente <b>Compartir</b> (el cuadrado con una flecha hacia arriba).</span></li>
+      <li>Desliza hacia abajo y toca <b>Añadir a pantalla de inicio</b>.</li>
+      <li>Deja activado <b>Abrir como app web</b> y toca <b>Añadir</b>.</li>
+      <li>Abre Mi Skincare desde su icono. Este apartado ya no aparecerá.</li>
+    </ol>
+    <div class="note warn">La app instalada guarda sus datos aparte de Safari y de esta vista. Exporta antes una copia y, ya en la app instalada, ve a Yo → Importar copia.</div>
+  </section>`;
+}
+function scanSettingsHTML(inIframe) {
+  const c = typeof scanCfg === 'function' ? scanCfg() : { proxy: '', obf: true }; const h = typeof proxyHealth !== 'undefined' ? proxyHealth : null;
+  const hs = !c.proxy ? 'Sin configurar: se usará solo Open Beauty Facts.' : !h ? 'Sin comprobar' : !h.ok ? 'No conecta: ' + h.msg : `Conectado · webs oficiales: sí · búsqueda general: ${h.search ? 'sí' : 'no'} · hoy ${h.used?.search ?? 0}/${h.limits?.search ?? '–'} búsquedas y ${h.used?.fetch ?? 0}/${h.limits?.fetch ?? '–'} consultas`;
+  return `<section class="card"><ul class="menu">
+    <li><div class="mi-h"><span class="mi-ic">${I.scan}</span><strong>Escanear productos</strong></div>
+      <p class="small muted">El texto de la etiqueta y el código de barras se leen en el teléfono. La foto nunca se envía.</p>
+      ${SCAN_OK ? `<div class="kv"><span>Lector sin conexión</span><span id="ocr-state">Comprobando…</span></div><button class="btn soft sm" data-act="y-offline-prep" style="align-self:flex-start">Descargar lector (≈ 17 MB) para usarlo sin conexión</button>` : '<p class="small muted">Disponible en la app publicada.</p>'}</li>
+    <li><label class="row" style="justify-content:space-between;font-weight:650">Buscar en Open Beauty Facts <input type="checkbox" id="y-obf" ${c.obf ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--pink)"></label>
+      <p class="small muted">Base de datos colaborativa y gratuita. Se envía el código de barras o la marca. No necesita cuenta.</p></li>
+    <li><div class="field"><label for="y-proxy">Servicio de búsqueda (web oficial)</label><input type="text" id="y-proxy" inputmode="url" autocomplete="off" placeholder="https://mi-skincare-busqueda.tu-cuenta.workers.dev" value="${esc(c.proxy)}"></div>
+      <div class="kv"><span>Estado</span><span id="proxy-state">${esc(hs)}</span></div>
+      <button class="btn soft sm" data-act="y-proxy-check" style="align-self:flex-start">Comprobar conexión</button>
+      <details class="small"><summary>Qué se envía</summary><p class="muted" style="margin-top:6px">A tu servicio (Cloudflare, tu cuenta): la marca y palabras del nombre, y las direcciones de las páginas oficiales que se consultan. Si activas la búsqueda general, esas palabras se reenvían a Tavily. Nunca se envían fotos, notas ni registros. La clave del buscador está guardada en tu servicio, no en la app.</p></details></li>
+  </ul></section>`;
+}
+function offlineState(inIframe) {
+  if (inIframe) return 'No disponible en la vista previa';
+  if (!('serviceWorker' in navigator)) return 'No disponible en este navegador';
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') return 'Solo al abrirla desde su dirección https';
+  return navigator.serviceWorker.controller ? 'Preparado' : 'Preparándose: vuelve a abrir la app con conexión';
+}
+function fmtBytes(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+function viewYo() {
+  const pr = D.profile, av = pr.avatar && photos[pr.avatar];
+  const inIframe = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+  const saved = saveState.ok ? (saveState.at ? `Último guardado: ${saveState.at.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}` : 'Sin cambios en esta sesión') : 'Último intento de guardado fallido';
+  return `<div class="page-h"><h1>Yo</h1></div>
+    <section class="card"><div class="me"><div class="avatar">${av ? `<img src="${av}" alt="Tu foto">` : esc((pr.name || '☺')[0].toUpperCase())}</div>
+      <div class="stack" style="flex:1;min-width:0;gap:8px"><div class="field"><label for="y-name">Nombre (opcional)</label><input type="text" id="y-name" value="${esc(pr.name)}" placeholder="Cómo quieres que te llame" autocomplete="off"></div>
+      <div class="row"><label class="btn soft sm filebtn">${av ? 'Cambiar foto' : 'Añadir foto'}<input type="file" id="y-avatar" accept="image/*"></label>${av ? '<button class="linkbtn" data-act="avatar-del">Quitar</button>' : ''}</div></div></div></section>
+    ${installHTML(inIframe)}
+
+    <section class="card"><ul class="menu">
+      <li><div class="mi-h"><span class="mi-ic">${I.target}</span><strong>Mi objetivo de constancia</strong></div>
+        <div class="grid2"><div class="field"><label for="y-goal">Rutinas completadas al mes (%)</label><input type="number" id="y-goal" min="0" max="100" step="5" value="${esc(pr.goal)}"></div>
+        <div class="field"><label for="y-start">Inicio del seguimiento</label><input type="date" id="y-start" value="${esc(pr.trackingStart)}" max="${todayKey()}"></div></div>
+        <p class="small muted">Los días anteriores al inicio no cuentan como incumplidos.</p></li>
+      <li><div class="mi-h"><span class="mi-ic">${I.bell}</span><strong>Recordatorios</strong><span class="pill next">Próxima fase</span></div>
+        <div class="grid2"><div class="field"><label for="y-am">Mañana</label><input type="time" id="y-am" value="${esc(pr.reminders.am)}"></div><div class="field"><label for="y-pm">Noche</label><input type="time" id="y-pm" value="${esc(pr.reminders.pm)}"></div></div>
+        <p class="small muted">Tus horarios se guardan, pero esta versión todavía no envía avisos. En iPhone, los avisos de una web app exigen instalarla en la pantalla de inicio y un pequeño servidor de notificaciones.</p></li>
+      <li><div class="mi-h"><span class="mi-ic">${I.calPhone}</span><strong>Calendario del teléfono</strong><span class="pill next">Próxima fase</span></div>
+        <dl class="opt"><dt>Exportar</dt><dd>Descarga un archivo .ics con tus horarios. Se añade una vez; si cambias los horarios, hay que volver a exportarlo.</dd>
+        <dt>Suscribirse</dt><dd>El iPhone consulta una dirección web publicada y se actualiza cada cierto tiempo. Solo lectura. Requiere alojar ese archivo.</dd>
+        <dt>Sincronizar</dt><dd>Cambios automáticos en ambos sentidos (por ejemplo, con Google Calendar o iCloud). Requiere cuenta y servidor.</dd></dl>
+        <p class="small muted">Añadir un evento al calendario nunca marcará una rutina como realizada.</p></li>
+    </ul></section>
+
+    ${scanSettingsHTML(inIframe)}
+    <section class="card"><ul class="menu">
+      <li><div class="mi-h"><span class="mi-ic">${I.shield}</span><strong>Copia de seguridad</strong></div>
+        <p class="small muted">Guarda un archivo con productos, fotos, planificación y registros. Consérvalo en Archivos, iCloud Drive o tu ordenador.${D.lastExport ? ` Última copia: ${esc(new Date(D.lastExport).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' }))}.` : ' Aún no has exportado ninguna copia.'}</p>
+        <div class="row"><button class="btn sm" data-act="export">Exportar copia</button><label class="btn soft sm filebtn">Importar copia<input type="file" id="y-import" accept=".json,application/json,text/plain"></label></div>
+        <div class="row"><button class="linkbtn" data-act="export-text">Ver copia como texto</button><button class="linkbtn" data-act="import-text">Pegar copia como texto</button></div>
+        ${inIframe ? '<p class="small muted">En esta vista previa, la descarga pide confirmación. Si no aparece, usa «Ver copia como texto».</p>' : ''}</li>
+      <li><div class="mi-h"><span class="mi-ic">${I.palette}</span><strong>Apariencia y accesibilidad</strong></div>
+        <div class="field"><span class="lbl">Tema</span><div class="seg" role="group" aria-label="Tema">${[['system', 'Sistema'], ['light', 'Claro'], ['dark', 'Oscuro']].map(([v, l]) => `<button aria-pressed="${meta.theme === v}" data-act="meta" data-k="theme" data-v="${v}">${l}</button>`).join('')}</div></div>
+        <div class="field"><span class="lbl">Tamaño del texto</span><div class="seg" role="group" aria-label="Tamaño del texto">${[['normal', 'Normal'], ['l', 'Grande'], ['xl', 'Muy grande']].map(([v, l]) => `<button aria-pressed="${meta.text === v}" data-act="meta" data-k="text" data-v="${v}">${l}</button>`).join('')}</div></div>
+        <div class="field"><span class="lbl">Animaciones</span><div class="seg" role="group" aria-label="Animaciones"><button aria-pressed="${!meta.reduce}" data-act="meta" data-k="reduce" data-v="0">Normales</button><button aria-pressed="${meta.reduce}" data-act="meta" data-k="reduce" data-v="1">Reducidas</button></div></div></li>
+      <li><div class="mi-h"><span class="mi-ic">${I.db}</span><strong>Mis datos</strong></div>
+        <div class="kv"><span>Dónde se guardan</span><span>${store.persistent ? 'En este navegador, en este dispositivo' : 'Solo en memoria (se perderán al cerrar)'}</span></div>
+        <div class="kv"><span>Abierta como</span><span id="open-mode">${isStandalone() ? 'App instalada' : inIframe ? 'Vista previa de Claude' : 'Página web en el navegador'}</span></div>
+        <div class="kv"><span>Uso sin conexión</span><span id="offline-state">${offlineState(inIframe)}</span></div>
+        <div class="kv"><span>Espacio usado</span><span>${fmtBytes(store.bytes(KEY))}</span></div>
+        <div class="kv"><span>Estado</span><span style="color:${saveState.ok ? 'var(--ok)' : 'var(--err)'}">${esc(saved)}</span></div>
+        <p class="small muted">No se envían a ningún servidor. Para pasarlos a otro dispositivo, exporta una copia aquí e impórtala allí.</p>
+        ${navigator.storage && navigator.storage.persist && !inIframe ? '<button class="btn soft sm" data-act="persist">Pedir que el navegador no borre los datos</button>' : ''}
+        <div class="row">${meta.mode === 'demo' ? '<button class="btn sm" data-act="demo-off">Volver a mis datos</button><button class="btn soft sm" data-act="demo-reset">Reiniciar demostración</button>' : '<button class="btn soft sm" data-act="demo-on">Abrir demostración</button>'}</div>
+        <button class="btn danger sm" data-act="wipe">${meta.mode === 'demo' ? 'Borrar datos de la demostración' : 'Borrar todos mis datos'}</button></li>
+    </ul></section>
+    <p class="small muted" style="text-align:center">Mi Skincare · versión ${APP_VERSION}</p>`;
+}
+
+/* ===== Mi Skincare · escanear producto =====
+   1) Lee la etiqueta en el propio teléfono (Tesseract, sin enviar la foto).
+   2) Busca el código de barras en la foto (ZXing, en el teléfono).
+   3) Con conexión, busca el producto: web oficial para España (a través de tu servicio de búsqueda),
+      buscador general opcional (Tavily, a través del mismo servicio) y Open Beauty Facts.
+   4) Rellena la ficha solo con lo que aparece en esas fuentes. */
+const VENDOR = './vendor/';
+const SCAN_OK = (() => { try { return window.self === window.top && /^https?:$/.test(location.protocol); } catch (e) { return false; } })();
+const OBF = 'https://world.openbeautyfacts.org';
+const OBF_FIELDS = 'code,product_name,product_name_es,product_name_en,product_name_fr,brands,periods_after_opening,categories_tags,ingredients_text,ingredients_text_es,ingredients_text_en,ingredients_text_fr,url,image_front_small_url';
+const draftKey = () => `${KEY}.scan.${meta.mode}`;
+let SC = null;             // escaneo en curso
+let proxyHealth = null;    // última comprobación del servicio
+
+const scanCfg = () => { D.profile.scan = Object.assign({ proxy: '', obf: true }, D.profile.scan || {}); return D.profile.scan; };
+const proxyUrl = () => (scanCfg().proxy || '').trim().replace(/\/+$/, '');
+const viaProxy = (u, sig) => `${proxyUrl()}/fetch?url=${encodeURIComponent(u)}${sig ? '&sig=' + sig : ''}`;
+
+/* ---------- red ---------- */
+async function net(url, { as = 'json', timeout = 20000 } = {}) {
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), timeout);
+  try {
+    const r = await fetch(url, { signal: c.signal, credentials: 'omit' });
+    if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) {} const err = new Error(j?.message || `Error ${r.status}`); err.status = r.status; err.code = j?.error; throw err; }
+    return as === 'json' ? await r.json() : await r.text();
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('La consulta ha tardado demasiado');
+    if (e instanceof TypeError) throw new Error(navigator.onLine ? 'No se ha podido conectar' : 'Sin conexión');
+    throw e;
+  } finally { clearTimeout(t); }
+}
+async function checkProxy() {
+  if (!proxyUrl()) { proxyHealth = null; return null; }
+  try { proxyHealth = { ok: true, ...(await net(proxyUrl() + '/health', { timeout: 10000 })) }; }
+  catch (e) { proxyHealth = { ok: false, msg: e.message, code: e.code }; }
+  return proxyHealth;
+}
+
+/* ---------- librerías del teléfono (se descargan una vez y quedan guardadas) ---------- */
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    if (document.querySelector(`script[data-src="${src}"]`)) return res();
+    const s = document.createElement('script'); s.src = src; s.dataset.src = src; s.async = true;
+    s.onload = () => res(); s.onerror = () => rej(new Error('No se ha podido cargar el lector. Abre la app con conexión una vez.'));
+    document.head.appendChild(s);
+  });
+}
+let ocrWorkerP = null, ocrProgress = null;
+function getOCR() {
+  if (!ocrWorkerP) ocrWorkerP = (async () => {
+    await loadScript(VENDOR + 'tesseract/tesseract.min.js');
+    const base = new URL(VENDOR + 'tesseract/', location.href).href;
+    return Tesseract.createWorker(['spa', 'eng'], 1, {
+      workerPath: base + 'worker.min.js', corePath: base, langPath: base + 'lang', gzip: true, workerBlobURL: false,
+      logger: m => { if (ocrProgress && m.progress != null) ocrProgress(m); }
+    });
+  })().catch(e => { ocrWorkerP = null; throw e; });
+  return ocrWorkerP;
+}
+let zxingP = null;
+function getZXing() {
+  if (!zxingP) zxingP = (async () => {
+    await loadScript(VENDOR + 'zxing/zxing-reader.js');
+    const base = new URL(VENDOR + 'zxing/', location.href).href;
+    ZXingWASM.prepareZXingModule({ overrides: { locateFile: (p, prefix) => p.endsWith('.wasm') ? base + p : prefix + p } });
+    return ZXingWASM;
+  })().catch(e => { zxingP = null; throw e; });
+  return zxingP;
+}
+const VENDOR_FILES = ['tesseract/tesseract.min.js', 'tesseract/worker.min.js', 'tesseract/tesseract-core-relaxedsimd-lstm.wasm.js', 'tesseract/tesseract-core-simd-lstm.wasm.js',
+  'tesseract/tesseract-core-lstm.wasm.js', 'tesseract/lang/spa.traineddata.gz', 'tesseract/lang/eng.traineddata.gz', 'zxing/zxing-reader.js', 'zxing/zxing_reader.wasm'];
+async function prepareOffline(onStep) {
+  let n = 0;
+  for (const f of VENDOR_FILES) { const r = await fetch(VENDOR + f, { cache: 'reload' }); if (!r.ok) throw new Error('Falta el archivo ' + f); await r.arrayBuffer(); onStep && onStep(++n, VENDOR_FILES.length); }
+  return true;
+}
+async function offlineReady() {
+  try { if (!('caches' in window)) return false; for (const f of VENDOR_FILES) if (!(await caches.match(new URL(VENDOR + f, location.href).href))) return false; return true; } catch (e) { return false; }
+}
+
+/* ---------- imágenes ---------- */
+function fileToCanvas(file, max) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error('No se pudo leer la foto.'));
+    fr.onload = () => { const img = new Image(); img.onload = () => { const sc = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c); }; img.onerror = () => rej(new Error('Formato de imagen no compatible.')); img.src = fr.result; };
+    fr.readAsDataURL(file);
+  });
+}
+function urlToCanvas(dataUrl, rotate = 0) {
+  return new Promise((res, rej) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const r = rotate % 180 !== 0; c.width = r ? img.height : img.width; c.height = r ? img.width : img.height; const x = c.getContext('2d'); x.translate(c.width / 2, c.height / 2); x.rotate(rotate * Math.PI / 180); x.drawImage(img, -img.width / 2, -img.height / 2); res(c); }; img.onerror = rej; img.src = dataUrl; });
+}
+async function shrink(dataUrl, max = 480) { const c = await urlToCanvas(dataUrl); const sc = Math.min(1, max / Math.max(c.width, c.height)); const d = document.createElement('canvas'); d.width = Math.round(c.width * sc); d.height = Math.round(c.height * sc); d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); return d.toDataURL('image/jpeg', 0.8); }
+
+/* ---------- lectura en el teléfono ---------- */
+async function ocrPhoto(w, dataUrl) {
+  // Dos lecturas (tamaño completo y reducido): el texto muy grande, como la marca, se lee mejor reducido.
+  const read = async (rot, scale) => {
+    await w.setParameters({ tessedit_pageseg_mode: scale < 1 ? '11' : '3' });
+    let c = await urlToCanvas(dataUrl, rot);
+    if (scale < 1) { const d = document.createElement('canvas'); d.width = Math.round(c.width * scale); d.height = Math.round(c.height * scale); d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); c = d; }
+    const { data } = await w.recognize(c, {}, { text: true, blocks: true });
+    const lines = [];
+    (data.blocks || []).forEach(b => (b.paragraphs || []).forEach(p => (p.lines || []).forEach(l => { if (l.confidence > 40 && l.text.trim()) lines.push({ text: l.text.trim(), h: (l.bbox.y1 - l.bbox.y0) / scale, conf: l.confidence }); })));
+    return lines;
+  };
+  const merge = (...sets) => {
+    const out = [];
+    for (const l of sets.flat()) { const k = XT.norm(l.text).replace(/[^a-z0-9]/g, ''); const prev = out.find(o => o.k === k); if (!prev) out.push({ ...l, k }); else if (l.conf > prev.conf) Object.assign(prev, l); }
+    return out;
+  };
+  const score = ls => ls.reduce((s, l) => s + l.conf * Math.min(l.text.length, 40), 0);
+  let best = merge(await read(0, 1), await read(0, 0.5));
+  if (XT.tokens(best.map(l => l.text).join(' ')).length < 3) for (const r of [90, 270]) { const x = merge(await read(r, 1), await read(r, 0.5)); if (score(x) > score(best)) best = x; }
+  return { text: best.map(l => l.text).join('\n'), lines: best };
+}
+async function readBarcode(dataUrl) {
+  const Z = await getZXing();
+  const c = await urlToCanvas(dataUrl); const id = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+  const res = await Z.readBarcodes(id, { tryHarder: true, maxNumberOfSymbols: 2 });
+  const hit = res.find(r => r.isValid !== false && /^\d{8}$|^\d{12,14}$/.test(r.text || ''));
+  return hit ? hit.text : '';
+}
+
+/* ---------- búsquedas ---------- */
+async function obfByCode(code) {
+  const j = await net(`${OBF}/api/v2/product/${encodeURIComponent(code)}.json?fields=${OBF_FIELDS}`);
+  return j.status === 1 && j.product ? XT.fromOBF(j.product) : null;
+}
+async function obfByBrand(brand, toks) {
+  const j = await net(`${OBF}/api/v2/search?brands_tags=${encodeURIComponent(XT.brandTag(brand))}&page_size=100&fields=${OBF_FIELDS}`);
+  return (j.products || []).map(XT.fromOBF).filter(p => p.name).map(p => ({ ...p, score: XT.matchScore(toks, p.name) })).filter(p => p.score >= 0.34).sort((a, b) => b.score - a.score).slice(0, 4);
+}
+async function siteUrls(domain) {
+  const ck = `${KEY}.sm.${domain}`;
+  try { const c = JSON.parse(store.get(ck) || 'null'); if (c && Date.now() - c.at < 7 * 864e5 && c.urls.length) return c.urls; } catch (e) {}
+  const bare = domain.replace(/^www\./, '');
+  let robots = ''; try { robots = await net(viaProxy(`https://${domain}/robots.txt`), { as: 'text' }); } catch (e) { if (e.code === 'origin_not_allowed' || e.code === 'daily_limit' || e.code === 'not_configured') throw e; }
+  let queue = [...robots.matchAll(/^\s*Sitemap:\s*(\S+)/gim)].map(m => m[1]).filter(u => { try { return new URL(u).hostname.endsWith(bare) && !/\.gz$/i.test(u) && !/image|video/i.test(u); } catch (e) { return false; } });
+  if (!queue.length) queue = [`https://${domain}/sitemap.xml`];
+  let urls = [], n = 0;
+  while (queue.length && n < 6) {
+    const u = queue.shift(); n++;
+    let x; try { x = await net(viaProxy(u), { as: 'text' }); } catch (e) { if (e.code === 'daily_limit') throw e; continue; }
+    const locs = XT.sitemapLocs(x);
+    if (XT.isSitemapIndex(x)) { const pri = locs.filter(l => /product|producto|pdp|catalog/i.test(l) && !/\.gz$/i.test(l)); const es = (pri.length ? pri : locs).filter(l => /es[-_]es|\/es\//i.test(l)); queue.push(...(es.length ? es : pri.length ? pri : locs).filter(l => !/\.gz$|image|video/i.test(l)).slice(0, 4)); }
+    else urls.push(...locs);
+  }
+  urls = [...new Set(urls)].slice(0, 8000);
+  if (urls.length) try { store.set(ck, JSON.stringify({ at: Date.now(), urls })); } catch (e) {}
+  return urls;
+}
+async function pageDetails(url, sig, brandName) {
+  const html = await net(viaProxy(url, sig), { as: 'text', timeout: 25000 });
+  return XT.parseProductPage(html, url, brandName);
+}
+function isOfficial(url, bi) { try { const h = new URL(url).hostname; return !!bi && ((bi.domain && h.endsWith(bi.domain.replace(/^www\./, ''))) || bi.aliases.some(a => h.replace(/[^a-z0-9]/g, '').includes(a.replace(/[^a-z0-9]/g, '')))); } catch (e) { return false; } }
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
+
+/* ---------- flujo principal ---------- */
+function newScan(target = null) { return { id: uid(), target, photos: [], status: 'capture', steps: [], label: null, barcode: '', brand: null, candidates: [], chosen: null, error: '' }; }
+function saveDraft() {
+  if (!SC) return;
+  const d = { ...SC, steps: [], candidates: SC.candidates.map(c => ({ ...c, inci: c.inci ? c.inci.slice(0, 3000) : '' })) };
+  try { store.set(draftKey(), JSON.stringify(d)); return true; } catch (e) { return false; }
+}
+function loadDraft() { try { return JSON.parse(store.get(draftKey()) || 'null'); } catch (e) { return null; } }
+function clearDraft() { store.del(draftKey()); }
+
+let scanRunning = false;
+async function runScan(opts = {}) {
+  if (!SC || !SC.photos.length || scanRunning) return;
+  scanRunning = true;
+  try { await runScanInner(opts); } finally { scanRunning = false; }
+}
+async function runScanInner({ reuseLabel = false } = {}) {
+  SC.status = 'working'; SC.steps = []; SC.candidates = []; SC.error = '';
+  const step = label => { const s = { label, state: 'run', note: '' }; SC.steps.push(s); renderScanLive(); return s; };
+  const done = (s, state, note = '') => { s.state = state; s.note = note; renderScanLive(); };
+
+  if (!reuseLabel || !SC.label || !SC.label.tokens.length) {
+    const s1 = step('Leyendo la etiqueta en el teléfono');
+    try {
+      const w = await getOCR(); let text = '', lines = [];
+      for (let i = 0; i < SC.photos.length; i++) {
+        ocrProgress = m => { s1.note = `${m.status === 'recognizing text' ? 'Foto ' + (i + 1) + ': ' : 'Preparando lector: '}${Math.round((m.progress || 0) * 100)} %`; renderScanLive(); };
+        const r = await ocrPhoto(w, SC.photos[i].data); text += '\n' + r.text; lines.push(...r.lines);
+      }
+      ocrProgress = null;
+      SC.label = XT.parseLabel(text.trim(), lines);
+      done(s1, SC.label.tokens.length ? 'ok' : 'fail', SC.label.tokens.length ? `${SC.label.tokens.length} palabras leídas` : 'No se ha podido leer texto. Prueba con más luz o más cerca.');
+    } catch (e) { SC.label = XT.parseLabel('', []); done(s1, 'fail', e.message); }
+    const s2 = step('Buscando el código de barras');
+    try { let code = ''; for (const p of SC.photos) { code = await readBarcode(p.data); if (code) break; } SC.barcode = code; done(s2, code ? 'ok' : 'skip', code || 'No aparece en las fotos (suele estar detrás)'); }
+    catch (e) { done(s2, 'fail', 'No disponible: ' + e.message); }
+    const known = D.products.map(p => p.brand).filter(Boolean);
+    const b = XT.detectBrand(SC.label.text, known)[0];
+    SC.brand = b ? { name: b.name } : null;
+    saveDraft();
+  }
+  if (!navigator.onLine) { SC.status = 'offline'; saveDraft(); renderScanLive(); return; }
+
+  const label = SC.label, cands = [];
+  const cfg = scanCfg();
+  let obfCode = null;
+  if (SC.barcode && cfg.obf) {
+    const s = step('Consultando el código en Open Beauty Facts');
+    try { obfCode = await obfByCode(SC.barcode); if (obfCode) { cands.push({ ...obfCode, source: 'obf', score: 0.9, why: 'Mismo código de barras' }); if (!SC.brand && obfCode.brand) SC.brand = { name: obfCode.brand }; done(s, 'ok', obfCode.name); } else done(s, 'skip', 'Este código no está en la base'); }
+    catch (e) { done(s, 'fail', e.message); }
+  }
+  const brandName = SC.brand?.name || '';
+  const bi = brandName ? (XT.brandInfo(brandName) || { name: brandName, domain: '', aliases: [XT.norm(brandName)] }) : null;
+  const toks = [...new Set([...label.tokens, ...(obfCode ? XT.tokens(obfCode.name) : [])])];
+  const px = proxyUrl();
+  let officialFound = false;
+
+  if (px && bi?.domain && toks.length) {
+    const s = step(`Buscando en la web oficial (${hostOf('https://' + bi.domain)})`);
+    try {
+      const urls = await siteUrls(bi.domain);
+      const ranked = XT.rankUrls(urls, toks, bi.aliases, 'es').slice(0, 3);
+      const pages = await Promise.all(ranked.map(r => pageDetails(r.url, '', bi.name).then(p => ({ ...p, urlScore: r.score })).catch(() => null)));
+      for (const p of pages) if (p && p.isProduct) { officialFound = true; cands.push({ ...p, source: 'official', score: 0.45 * p.urlScore + 0.55 * XT.matchScore(toks, p.name, null, bi.aliases) + 0.1 }); }
+      done(s, officialFound ? 'ok' : 'skip', officialFound ? `${pages.filter(p => p && p.isProduct).length} posibles` : (urls.length ? 'No he encontrado una página que coincida' : 'No he podido leer el catálogo de la web'));
+    } catch (e) { done(s, 'fail', e.message); }
+  }
+  if (px && !officialFound && toks.length && (proxyHealth?.search !== false)) {
+    const q = [brandName, ...Object.entries(label.weighted).sort((a, b) => b[1] - a[1]).map(x => x[0]).filter(t => !bi || !bi.aliases.some(a => a.includes(t))).slice(0, 5)].join(' ').trim();
+    const s = step('Buscando en internet');
+    try {
+      const dom = bi?.domain ? bi.domain.replace(/^www\./, '') : '';
+      const j = await net(`${px}/search?q=${encodeURIComponent(q)}${dom ? '&domain=' + encodeURIComponent(dom) : ''}`);
+      let res = j.results || [];
+      res.sort((a, b) => (isOfficial(b.url, bi) ? 1 : 0) - (isOfficial(a.url, bi) ? 1 : 0));
+      const pages = await Promise.all(res.slice(0, 3).map(r => pageDetails(r.url, r.sig, brandName).catch(() => null)));
+      let n = 0;
+      pages.forEach((p, i) => { if (p && p.isProduct && p.name) { n++; const off = isOfficial(p.url, bi); cands.push({ ...p, source: off ? 'official' : 'web', score: XT.matchScore(toks, p.name, null, bi ? bi.aliases : []) + (off ? 0.1 : -0.1) }); } });
+      done(s, n ? 'ok' : 'skip', n ? `${n} posibles` : 'Sin resultados útiles');
+    } catch (e) { done(s, e.code === 'search_not_configured' ? 'skip' : 'fail', e.code === 'search_not_configured' ? 'Búsqueda general no activada' : e.message); }
+  }
+  if (cfg.obf && brandName && !obfCode && toks.length) {
+    const s = step('Buscando en Open Beauty Facts');
+    try { const r = await obfByBrand(brandName, toks); r.forEach(p => cands.push({ ...p, source: 'obf', score: p.score * 0.8 })); done(s, r.length ? 'ok' : 'skip', r.length ? `${r.length} posibles` : 'Sin coincidencias'); }
+    catch (e) { done(s, 'fail', e.message); }
+  }
+  // quitar duplicados y ordenar
+  const seen = new Set();
+  SC.candidates = cands.filter(c => { const k = c.url || c.code || c.name; if (seen.has(k)) return false; seen.add(k); return true; }).sort((a, b) => b.score - a.score).slice(0, 5);
+  SC.obfCode = obfCode;
+  if (!SC.candidates.length) { SC.status = 'failed'; SC.error = !px && !cfg.obf ? 'No hay ninguna fuente de búsqueda activada.' : 'No he encontrado el producto.'; saveDraft(); renderScanLive(); return; }
+  const aliases = bi ? bi.aliases : [];
+  SC.candidates.forEach(c => { const cv = XT.coverage(label.tokens, c.name || '', aliases); c.cover = cv.cover; c.hits = cv.hits; });
+  const [a, b] = SC.candidates;
+  // Solo se elige sola si es inequívoca: mismo código de barras, o casi todas las palabras del nombre están en la etiqueta y destaca sobre la siguiente
+  const sure = x => x && (x.why === 'Mismo código de barras' || (x.cover >= 0.66 && x.hits >= Math.min(2, Math.max(1, Math.round(x.cover ? x.hits / x.cover : 1)))));
+  const clearGap = !b || (a.score - b.score >= 0.2 && !(b.cover >= 0.66 && b.hits >= a.hits));
+  if (sure(a) && clearGap) return chooseCandidate(0);
+  SC.status = 'choose'; saveDraft(); renderScanLive();
+}
+
+function chooseCandidate(i) {
+  const c = SC.candidates[i]; if (!c) return;
+  SC.chosen = c;
+  const today = todayKey(), sources = [];
+  const f = { name: c.name || '', brand: c.brand || SC.brand?.name || '', category: c.category || '', description: c.description || '', mfrInstructions: c.instructions || '', highlights: (c.highlights || []).join('\n'), inci: c.inci || '', paoMonths: c.pao || '' };
+  const srcName = c.source === 'official' ? `Web oficial (${hostOf(c.url)})` : c.source === 'web' ? `Otra web (${hostOf(c.url)})` : 'Open Beauty Facts (base colaborativa)';
+  sources.push({ name: srcName, url: c.url, date: today, fields: Object.entries({ nombre: f.name, marca: f.brand, categoría: f.category, descripción: f.description, instrucciones: f.mfrInstructions, 'ingredientes destacados': f.highlights, INCI: f.inci, 'plazo tras apertura': f.paoMonths }).filter(([, v]) => v).map(([k]) => k) });
+  // completar con Open Beauty Facts solo si es el mismo producto (mismo código y nombre coincidente)
+  const o = SC.obfCode;
+  if (o && c.source !== 'obf' && XT.matchScore(XT.tokens(o.name), c.name || '') >= 0.5) {
+    const add = [];
+    if (!f.inci && o.inci) { f.inci = o.inci; add.push('INCI'); }
+    if (!f.paoMonths && o.pao) { f.paoMonths = o.pao; add.push('plazo tras apertura'); }
+    if (add.length) sources.push({ name: 'Open Beauty Facts (base colaborativa)', url: o.url, date: today, fields: add });
+  }
+  const verifyList = XT.verify(SC.label || XT.parseLabel('', []), c, SC.brand?.name || '');
+  const prefill = { ...f, sources, verify: verifyList, labelPao: SC.label?.pao || null, labelText: SC.label?.text || '', scanPhoto: SC.photos[0]?.data || null };
+  SC.status = 'done'; saveDraft();
+  openProductFromScan(prefill);
+}
+function manualFromScan() {
+  openProductFromScan({ name: '', brand: SC.brand?.name || '', sources: [], verify: [], labelPao: SC.label?.pao || null, labelText: SC.label?.text || '', scanPhoto: SC.photos[0]?.data || null, manual: true });
+}
+async function openProductFromScan(prefill) {
+  let small = null; if (prefill.scanPhoto) try { small = await shrink(prefill.scanPhoto, 480); } catch (e) {}
+  ui.sheets = ui.sheets.filter(s => s.kind !== 'scan');
+  const existing = SC?.target ? ui.sheets.find(s => s.kind === 'product' && (s.id === SC.target || (SC.target === '__new__' && !s.id))) : null;
+  if (existing) {
+    // «Completar con escaneo»: solo campos de la ficha; nunca notas, mis instrucciones ni fecha de apertura
+    existing.draft = { ...(existing.draft || {}), ...collectProductForm(), ...pickInfo(prefill), sources: prefill.sources, verify: prefill.verify, labelPao: prefill.labelPao, labelText: prefill.labelText };
+    if (small && !existing.newPhoto && !(existing.id && product(existing.id)?.photo)) { existing.pendingPhoto = small; existing.pendingPhotoSmall = small; }
+    renderSheets();
+  } else {
+    openSheet({ kind: 'product', id: null, draft: pickInfo(prefill, true), fromScan: true, pendingPhoto: small, pendingPhotoSmall: small });
+  }
+  toast(prefill.manual ? 'Rellena la ficha a mano y pulsa Guardar.' : 'Ficha rellenada. Revísala y pulsa Guardar.');
+}
+function pickInfo(p, all = false) {
+  const keys = ['name', 'brand', 'category', 'description', 'mfrInstructions', 'highlights', 'inci', 'paoMonths'];
+  const o = {}; for (const k of keys) if (all || p[k]) o[k] = p[k] ?? '';
+  o.sources = p.sources || []; o.verify = p.verify || []; o.labelPao = p.labelPao; o.labelText = p.labelText;
+  return o;
+}
+
+/* ---------- interfaz del escaneo ---------- */
+function scanStepIcon(s) { return s.state === 'ok' ? '✓' : s.state === 'fail' ? '!' : s.state === 'skip' ? '–' : '<span class="spin" aria-hidden="true"></span>'; }
+function scanSheetHTML() {
+  const s = SC; if (!s) return '';
+  const photos = s.photos.map((p, i) => `<div class="scan-ph"><img src="${p.data}" alt="Foto ${i + 1}">${s.status === 'capture' || s.status === 'failed' || s.status === 'offline' ? `<button class="iconbtn" data-act="scan-photo-del" data-i="${i}" aria-label="Quitar foto ${i + 1}">${I.close}</button>` : ''}</div>`).join('');
+  const addBtns = (label) => `<div class="row"><label class="btn ${s.photos.length ? 'soft' : ''} filebtn">${label}<input type="file" id="scan-cam" accept="image/*" capture="environment"></label><label class="btn soft filebtn">Elegir de la galería<input type="file" id="scan-gal" accept="image/*"></label></div>`;
+  let body = '';
+  if (s.status === 'capture') body = `<p class="muted small">Haz una foto de la parte delantera, con la marca y el nombre bien visibles. La foto se analiza en el teléfono y no se envía a ningún sitio.</p>${photos ? `<div class="scan-phs">${photos}</div>` : ''}${addBtns(s.photos.length ? 'Hacer otra foto' : 'Hacer foto')}`;
+  if (s.status === 'working' || s.status === 'choose' || s.status === 'failed' || s.status === 'offline' || s.status === 'done') {
+    body += `<div class="scan-phs">${photos}</div><ol class="scan-steps" aria-live="polite">${s.steps.map(x => `<li class="st-${x.state}"><span class="si">${scanStepIcon(x)}</span><span><b>${esc(x.label)}</b>${x.note ? `<small>${esc(x.note)}</small>` : ''}</span></li>`).join('')}</ol>`;
+  }
+  if (s.status === 'choose') body += `<h3 class="scan-q">¿Cuál es tu producto?</h3><div class="plist">${s.candidates.map((c, i) => `<button class="pcard" data-act="scan-pick" data-i="${i}">${c.image ? `<div class="thumb"><img src="${esc(c.image)}" alt=""></div>` : `<div class="thumb">${esc((c.name || '?')[0])}</div>`}<span><strong>${esc(c.name || 'Sin nombre')}</strong><span class="meta">${esc([c.brand, c.category].filter(Boolean).join(' · '))}</span><span class="pao">${c.source === 'official' ? 'Web oficial' : c.source === 'web' ? 'Otra web' : 'Open Beauty Facts'} · ${esc(hostOf(c.url))}${c.why ? ' · ' + esc(c.why) : ''}</span></span><span class="muted">${I.right}</span></button>`).join('')}</div>
+    <div class="row"><button class="btn ghost sm" data-act="scan-more">Ninguno: añadir foto trasera</button><button class="linkbtn" data-act="scan-manual">Rellenar a mano</button></div>`;
+  if (s.status === 'failed' || s.status === 'offline') body += `<div class="note ${s.status === 'offline' ? '' : 'warn'}">${s.status === 'offline' ? (s.label?.tokens?.length ? 'Sin conexión: la etiqueta está leída y la foto guardada. Busca cuando vuelvas a tener conexión.' : 'Sin conexión y el lector aún no está descargado en este teléfono. La foto queda guardada y se analizará cuando vuelvas a tener conexión.') : esc(s.error) + ' Puedes añadir la etiqueta trasera, reintentar o rellenar la ficha a mano. La foto se conserva.'}</div>
+    ${s.label?.text ? `<details class="small"><summary>Texto leído en la etiqueta</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(s.label.text.slice(0, 1500))}</p></details>` : ''}
+    <div class="row"><button class="btn sm" data-act="scan-retry">${s.status === 'offline' ? 'Buscar ahora' : 'Reintentar'}</button><label class="btn soft sm filebtn">Añadir otra foto<input type="file" id="scan-back" accept="image/*"></label><button class="btn ghost sm" data-act="scan-manual">Rellenar a mano</button></div>`;
+  const busy = s.status === 'working';
+  return `${sheetHead(s.target ? 'Completar con escaneo' : 'Escanear producto', busy ? 'Analizando…' : '')}${body}
+    <div class="row between"><button class="linkbtn" data-act="scan-discard" ${busy ? 'disabled' : ''}>Descartar escaneo</button>${busy ? '' : '<button class="btn soft sm" data-act="sheet-close">Cerrar</button>'}</div>
+    <p class="small muted">Se envía a internet solo el texto necesario para buscar (marca, palabras del nombre o el código de barras). Nunca la foto.</p>`;
+}
+function renderScanLive() { if (topSheet()?.kind === 'scan') renderSheets(); }
+async function addScanPhoto(file) {
+  try {
+    const c = await fileToCanvas(file, 1280);
+    SC.photos.push({ id: uid(), data: c.toDataURL('image/jpeg', 0.78) });
+    if (!saveDraft()) toast('No hay espacio para guardar el borrador del escaneo; seguirá mientras la app esté abierta.', 'error');
+    await runScan();
+  } catch (e) { toast(e.message || 'No se pudo usar la foto.', 'error'); renderScanLive(); }
+}
+function openScan(target = null) {
+  if (!SCAN_OK) { toast('El escaneo funciona en la app publicada (tu dirección de GitHub Pages).', 'error'); return; }
+  const d = loadDraft();
+  SC = d && !target && d.status !== 'done' ? d : newScan(target);
+  if (d && SC === d && SC.status === 'working') SC.status = SC.photos.length ? 'failed' : 'capture';
+  if (target) SC.target = target;
+  openSheet({ kind: 'scan' });
+}
+window.addEventListener('online', () => { if (SC && SC.status === 'offline' && topSheet()?.kind === 'scan') runScan({ reuseLabel: true }); });
+
+/* ===== Mi Skincare · hojas, acciones y arranque ===== */
+const LIVE = new Set(['override', 'day']);
+const topSheet = kind => { for (let i = ui.sheets.length - 1; i >= 0; i--) if (!kind || ui.sheets[i].kind === kind) return ui.sheets[i]; return null; };
+const val = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+const inIframe = () => { try { return window.self !== window.top; } catch (e) { return true; } };
+
+/* ---------- objetivo de edición de pasos ---------- */
+function target(ctx) {
+  if (ctx === 'plan') return { type: 'plan', from: ui.editFrom, day: ui.rDay, slot: ui.rSlot };
+  const sh = topSheet('override'); return { type: 'ov', date: sh.date, slot: sh.slot };
+}
+function getList(tg) { return tg.type === 'plan' ? weekSteps(planAt(tg.from), tg.day, tg.slot) : resolve(tg.date, tg.slot).steps; }
+function mutate(tg, fn) {
+  if (tg.type === 'plan') { const v = ensureVersion(tg.from); if (v.from !== tg.from) ui.editFrom = v.from; fn(v.week[tg.day][tg.slot]); afterPlanChange(v.from); }
+  else {
+    const o = D.overrides[tg.date] || (D.overrides[tg.date] = {});
+    if (!Array.isArray(o[tg.slot])) o[tg.slot] = clone(baseResolve(tg.date, tg.slot).steps);
+    fn(o[tg.slot]);
+  }
+  save();
+}
+
+/* ---------- hojas ---------- */
+function sheetHead(title, sub) {
+  return `<div class="grab" aria-hidden="true"></div><div class="sheet-h"><div><h2 id="sheet-title">${title}</h2>${sub ? `<p class="small muted">${sub}</p>` : ''}</div><button class="iconbtn" data-act="sheet-close" aria-label="Cerrar">${I.close}</button></div>`;
+}
+function sheetHTML(sh) {
+  if (sh.kind === 'scan') return scanSheetHTML();
+  if (sh.kind === 'product') {
+    const p = sh.id ? product(sh.id) : null;
+    const dv = k => (sh.draft && k in sh.draft) ? sh.draft[k] : (p?.[k] ?? '');
+    const pendingPh = !sh.newPhoto && !sh.removePhoto && sh.pendingPhoto && !(p?.photo) ? sh.pendingPhoto : null;
+    const ph = sh.newPhoto || pendingPh || (!sh.removePhoto && p?.photo && photos[p.photo]);
+    const used = p ? usedIn(p.id) : [];
+    const sources = (sh.draft && sh.draft.sources) || p?.sources || [];
+    const ver = sh.draft?.verify || [];
+    const infoFilled = ['description', 'mfrInstructions', 'highlights', 'inci'].some(k => dv(k));
+    return `${sheetHead(p ? 'Editar producto' : sh.fromScan ? 'Revisa la ficha' : 'Nuevo producto', sh.fromScan ? 'Todo se puede corregir antes de guardar' : '')}
+      ${ver.length ? `<section class="verify" aria-label="Comprobación con la etiqueta"><span class="label">Comprobación con tu foto</span><ul>${ver.map(v => `<li class="${v.ok === true ? 'ok' : v.ok === false ? 'warn' : ''}">${v.ok === true ? '✓' : v.ok === false ? '⚠' : '·'} ${esc(v.t)}</li>`).join('')}</ul></section>` : ''}
+      <div class="photo-edit"><div class="thumb">${ph ? `<img src="${ph}" alt="Foto del producto">` : '📷'}</div>
+        <div class="stack" style="gap:6px"><label class="btn soft sm filebtn">${ph ? 'Cambiar foto' : 'Añadir foto (opcional)'}<input type="file" id="p-photo" accept="image/*"></label>${ph ? '<button class="linkbtn" data-act="p-photo-del">Quitar foto</button>' : ''}${pendingPh ? '<span class="small muted">Foto del escaneo</span>' : ''}</div></div>
+      ${SCAN_OK ? `<button class="btn soft sm" data-act="p-scan" style="align-self:flex-start">📷 ${p || sh.draft ? 'Completar con escaneo' : 'Rellenar escaneando'}</button>` : ''}
+      <div class="field"><label for="p-name">Nombre completo *</label><input type="text" id="p-name" value="${esc(dv('name'))}" autocomplete="off"></div>
+      <div class="grid2"><div class="field"><label for="p-brand">Marca</label><input type="text" id="p-brand" value="${esc(dv('brand'))}" autocomplete="off"></div>
+        <div class="field"><label for="p-cat">Categoría</label><select id="p-cat"><option value="">Sin categoría</option>${CATS.map(c => `<option ${dv('category') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div></div>
+      <details class="fold" ${infoFilled || sh.fromScan ? 'open' : ''}><summary>Ficha del fabricante</summary>
+        <div class="stack" style="margin-top:10px">
+        <div class="field"><label for="p-desc">Para qué sirve</label><textarea id="p-desc" placeholder="Descripción breve">${esc(dv('description'))}</textarea></div>
+        <div class="field"><label for="p-mfr">Instrucciones del fabricante</label><textarea id="p-mfr">${esc(dv('mfrInstructions'))}</textarea></div>
+        <div class="field"><label for="p-hl">Ingredientes destacados y concentraciones</label><textarea id="p-hl" placeholder="Uno por línea. Solo concentraciones que figuren en la fuente.">${esc(dv('highlights'))}</textarea></div>
+        <div class="field"><label for="p-inci">Lista de ingredientes (INCI)</label><textarea id="p-inci" style="font-size:.85rem">${esc(dv('inci'))}</textarea></div>
+        ${sources.length ? `<div class="sources"><span class="label">Fuentes</span>${sources.map(s => `<p class="small">${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)} · consultada el ${esc(fmtShort(s.date))}${s.fields?.length ? `<br><span class="muted">${esc(s.fields.join(', '))}</span>` : ''}</p>`).join('')}</div>` : ''}
+        </div></details>
+      <div class="field"><label for="p-instr">Mis instrucciones</label><textarea id="p-instr" placeholder="Cómo lo usas, según tus pautas">${esc(dv('instructions'))}</textarea></div>
+      <div class="field"><label for="p-notes">Notas personales</label><textarea id="p-notes">${esc(dv('notes'))}</textarea></div>
+      <div class="grid2"><div class="field"><label for="p-opened">Fecha de apertura</label><input type="date" id="p-opened" value="${esc(dv('opened'))}"></div>
+        <div class="field"><label for="p-pao">Plazo tras apertura (meses)</label><input type="number" id="p-pao" min="1" max="60" value="${esc(dv('paoMonths'))}" placeholder="p. ej. 12"><span class="hint">El que indica el fabricante (símbolo del tarro abierto).</span></div></div>
+      ${sh.draft?.labelPao && !dv('paoMonths') ? `<div class="note pink">En tu foto parece leerse «${sh.draft.labelPao}M» (símbolo del tarro abierto). Compruébalo en el envase. <button class="linkbtn" data-act="p-use-pao" data-v="${sh.draft.labelPao}">Usar ${sh.draft.labelPao} meses</button></div>` : ''}
+      ${sh.draft?.labelText ? `<details class="small"><summary>Texto leído en tu foto</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(sh.draft.labelText.slice(0, 1500))}</p></details>` : ''}
+      ${used.length ? `<p class="small muted">En tu rutina actual: ${esc(used.join(', '))}. Guardar la ficha no cambia tu planificación.</p>` : ''}
+      <div class="row between">${p ? `<button class="btn ghost sm" data-act="p-archive">${p.archived ? 'Restaurar' : 'Archivar'}</button>` : '<span></span>'}<div class="row"><button class="btn soft" data-act="sheet-close">Cancelar</button><button class="btn" data-act="p-save">Guardar</button></div></div>`;
+  }
+  if (sh.kind === 'step') {
+    const list = getList(target(sh.ctx)), s = sh.i != null ? list[sh.i] : null;
+    const opts = D.products.filter(p => !p.archived || p.id === s?.productId).sort((a, b) => a.name.localeCompare(b.name, 'es'));
+    return `${sheetHead(s ? 'Editar paso' : 'Nuevo paso', sh.ctx === 'plan' ? `${DAYS[ui.rDay]} · ${SLOTS[ui.rSlot].short.toLowerCase()} · desde el ${fmtShort(ui.editFrom)}` : `Solo el ${fmtLong(topSheet('override').date)}`)}
+      <div class="field"><label for="s-prod">Producto</label><select id="s-prod"><option value="">— Paso sin producto —</option>${opts.map(p => `<option value="${esc(p.id)}" ${s?.productId === p.id ? 'selected' : ''}>${esc(p.name)}${p.brand ? ' · ' + esc(p.brand) : ''}${p.archived ? ' (archivado)' : ''}</option>`).join('')}</select>
+        ${!D.products.length ? '<span class="hint">Aún no tienes productos. Puedes crear el paso igualmente y asignarlo después.</span>' : ''}</div>
+      <div class="field"><label for="s-title">Nombre del paso</label><input type="text" id="s-title" value="${esc(s?.title || '')}" placeholder="p. ej. Limpieza" autocomplete="off"></div>
+      <div class="field"><label for="s-instr">Instrucciones para este paso</label><textarea id="s-instr" placeholder="Opcional">${esc(s?.instructions || '')}</textarea></div>
+      <div class="row end"><button class="btn soft" data-act="sheet-close">Cancelar</button><button class="btn" data-act="s-save">Guardar paso</button></div>`;
+  }
+  if (sh.kind === 'copy') {
+    return `${sheetHead('Copiar rutina', `${DAYS[ui.rDay]} · ${SLOTS[ui.rSlot].short.toLowerCase()}`)}
+      <div class="checklist">${[1, 2, 3, 4, 5, 6, 7].filter(n => n !== ui.rDay).map(n => `<label><input type="checkbox" id="copy-d${n}" value="${n}">${DAYS[n]}</label>`).join('')}</div>
+      <button class="linkbtn" data-act="copy-all" style="align-self:flex-start">Seleccionar todos</button>
+      <div class="field"><label for="copy-dest">Copiar en</label><select id="copy-dest"><option value="same">La ${SLOTS[ui.rSlot].short.toLowerCase()} de esos días</option><option value="other">La ${SLOTS[ui.rSlot === 'am' ? 'pm' : 'am'].short.toLowerCase()} de esos días</option><option value="both">Mañana y noche de esos días</option></select></div>
+      <div class="note warn">Sustituye lo que hubiera en esas rutinas, desde el ${esc(fmtShort(ui.editFrom))}.</div>
+      <div class="row end"><button class="btn soft" data-act="sheet-close">Cancelar</button><button class="btn" data-act="copy-apply">Copiar</button></div>`;
+  }
+  if (sh.kind === 'override') {
+    const has = !!D.overrides[sh.date]?.[sh.slot], list = resolve(sh.date, sh.slot).steps;
+    return `${sheetHead('Solo este día', cap(fmtLong(sh.date)))}
+      <div class="seg" role="group" aria-label="Momento del día"><button aria-pressed="${sh.slot === 'am'}" data-act="ov-slot" data-v="am">☀️ Mañana</button><button aria-pressed="${sh.slot === 'pm'}" data-act="ov-slot" data-v="pm">🌙 Noche</button></div>
+      <div class="note ${has ? 'pink' : ''}">${has ? 'Esta rutina está personalizada para esta fecha. El resto de la semana no cambia.' : 'Ahora sigue tu rutina semanal. Cualquier cambio aquí se aplicará solo a esta fecha.'}</div>
+      ${stepListHTML('ov', list)}
+      <div class="row between"><button class="btn sm" data-act="st-add" data-ctx="ov">+ Añadir paso</button>${has ? '<button class="btn ghost sm" data-act="ov-clear">Volver a la rutina semanal</button>' : ''}</div>
+      <button class="btn soft block" data-act="sheet-close">Listo</button>`;
+  }
+  if (sh.kind === 'day') {
+    const sk = D.logs[sh.date]?.skin, inf = dayInfo(sh.date);
+    const skinTxt = sk ? [SKIN.filter(([k]) => sk[k] != null).map(([k, l]) => `${l}: ${LEVELS[sk[k]].toLowerCase()}`).join(' · '), sk.notes ? `Notas: ${sk.notes}` : ''].filter(Boolean).join('\n') : '';
+    const w = { future: 'Fecha futura: solo consulta.', before: 'Anterior al inicio del seguimiento.', today: 'Hoy', past: 'Día anterior: puedes corregirlo.' }[inf.when];
+    return `${sheetHead(cap(fmtLong(sh.date)), w)}
+      ${routineCard(sh.date, 'am')}${routineCard(sh.date, 'pm')}
+      <section class="card"><h2>Piel y observaciones</h2><p class="small ${skinTxt ? '' : 'muted'}" style="white-space:pre-wrap;margin-top:6px">${skinTxt ? esc(skinTxt) : 'Sin anotaciones.'}</p></section>
+      <button class="btn soft block" data-act="day-in-hoy" data-date="${sh.date}">Abrir este día en Hoy</button>`;
+  }
+  if (sh.kind === 'confirm') {
+    return `${sheetHead(esc(sh.title))}<p>${sh.text}</p>
+      ${sh.typed ? `<div class="field"><label for="confirm-typed">Escribe ${sh.typed} para confirmar</label><input type="text" id="confirm-typed" autocomplete="off" autocapitalize="characters"></div>` : ''}
+      <div class="row end"><button class="btn soft" data-act="sheet-close">Cancelar</button><button class="btn ${sh.danger ? 'danger' : ''}" data-act="confirm-yes">${esc(sh.yes)}</button></div>`;
+  }
+  if (sh.kind === 'textout') {
+    return `${sheetHead('Copia como texto', 'Cópiala y guárdala en un lugar seguro (Notas, un correo a ti misma, un archivo…)')}
+      <textarea id="bk-text" readonly style="min-height:220px;font-family:ui-monospace,Menlo,monospace;font-size:.75rem">${esc(sh.text)}</textarea>
+      <div class="row end"><button class="btn soft" data-act="bk-select">Seleccionar todo</button><button class="btn" data-act="bk-copy">Copiar</button></div>`;
+  }
+  if (sh.kind === 'textin') {
+    return `${sheetHead('Pegar copia', 'Pega el texto completo de una copia de Mi Skincare')}
+      <textarea id="bk-in" style="min-height:200px;font-family:ui-monospace,Menlo,monospace;font-size:.75rem" placeholder='{"app":"Mi Skincare", …}'></textarea>
+      <div class="row end"><button class="btn soft" data-act="sheet-close">Cancelar</button><button class="btn" data-act="bk-review">Revisar copia</button></div>`;
+  }
+  return '';
+}
+function renderSheets() {
+  const root = $('#sheet-root'), sh = ui.sheets[ui.sheets.length - 1];
+  if (!sh) { root.innerHTML = ''; document.documentElement.style.overflow = ''; return; }
+  const prevScroll = root.querySelector('.sheet')?.scrollTop || 0;
+  root.innerHTML = `<div class="sheet-wrap" data-bg="1"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" data-sheet="${sh.kind}">${sheetHTML(sh)}</div></div>`;
+  document.documentElement.style.overflow = 'hidden';
+  const s = root.querySelector('.sheet'); if (sh._shown) s.scrollTop = prevScroll; else { sh._shown = true; s.style.animation = ''; }
+}
+function openSheet(sh) { ui.sheets.push(sh); renderSheets(); const f = $('#sheet-root .sheet input:not([type=file]):not([readonly]), #sheet-root .sheet textarea'); if (f && (sh.kind === 'product' || sh.kind === 'textin')) setTimeout(() => f.focus({ preventScroll: true }), 50); }
+function closeSheet() { ui.sheets.pop(); renderSheets(); render(false); }
+function askConfirm(o, fn) { const id = uid(); confirmFns.set(id, fn); openSheet({ kind: 'confirm', fnId: id, ...o }); }
+function usedIn(pid) {
+  const plan = planAt(todayKey()); const out = [];
+  if (plan) for (let d = 1; d <= 7; d++) for (const s of ['am', 'pm']) if (plan.week[d][s].some(x => x.productId === pid)) out.push(`${DAYS[d].toLowerCase()} ${SLOTS[s].short.toLowerCase()}`);
+  return out;
+}
+
+/* ---------- render principal ---------- */
+function renderBanner() {
+  const b = [];
+  if (meta.mode === 'demo') b.push('<div class="banner demo" role="note"><span>MODO DEMOSTRACIÓN · datos ficticios, separados de los tuyos</span><button data-act="demo-off">Volver a mis datos</button></div>');
+  if (loadProblem) b.push('<div class="banner err" role="alert"><span>Tus datos guardados no se han podido leer. No se sobrescriben: puedes recuperarlos importando una copia.</span></div>');
+  else if (!saveState.ok) b.push(`<div class="banner err" role="alert"><span>No se han podido guardar los últimos cambios. ${esc(saveState.msg)}</span></div>`);
+  if (!store.persistent) b.push('<div class="banner warn" role="alert"><span>Este navegador no permite guardar datos aquí: los cambios se perderán al cerrar. Exporta una copia antes de salir.</span></div>');
+  $('#banner').innerHTML = b.join('');
+}
+function render(withSheets = true) {
+  const fk = document.activeElement?.dataset?.fk;
+  renderBanner();
+  const v = { hoy: viewHoy, calendario: viewCal, productos: viewProducts, rutina: viewRutina, yo: viewYo }[ui.tab];
+  $('#view').innerHTML = v();
+  document.querySelectorAll('.tabbar [data-tab]').forEach(b => b.setAttribute('aria-current', b.dataset.tab === ui.tab ? 'page' : 'false'));
+  const sh = topSheet();
+  if (withSheets && sh && LIVE.has(sh.kind)) renderSheets();
+  if (fk) { const el = document.querySelector(`[data-fk="${CSS.escape(fk)}"]`); if (el) el.focus({ preventScroll: true }); }
+  if (ui.tab === 'yo' && SCAN_OK) offlineReady().then(ok => { const e = $('#ocr-state'); if (e) e.textContent = ok ? 'Listo' : 'Se descargará al escanear por primera vez'; });
+}
+function applyMeta() {
+  const r = document.documentElement;
+  r.classList.toggle('app-light', meta.theme === 'light'); r.classList.toggle('app-dark', meta.theme === 'dark');
+  r.classList.toggle('ts-l', meta.text === 'l'); r.classList.toggle('ts-xl', meta.text === 'xl');
+  r.classList.toggle('reduce', !!meta.reduce);
+}
+
+/* ---------- fotos ---------- */
+function readImage(file) {
+  return new Promise((res, rej) => {
+    if (!file || !/^image\//.test(file.type || 'image/')) return rej(new Error('El archivo no es una imagen.'));
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error('No se pudo leer la imagen.'));
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 480, sc = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(img.width * sc)); c.height = Math.max(1, Math.round(img.height * sc));
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        try { res(c.toDataURL('image/jpeg', 0.8)); } catch (e) { rej(e); }
+      };
+      img.onerror = () => rej(new Error('Formato de imagen no compatible.'));
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+/* ---------- copia de seguridad ---------- */
+function backupObject() {
+  const ph = {};
+  const ids = D.products.map(p => p.photo).concat(D.profile.avatar).filter(Boolean);
+  for (const id of ids) if (photos[id]) ph[id] = photos[id];
+  return { app: 'Mi Skincare', format: 1, version: APP_VERSION, exportedAt: new Date().toISOString(), mode: meta.mode, data: D, photos: ph };
+}
+const backupName = () => `mi-skincare-${meta.mode === 'demo' ? 'demo-' : ''}copia-${todayKey()}.json`;
+async function doExport() {
+  const json = JSON.stringify(backupObject(), null, 1), name = backupName();
+  let dl = null;
+  try { if (window.claude && typeof window.claude.use === 'function') dl = await window.claude.use('downloads'); } catch (e) { dl = null; }
+  if (dl) {
+    try { await dl.save({ filename: name, data: json }); D.lastExport = new Date().toISOString(); save(); toast('Copia guardada: ' + name); render(); }
+    catch (e) { if (e && e.code === 'declined') toast('Descarga cancelada: no se ha guardado ninguna copia.'); else { toast('La descarga no está disponible en esta vista. Te muestro la copia como texto.', 'error'); openSheet({ kind: 'textout', text: json }); } }
+    return;
+  }
+  if (inIframe()) { toast('Esta vista no permite descargar archivos. Te muestro la copia como texto.'); openSheet({ kind: 'textout', text: json }); return; }
+  try {
+    const file = new File([json], name, { type: 'application/json' });
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'Copia de Mi Skincare' }); D.lastExport = new Date().toISOString(); save(); toast('Copia compartida. Comprueba que se ha guardado en Archivos.'); render(); return; }
+      catch (e) { if (e && e.name === 'AbortError') { toast('Has cancelado: no se ha guardado ninguna copia.'); return; } }
+    }
+    const url = URL.createObjectURL(file), a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+    D.lastExport = new Date().toISOString(); save(); toast('Descarga iniciada: ' + name + '. Búscala en Descargas o Archivos.'); render();
+  } catch (e) { toast('No se pudo crear el archivo. Usa «Ver copia como texto».', 'error'); }
+}
+function parseBackup(text) {
+  let o; try { o = JSON.parse(text); } catch (e) { throw new Error('El texto no es una copia válida (no se puede leer).'); }
+  if (!o || o.app !== 'Mi Skincare' || !o.data) throw new Error('Esto no es una copia de Mi Skincare.');
+  const d = o.data; if (!Array.isArray(d.products) || !Array.isArray(d.plans) || typeof d.logs !== 'object' || !d.profile) throw new Error('La copia está incompleta o dañada.');
+  return o;
+}
+function reviewImport(text) {
+  let o; try { o = parseBackup(text); } catch (e) { toast(e.message, 'error'); return; }
+  const d = o.data, days = Object.keys(d.logs).filter(isKey).sort();
+  const txt = `<b>${d.products.length}</b> productos · <b>${d.plans.length}</b> versiones de planificación · <b>${days.length}</b> días con registros${days.length ? ` (del ${esc(fmtShort(days[0]))} al ${esc(fmtShort(days[days.length - 1]))})` : ''}.<br>Copia creada el ${esc(new Date(o.exportedAt).toLocaleString('es-ES'))}.
+    ${o.mode === 'demo' && meta.mode === 'real' ? '<br><b>Atención: es una copia de la demostración.</b>' : ''}<br><br>Sustituirá los datos ${meta.mode === 'demo' ? 'de la demostración' : 'actuales de este dispositivo'}. Si quieres conservarlos, exporta antes una copia.`;
+  askConfirm({ title: 'Importar copia', text: txt, yes: 'Importar y sustituir', danger: true }, () => applyImport(o));
+}
+function applyImport(o) {
+  const pfx = photoPrefix(meta.mode), prevD = D, prevPhotos = { ...photos }, prevRaw = loadProblem;
+  try {
+    for (const k of store.keys(pfx)) store.del(k);
+    for (const [id, url] of Object.entries(o.photos || {})) store.set(pfx + id, url);
+    const nd = normalize(clone(o.data)); delete nd.demo; if (meta.mode === 'demo') nd.demo = true;
+    store.set(dataKey(meta.mode), JSON.stringify(nd));
+    D = nd; photos = { ...(o.photos || {}) }; store.blocked = false; loadProblem = null;
+    saveState = { ok: true, at: new Date(), msg: '' };
+    ui.date = todayKey(); ui.hoyMonth = ui.calMonth = ymOf(ui.date);
+    toast('Copia importada correctamente.');
+  } catch (e) {
+    try { for (const k of store.keys(pfx)) store.del(k); for (const [id, url] of Object.entries(prevPhotos)) store.set(pfx + id, url); store.set(dataKey(meta.mode), prevRaw != null ? prevRaw : JSON.stringify(prevD)); } catch (e2) {}
+    D = prevD; photos = prevPhotos;
+    toast('No se pudo importar: ' + (e.message || e) + '. Se han restaurado tus datos anteriores.', 'error');
+  }
+  render();
+}
+
+/* ---------- acciones ---------- */
+const A = {
+  tab(el) { ui.tab = el.dataset.tab; ui.sheets = []; renderSheets(); render(); window.scrollTo(0, 0); },
+  day(el) { ui.date = el.dataset.date; ui.hoyMonth = ymOf(ui.date); render(); },
+  today() { ui.date = todayKey(); ui.hoyMonth = ymOf(ui.date); render(); },
+  'hoy-month'(el) { ui.hoyMonth = addMonths(ui.hoyMonth, Number(el.dataset.v)); render(); },
+  'cal-month'(el) { ui.calMonth = addMonths(ui.calMonth, Number(el.dataset.v)); render(); },
+  'cal-today'() { ui.calMonth = ymOf(todayKey()); render(); },
+  'pick-date'(el) {
+    const k = el.dataset.date;
+    if (el.dataset.ctx === 'hoy') { ui.date = k; render(); }
+    else openSheet({ kind: 'day', date: k });
+  },
+  'day-in-hoy'(el) { ui.date = el.dataset.date; ui.hoyMonth = ymOf(ui.date); ui.tab = 'hoy'; ui.sheets = []; renderSheets(); render(); window.scrollTo(0, 0); },
+  toggle(el) { const { date, slot, step } = el.dataset; const on = el.getAttribute('aria-checked') === 'true'; setDone(date, slot, [step], !on); render(); },
+  complete(el) { const { date, slot } = el.dataset; const ids = resolve(date, slot).steps.map(s => s.id); if (setDone(date, slot, ids, el.dataset.v === '1')) toast(el.dataset.v === '1' ? `${SLOTS[slot].label} completada` : 'Rutina desmarcada'); render(); },
+  info(el) { const k = el.dataset.key; ui.open[k] = !ui.open[k]; render(); },
+  'skin-open'() { ui.skinOpen = true; render(); },
+  'skin-close'() { ui.skinOpen = false; render(); },
+  'skin-lv'(el) {
+    const { date, k } = el.dataset, v = Number(el.dataset.v);
+    if (date > todayKey()) return;
+    const L = D.logs[date] || (D.logs[date] = {}); const sk = L.skin || (L.skin = {});
+    sk[k] = sk[k] === v ? null : v; save(); render();
+  },
+  'goto-rutina'(el) { ui.tab = 'rutina'; ui.rDay = dow(ui.date); ui.rSlot = el.dataset.slot; ui.editFrom = todayKey(); render(); window.scrollTo(0, 0); },
+  'open-override'(el) { openSheet({ kind: 'override', date: el.dataset.date, slot: el.dataset.slot }); },
+  'ov-open-date'() { const k = val('ov-date'); if (!isKey(k)) { toast('Elige una fecha.'); return; } openSheet({ kind: 'override', date: k, slot: ui.rSlot }); },
+  'ov-slot'(el) { topSheet('override').slot = el.dataset.v; renderSheets(); },
+  'ov-clear'() {
+    const sh = topSheet('override'); const o = D.overrides[sh.date];
+    if (o) { delete o[sh.slot]; if (!o.am && !o.pm) delete D.overrides[sh.date]; }
+    save(); toast('Esta fecha vuelve a seguir la rutina semanal'); render();
+  },
+  // planificador
+  'r-day'(el) { ui.rDay = Number(el.dataset.v); render(); },
+  'r-slot'(el) { ui.rSlot = el.dataset.v; render(); },
+  'r-from-set'(el) { ui.editFrom = el.dataset.v; render(); window.scrollTo(0, 0); },
+  'st-add'(el) { openSheet({ kind: 'step', ctx: el.dataset.ctx, i: null }); },
+  'st-edit'(el) { openSheet({ kind: 'step', ctx: el.dataset.ctx, i: Number(el.dataset.i) }); },
+  'st-move'(el) {
+    const i = Number(el.dataset.i), dlt = Number(el.dataset.v);
+    mutate(target(el.dataset.ctx), l => { const j = i + dlt; if (j < 0 || j >= l.length) return; [l[i], l[j]] = [l[j], l[i]]; });
+    render();
+  },
+  'st-del'(el) { const i = Number(el.dataset.i); mutate(target(el.dataset.ctx), l => l.splice(i, 1)); toast('Paso eliminado'); render(); },
+  's-save'() {
+    const sh = topSheet('step'); const pid = val('s-prod') || null, title = val('s-title').trim(), instr = val('s-instr').trim();
+    if (!pid && !title) { toast('Elige un producto o escribe el nombre del paso.'); $('#s-title')?.focus(); return; }
+    mutate(target(sh.ctx), l => {
+      if (sh.i == null) l.push({ id: uid(), productId: pid, title, instructions: instr });
+      else { const s = l[sh.i]; if (s.productId !== pid) { delete s.pName; delete s.pBrand; delete s.pInstr; } Object.assign(s, { productId: pid, title, instructions: instr }); }
+    });
+    ui.sheets.pop(); renderSheets(); render(); toast('Paso guardado');
+  },
+  'copy-open'() { openSheet({ kind: 'copy' }); },
+  'copy-all'() { document.querySelectorAll('[id^="copy-d"]').forEach(c => { c.checked = true; }); },
+  'copy-apply'() {
+    const days = [...document.querySelectorAll('[id^="copy-d"]:checked')].map(c => Number(c.value));
+    if (!days.length) { toast('Elige al menos un día.'); return; }
+    const dest = val('copy-dest'), other = ui.rSlot === 'am' ? 'pm' : 'am';
+    const slots = dest === 'same' ? [ui.rSlot] : dest === 'other' ? [other] : ['am', 'pm'];
+    const v = ensureVersion(ui.editFrom), src = v.week[ui.rDay][ui.rSlot]; let n = 0; ui.editFrom = v.from;
+    for (const d of days) for (const s of slots) { v.week[d][s] = src.map(x => ({ id: uid(), productId: x.productId, title: x.title, instructions: x.instructions })); n++; }
+    afterPlanChange(v.from); save(); ui.sheets.pop(); renderSheets(); render(); toast(`Copiada en ${n} rutina${n > 1 ? 's' : ''}`);
+  },
+  // productos
+  cat(el) { ui.cat = el.dataset.v; render(); },
+  'toggle-arch'() { ui.showArchived = !ui.showArchived; render(); },
+  'new-product'() { if (ui.tab !== 'productos') { ui.tab = 'productos'; render(); } openSheet({ kind: 'product', id: null }); },
+  'edit-product'(el) { openSheet({ kind: 'product', id: el.dataset.id }); },
+  'p-photo-del'() { const sh = topSheet('product'); sh.newPhoto = null; sh.removePhoto = true; keepForm(renderSheets); },
+  'p-save'() {
+    const sh = topSheet('product'); const f0 = collectProductForm();
+    if (!f0.name) { toast('Escribe el nombre del producto.'); $('#p-name')?.focus(); return; }
+    const f = { ...f0, paoMonths: f0.paoMonths ? Number(f0.paoMonths) : '' };
+    const srcs = sh.draft?.sources;
+    let p = sh.id ? product(sh.id) : null;
+    if (p) { if (p.name !== f.name || (p.brand || '') !== f.brand || (p.instructions || '') !== f.instructions) freezeProductHistory(p.id); Object.assign(p, f, { updatedAt: new Date().toISOString() }); }
+    else { p = { id: 'p_' + uid(), ...f, photo: null, archived: false, createdAt: new Date().toISOString() }; D.products.push(p); }
+    if (srcs && srcs.length) { p.sources = srcs; p.checkedAt = todayKey(); }
+    const newPh = sh.newPhoto || (!sh.removePhoto && !p.photo && sh.pendingPhoto ? sh.pendingPhotoSmall : null);
+    if (newPh) { const id = savePhoto(newPh); if (id) { deletePhoto(p.photo); p.photo = id; } }
+    else if (sh.removePhoto && p.photo) { deletePhoto(p.photo); p.photo = null; }
+    if (save()) {
+      toast(sh.id ? 'Producto actualizado' : 'Producto añadido');
+      if (sh.fromScan || (SC && (SC.target === p.id || SC.status === 'done'))) { clearDraft(); SC = null; }
+    }
+    ui.sheets.pop(); renderSheets(); render();
+  },
+  'p-use-pao'(el) { const i = $('#p-pao'); if (i) i.value = el.dataset.v; el.closest('.note')?.remove(); },
+  'p-scan'() { const sh = topSheet('product'); sh.draft = { ...(sh.draft || {}), ...collectProductForm() }; if (!sh.id) sh.fromScan = true; openScan(sh.id || '__new__'); },
+  'p-archive'() {
+    const p = product(topSheet('product').id); p.archived = !p.archived; save();
+    toast(p.archived ? 'Producto archivado. Sigue en tus registros anteriores.' : 'Producto restaurado');
+    ui.sheets.pop(); renderSheets(); render();
+  },
+  // yo
+  meta(el) { const k = el.dataset.k; meta[k] = k === 'reduce' ? el.dataset.v === '1' : el.dataset.v; saveMeta(); applyMeta(); render(); },
+  'avatar-del'() { deletePhoto(D.profile.avatar); D.profile.avatar = null; save(); render(); },
+  export() { doExport(); },
+  'export-text'() { openSheet({ kind: 'textout', text: JSON.stringify(backupObject(), null, 1) }); },
+  'import-text'() { openSheet({ kind: 'textin' }); },
+  'bk-select'() { const t = $('#bk-text'); t.focus(); t.select(); },
+  async 'bk-copy'() {
+    const t = $('#bk-text');
+    try { await navigator.clipboard.writeText(t.value); toast('Copia copiada al portapapeles. Pégala en un lugar seguro.'); }
+    catch (e) { t.focus(); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {} toast(ok ? 'Copia copiada al portapapeles.' : 'No se pudo copiar automáticamente. El texto está seleccionado: cópialo a mano.', ok ? 'info' : 'error'); }
+  },
+  'bk-review'() { const t = val('bk-in').trim(); if (!t) { toast('Pega primero el texto de la copia.'); return; } ui.sheets.pop(); renderSheets(); reviewImport(t); },
+  persist() { navigator.storage.persist().then(ok => toast(ok ? 'El navegador conservará los datos salvo que los borres tú.' : 'El navegador no lo ha concedido. Exporta copias con frecuencia.', ok ? 'info' : 'error')).catch(() => toast('Este navegador no permite pedirlo.', 'error')); },
+  'demo-on'() { meta.mode = 'demo'; saveMeta(); loadData('demo'); resetUi(); render(); toast('Demostración abierta: datos ficticios'); },
+  'demo-off'() { meta.mode = 'real'; saveMeta(); loadData('real'); resetUi(); render(); toast('Has vuelto a tus datos'); },
+  'demo-reset'() { store.del(dataKey('demo')); for (const k of store.keys(photoPrefix('demo'))) store.del(k); loadData('demo'); resetUi(); render(); toast('Demostración reiniciada'); },
+  wipe() {
+    askConfirm({ title: meta.mode === 'demo' ? 'Borrar la demostración' : 'Borrar todos mis datos', text: 'Se eliminarán productos, fotos, planificación y registros de este dispositivo. No se puede deshacer salvo que tengas una copia de seguridad.', yes: 'Borrar', danger: true, typed: 'BORRAR' }, () => {
+      if (val('confirm-typed').trim().toUpperCase() !== 'BORRAR') { toast('Escribe BORRAR para confirmar.'); return false; }
+      store.del(dataKey(meta.mode)); for (const k of store.keys(photoPrefix(meta.mode))) store.del(k);
+      store.blocked = false; loadProblem = null; D = meta.mode === 'demo' ? makeDemo() : emptyData(); photos = {}; save(); resetUi(); toast('Datos borrados'); render();
+    });
+  },
+  'confirm-yes'() { const sh = topSheet('confirm'); const fn = confirmFns.get(sh.fnId); const r = fn ? fn() : undefined; if (r === false) return; confirmFns.delete(sh.fnId); ui.sheets = ui.sheets.filter(s => s !== sh); renderSheets(); render(false); },
+  async 'copy-link'() {
+    try { await navigator.clipboard.writeText(appUrl()); toast('Enlace copiado. Envíatelo al iPhone y ábrelo en Safari.'); }
+    catch (e) { const r = document.createRange(); r.selectNodeContents($('#app-url')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('No se pudo copiar automáticamente. El enlace está seleccionado: cópialo a mano.', 'error'); }
+  },
+  'scan-open'() { openScan(); },
+  'scan-pick'(el) { chooseCandidate(Number(el.dataset.i)); },
+  'scan-more'() { SC.status = 'capture'; saveDraft(); renderSheets(); },
+  'scan-manual'() { manualFromScan(); },
+  'scan-retry'() { runScan({ reuseLabel: true }); },
+  'scan-photo-del'(el) { SC.photos.splice(Number(el.dataset.i), 1); if (!SC.photos.length) { SC.status = 'capture'; SC.label = null; } saveDraft(); renderSheets(); },
+  'scan-discard'() { clearDraft(); SC = null; ui.sheets = ui.sheets.filter(s => s.kind !== 'scan'); renderSheets(); render(false); toast('Escaneo descartado'); },
+  async 'y-proxy-check'() {
+    const i = $('#y-proxy'); if (i) { scanCfg().proxy = i.value.trim(); save(); }
+    if (!proxyUrl()) { toast('Escribe primero la dirección del servicio.'); return; }
+    const el = $('#proxy-state'); if (el) el.textContent = 'Comprobando…';
+    const h = await checkProxy(); render();
+    toast(h && h.ok ? 'Servicio conectado' : 'No se ha podido conectar: ' + (h?.msg || ''), h && h.ok ? 'info' : 'error');
+  },
+  async 'y-offline-prep'(el) {
+    el.disabled = true;
+    try { await prepareOffline((n, t) => { el.textContent = `Descargando ${n} de ${t}…`; }); toast('Lector preparado: ya funciona sin conexión.'); }
+    catch (e) { toast(e.message, 'error'); }
+    render();
+  },
+  'sheet-close'() { closeSheet(); }
+};
+function resetUi() { const t = todayKey(); Object.assign(ui, { date: t, hoyMonth: ymOf(t), calMonth: ymOf(t), editFrom: t, rDay: dow(t), open: {}, sheets: [], skinOpen: false }); renderSheets(); }
+// Conserva lo escrito en el formulario de producto al re-dibujar la hoja
+function collectProductForm() {
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : undefined; };
+  const o = { name: g('p-name'), brand: g('p-brand'), category: g('p-cat'), description: g('p-desc'), mfrInstructions: g('p-mfr'), highlights: g('p-hl'), inci: g('p-inci'), instructions: g('p-instr'), notes: g('p-notes'), opened: g('p-opened'), paoMonths: g('p-pao') };
+  for (const k in o) if (o[k] === undefined) delete o[k];
+  return o;
+}
+function keepForm(fn) {
+  const ids = ['p-name', 'p-brand', 'p-cat', 'p-desc', 'p-mfr', 'p-hl', 'p-inci', 'p-instr', 'p-notes', 'p-opened', 'p-pao'], v = {};
+  ids.forEach(i => { const el = document.getElementById(i); if (el) v[i] = el.value; });
+  fn(); ids.forEach(i => { const el = document.getElementById(i); if (el && i in v) el.value = v[i]; });
+}
+
+/* ---------- eventos ---------- */
+let skinTimer = null, nameTimer = null;
+document.addEventListener('click', e => {
+  const bg = e.target.closest('[data-bg]'); if (bg && e.target === bg) { closeSheet(); return; }
+  const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  const f = A[el.dataset.act]; if (f) { e.preventDefault(); f(el, e); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.sheets.length) closeSheet(); });
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.id === 'skin-notes') { const date = t.dataset.date; clearTimeout(skinTimer); skinTimer = setTimeout(() => { const L = D.logs[date] || (D.logs[date] = {}); (L.skin || (L.skin = {})).notes = t.value; save(); }, 400); }
+  if (t.id === 'y-name') { clearTimeout(nameTimer); nameTimer = setTimeout(() => { D.profile.name = t.value.trim(); save(); }, 400); }
+});
+document.addEventListener('change', async e => {
+  const t = e.target;
+  if (t.id === 'r-from') { if (isKey(t.value)) { ui.editFrom = t.value; render(); } return; }
+  if (t.id === 'y-goal') { const n = Math.max(0, Math.min(100, Math.round(Number(t.value) || 0))); t.value = n; D.profile.goal = n; save(); return; }
+  if (t.id === 'y-start') { if (isKey(t.value) && t.value <= todayKey()) {
+      const old = D.profile.trackingStart, first = D.plans[0]; let extra = '';
+      if (first && first.from === old && t.value < old) { first.from = t.value; extra = '. Tu primera planificación también se aplica desde esa fecha'; }
+      D.profile.trackingStart = t.value; save(); toast('Inicio del seguimiento: ' + fmtShort(t.value) + extra); } else { t.value = D.profile.trackingStart; toast('Elige una fecha que no sea futura.'); } return; }
+  if (t.id === 'y-am' || t.id === 'y-pm') { if (t.value) { D.profile.reminders[t.id === 'y-am' ? 'am' : 'pm'] = t.value; save(); } return; }
+  if (t.id === 'y-name') { clearTimeout(nameTimer); D.profile.name = t.value.trim(); save(); return; }
+  if (t.id === 'skin-notes') { clearTimeout(skinTimer); const L = D.logs[t.dataset.date] || (D.logs[t.dataset.date] = {}); (L.skin || (L.skin = {})).notes = t.value; save(); return; }
+  if ((t.id === 'scan-cam' || t.id === 'scan-gal' || t.id === 'scan-back') && t.files[0]) { const f = t.files[0]; t.value = ''; addScanPhoto(f); return; }
+  if (t.id === 'y-proxy') { scanCfg().proxy = t.value.trim(); proxyHealth = null; save(); return; }
+  if (t.id === 'y-obf') { scanCfg().obf = t.checked; save(); return; }
+  if (t.id === 'p-photo' && t.files[0]) {
+    try { const url = await readImage(t.files[0]); const sh = topSheet('product'); sh.newPhoto = url; sh.removePhoto = false; keepForm(renderSheets); }
+    catch (err) { toast(err.message || 'No se pudo usar la imagen.', 'error'); } return;
+  }
+  if (t.id === 'y-avatar' && t.files[0]) {
+    try { const url = await readImage(t.files[0]); const id = savePhoto(url); if (id) { deletePhoto(D.profile.avatar); D.profile.avatar = id; save(); render(); } }
+    catch (err) { toast(err.message || 'No se pudo usar la imagen.', 'error'); } return;
+  }
+  if (t.id === 'y-import' && t.files[0]) {
+    const file = t.files[0]; t.value = '';
+    try { reviewImport(await file.text()); } catch (err) { toast('No se pudo leer el archivo.', 'error'); } return;
+  }
+});
+function checkDay() {
+  const t = todayKey();
+  if (t === ui.lastToday) return;
+  if (ui.date === ui.lastToday) { ui.date = t; ui.hoyMonth = ymOf(t); }
+  if (ui.editFrom === ui.lastToday) ui.editFrom = t;
+  if (ui.calMonth === ymOf(ui.lastToday)) ui.calMonth = ymOf(t);
+  ui.lastToday = t; render();
+}
+setInterval(checkDay, 20000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkDay(); });
+window.addEventListener('focus', checkDay);
+if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('controllerchange', () => { if (ui.tab === 'yo') render(); });
+window.addEventListener('storage', e => { if (e.key === dataKey(meta.mode)) { loadData(meta.mode); render(); } });
+
+/* ---------- arranque ---------- */
+store.init(); loadMeta(); applyMeta(); loadData(meta.mode);
+ui.tab = 'hoy';
+render();
+// Acceso para pruebas automáticas (no visible en la interfaz)
+window.MiSkincare = { dayInfo: d => dayInfo(d), get data() { return D; }, get meta() { return meta; }, get scan() { return SC; }, todayKey, version: APP_VERSION };
+
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
+</body>
+</html>
