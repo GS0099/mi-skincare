@@ -28,6 +28,8 @@
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --display:"Fraunces","Iowan Old Style","Palatino Linotype",Georgia,serif;
   --tab-h:64px; --fs:16px;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px); --safe-l:env(safe-area-inset-left,0px); --safe-r:env(safe-area-inset-right,0px);
+  --tap:44px; --tap-sm:40px;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
@@ -70,7 +72,14 @@ button{cursor:pointer}
 h1,h2,h3{margin:0;text-wrap:balance}
 p{margin:0}
 
-#app{max-width:620px;margin:0 auto;padding-inline:16px;padding-top:calc(env(safe-area-inset-top) + 14px);padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 28px)}
+html,body{max-width:100%}
+#app{max-width:620px;margin:0 auto;padding-left:max(16px,var(--safe-l));padding-right:max(16px,var(--safe-r));padding-top:calc(var(--safe-t) + 14px);padding-bottom:calc(var(--tab-h) + var(--safe-b) + 28px)}
+/* Regla general: ningún hijo de flex/grid impone su ancho mínimo de contenido */
+/* :where() no suma especificidad, así los mínimos de tamaño de botones siguen mandando */
+:where(#app,.sheet) *{min-width:0}
+.iconbtn,.check,.thumb,.info-btn,.avatar,.tab-ic,.si,.sw{flex:none}
+.row>input,.row>select{flex:1 1 11rem}
+#view>*{max-width:100%}
 #view{display:flex;flex-direction:column;gap:14px;outline:none}
 
 /* banners */
@@ -78,10 +87,10 @@ p{margin:0}
 .banner.demo{background:repeating-linear-gradient(-45deg,var(--pink-soft) 0 10px,var(--pink-softer) 10px 20px);color:var(--pink-ink);font-weight:600;border:1px dashed var(--pink)}
 .banner.err{background:var(--err-soft);color:var(--err);font-weight:600}
 .banner.warn{background:var(--warn-soft);color:var(--warn)}
-.banner button{border:0;background:var(--card);color:var(--pink-ink);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.85rem}
+.banner button{border:0;background:var(--card);color:var(--pink-ink);border-radius:999px;padding:6px 14px;font-weight:600;font-size:.85rem;min-height:var(--tap-sm)}
 
 /* page titles */
-.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:4px 2px 2px}
+.page-h{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 12px;padding:4px 2px 2px}
 .page-h h1{font-family:var(--display);font-weight:600;font-size:2rem;letter-spacing:-.01em;font-variation-settings:"SOFT" 100,"opsz" 72}
 .page-h .sub{color:var(--muted);font-size:.9rem}
 
@@ -94,28 +103,28 @@ p{margin:0}
 .label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border-radius:999px;border:0;font-weight:700;background:var(--pink);color:var(--on-pink);font-size:.98rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;max-width:100%;padding:10px 18px;text-align:center;line-height:1.2;overflow-wrap:anywhere;border-radius:999px;border:0;font-weight:700;background:var(--pink);color:var(--on-pink);font-size:.98rem}
 .btn:active{transform:scale(.98)}
 .btn.soft{background:var(--pink-soft);color:var(--pink-ink)}
 .btn.ghost{background:transparent;color:var(--pink-ink);border:1.5px solid var(--line)}
 .btn.danger{background:var(--err-soft);color:var(--err)}
 .btn.block{width:100%}
-.btn.sm{min-height:36px;padding:6px 14px;font-size:.88rem}
+.btn.sm{min-height:var(--tap-sm);padding:8px 14px;font-size:.88rem}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
-.linkbtn{border:0;background:none;color:var(--pink-ink);font-weight:600;padding:6px 2px;font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
+.linkbtn{border:0;background:none;color:var(--pink-ink);font-weight:600;padding:6px 2px;min-height:var(--tap-sm);display:inline-flex;align-items:center;text-align:left;overflow-wrap:anywhere;font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
 .iconbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--card-2);display:inline-grid;place-items:center;color:var(--ink)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .row.end{justify-content:flex-end}
 .row.between{justify-content:space-between}
 .stack{display:flex;flex-direction:column;gap:10px}
-.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:700;background:var(--card-2);color:var(--muted);white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:700;background:var(--card-2);color:var(--muted);white-space:normal;line-height:1.25}
 .pill.pink{background:var(--pink-soft);color:var(--pink-ink)}
 .pill.next{background:var(--warn-soft);color:var(--warn)}
 .pill.ok{background:color-mix(in srgb,var(--both) 35%,transparent);color:var(--ok)}
 
 /* day header (Hoy) */
 .dayhead{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:var(--on-pink);border-radius:var(--r-lg);padding:14px 10px 16px;display:flex;flex-direction:column;gap:12px}
-.dh-row{display:grid;grid-template-columns:64px 1fr 64px;align-items:center}
+.dh-row{display:grid;grid-template-columns:3.6rem minmax(0,1fr) 3.6rem;align-items:center}
 .dh-nav{border:0;background:transparent;color:inherit;opacity:.85;display:flex;flex-direction:column;align-items:center;padding:6px 0;border-radius:14px;min-height:52px;justify-content:center}
 .dh-nav:hover{background:rgba(255,255,255,.12)}
 .dh-nav b{font-size:.95rem;font-weight:600}
@@ -124,21 +133,21 @@ p{margin:0}
 .dh-center h1{font-family:var(--display);font-weight:600;font-size:2.15rem;line-height:1.05;font-variation-settings:"SOFT" 100,"opsz" 72}
 .dh-center p{font-size:.92rem;opacity:.95;margin-top:4px}
 .dh-center p::first-letter{text-transform:uppercase}
-.dh-sum{background:rgba(255,255,255,.17);border-radius:var(--r-md);padding:10px 14px;display:flex;align-items:center;gap:12px;margin-inline:6px}
+.dh-sum{background:rgba(255,255,255,.17);border-radius:var(--r-md);padding:10px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-inline:6px}
+.dh-sum .grow{flex:1 1 9rem}
 .dh-sum strong{display:block;font-size:1rem}
 .dh-sum span{font-size:.86rem;opacity:.95}
-.dh-sum .grow{flex:1}
 .dh-dots{display:flex;gap:6px}
 .dh-dots i{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center;font-style:normal}
 .dh-dots i.on{background:#fff;color:var(--hero-b)}
 .dh-dots i svg{width:15px;height:15px}
-.backtoday{border:0;background:#fff;color:var(--pink-ink);font-weight:700;border-radius:999px;padding:8px 14px;font-size:.85rem;white-space:nowrap}
+.backtoday{border:0;background:#fff;color:var(--pink-ink);font-weight:700;border-radius:999px;padding:8px 14px;font-size:.85rem;min-height:var(--tap-sm);max-width:100%}
 .note{border-radius:var(--r-sm);padding:10px 12px;font-size:.88rem;background:var(--card-2);color:var(--muted);display:flex;gap:8px;align-items:flex-start}
 .note.warn{background:var(--warn-soft);color:var(--warn)}
 .note.pink{background:var(--pink-softer);color:var(--pink-ink)}
 
 /* routine cards */
-.routine .rt-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.routine .rt-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 10px}
 .rt-title{display:flex;align-items:center;gap:10px}
 .rt-emoji{font-size:1.5rem;line-height:1}
 .rt-title h2{font-size:1.15rem}
@@ -147,7 +156,7 @@ p{margin:0}
 .bar i{display:block;height:100%;background:var(--pink);border-radius:99px;transition:width .25s ease}
 .routine.am.complete .bar i{background:var(--am)} .routine.pm.complete .bar i{background:var(--pm)}
 .steps{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column}
-.step{display:grid;grid-template-columns:44px 48px 1fr 40px;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:44px 48px minmax(0,1fr) 44px;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .step:first-child{border-top:0}
 .check{width:40px;height:40px;border-radius:50%;border:2px solid color-mix(in srgb,var(--pink) 55%,var(--line));background:var(--card);display:grid;place-items:center;color:transparent;padding:0;transition:background .15s}
 .check svg{width:22px;height:22px}
@@ -160,7 +169,7 @@ p{margin:0}
 .st-text strong{display:block;font-weight:650;overflow-wrap:anywhere}
 .st-text span{display:block;font-size:.84rem;color:var(--muted);overflow-wrap:anywhere}
 .step.done .st-text strong{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--pink) 60%,transparent)}
-.info-btn{width:38px;height:38px;border-radius:50%;border:0;background:var(--card-2);color:var(--muted);display:grid;place-items:center}
+.info-btn{width:44px;height:44px;border-radius:50%;border:0;background:var(--card-2);color:var(--muted);display:grid;place-items:center}
 .info-btn[aria-expanded="true"]{background:var(--pink-soft);color:var(--pink-ink)}
 .st-info{grid-column:1/-1;background:var(--card-2);border-radius:var(--r-sm);padding:10px 12px;font-size:.9rem;display:flex;flex-direction:column;gap:6px;white-space:pre-wrap;overflow-wrap:anywhere}
 .st-info b{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block}
@@ -170,7 +179,7 @@ p{margin:0}
 /* calendar */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .cal-nav h2{font-size:1.08rem}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .cal .wd{text-align:center;font-size:.74rem;font-weight:700;color:var(--muted);padding:2px 0 4px}
 .cell{position:relative;border:0;border-radius:12px;background:transparent;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;color:var(--ink);font-variant-numeric:tabular-nums;max-width:100%}
 .cal.big .cell{aspect-ratio:auto;min-height:58px;border-radius:14px}
@@ -201,7 +210,7 @@ p{margin:0}
 .sw.part{background:var(--card-2);color:var(--pink-ink)} .sw.miss{background:var(--card-2);color:var(--muted)}
 .sw.fut{box-shadow:inset 0 0 0 1px var(--line)} .sw.bef{background:repeating-linear-gradient(-45deg,var(--hatch) 0 3px,transparent 3px 7px)}
 .sw.tod{box-shadow:inset 0 0 0 2.5px var(--pink)}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.2rem),1fr));gap:8px}
 .sum-tile{background:var(--card-2);border-radius:var(--r-sm);padding:10px;display:flex;flex-direction:column;gap:2px}
 .sum-tile b{font-size:1.35rem;font-variant-numeric:tabular-nums;line-height:1.1}
 .sum-tile small{color:var(--muted);font-size:.78rem}
@@ -212,10 +221,10 @@ p{margin:0}
 
 /* products */
 .search{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.chipbtn{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:.86rem;font-weight:600;white-space:nowrap;color:var(--ink)}
+.chipbtn{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;min-height:var(--tap-sm);flex:none;font-size:.86rem;font-weight:600;white-space:nowrap;color:var(--ink)}
 .chipbtn[aria-pressed="true"]{background:var(--pink-soft);border-color:transparent;color:var(--pink-ink)}
 .plist{display:flex;flex-direction:column;gap:10px}
-.pcard{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;background:var(--card);border-radius:var(--r-md);padding:12px;border:0;text-align:left;box-shadow:var(--shadow);width:100%}
+.pcard{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border-radius:var(--r-md);padding:12px;border:0;text-align:left;box-shadow:var(--shadow);width:100%}
 .pcard .thumb{width:56px;height:56px}
 .pcard strong{display:block;font-weight:700;overflow-wrap:anywhere}
 .pcard .meta{font-size:.84rem;color:var(--muted);display:block}
@@ -224,19 +233,19 @@ p{margin:0}
 .pcard.archived{opacity:.7;box-shadow:none;border:1.5px dashed var(--line)}
 
 /* routine planner */
-.daytabs{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.daytabs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .daytab{border:0;border-radius:14px;background:var(--card-2);padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;color:var(--ink)}
 .daytab[aria-selected="true"]{background:var(--pink);color:var(--on-pink)}
 .daytab .dd{display:flex;gap:3px}
 .daytab .dd i{width:6px;height:6px;border-radius:50%;background:var(--line)}
 .daytab .dd i.a{background:var(--am)} .daytab .dd i.p{background:var(--pm)}
-.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--card-2);border-radius:999px;padding:4px;gap:4px}
-.seg button{border:0;background:transparent;border-radius:999px;min-height:40px;font-weight:700;color:var(--muted);font-size:.92rem;padding:0 8px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--card-2);border-radius:999px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:999px;min-height:var(--tap-sm);line-height:1.2;overflow-wrap:anywhere;font-weight:700;color:var(--muted);font-size:.92rem;padding:0 8px}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--pink-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .edlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.ed-step{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center;background:var(--card-2);border-radius:var(--r-md);padding:10px}
+.ed-step{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;align-items:center;background:var(--card-2);border-radius:var(--r-md);padding:10px}
 .ed-actions{grid-column:1/-1;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
-.ed-actions button{border:0;background:var(--card);border-radius:10px;min-height:36px;min-width:40px;padding:0 10px;font-weight:600;font-size:.85rem;color:var(--ink);display:inline-flex;align-items:center;gap:4px}
+.ed-actions button{border:0;background:var(--card);border-radius:10px;min-height:var(--tap-sm);min-width:var(--tap-sm);padding:0 10px;font-weight:600;font-size:.85rem;color:var(--ink);display:inline-flex;align-items:center;gap:4px}
 .ed-actions button[disabled]{opacity:.35}
 .ed-actions .del{color:var(--err)}
 .vlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
@@ -247,17 +256,23 @@ p{margin:0}
 .field{display:flex;flex-direction:column;gap:6px}
 .field>label,.field>.lbl{font-weight:650;font-size:.9rem}
 .field .hint{font-size:.8rem;color:var(--muted)}
-input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{width:100%;min-height:46px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--card);padding:10px 12px;font-size:1rem;color:var(--ink)}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{display:block;width:100%;max-width:100%;min-width:0;min-height:46px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--card);padding:10px 12px;font-size:1rem;color:var(--ink)}
+/* Fecha y hora: Safari en iPhone da a estos campos un ancho propio que no encoge y los saca de la tarjeta */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;text-align:left;line-height:1.3;background-clip:padding-box}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;margin:0;min-height:1.3em}
+input[type=date]::-webkit-datetime-edit,input[type=time]::-webkit-datetime-edit{padding:0;max-width:100%}
+input[type=date]::-webkit-calendar-picker-indicator{margin-left:auto}
+select{-webkit-appearance:none;appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;text-overflow:ellipsis}
 textarea{min-height:88px;resize:vertical}
 input:focus,select:focus,textarea:focus{border-color:var(--pink);outline:none}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:380px){.grid2{grid-template-columns:1fr}}
-.photo-edit{display:flex;gap:12px;align-items:center}
+/* Dos campos por fila solo si caben; si no, uno debajo del otro */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:10px}
+.photo-edit{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .photo-edit .thumb{width:72px;height:72px;border-radius:18px}
 .filebtn{position:relative;overflow:hidden}
 .filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
 .levels{display:flex;gap:6px;flex-wrap:wrap}
-.lv{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:600;color:var(--ink);min-height:36px}
+.lv{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.84rem;font-weight:600;color:var(--ink);min-height:var(--tap-sm)}
 .lv[aria-pressed="true"]{background:var(--pink-soft);border-color:var(--pink);color:var(--pink-ink)}
 .skin-row{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
 .skin-row:first-of-type{border-top:0}
@@ -272,14 +287,15 @@ input:focus,select:focus,textarea:focus{border-color:var(--pink);outline:none}
 .menu{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .menu>li{padding:12px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
 .menu>li:first-child{border-top:0;padding-top:2px}
-.mi-h{display:flex;gap:12px;align-items:center}
+.mi-h{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
 .mi-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--pink-soft);color:var(--pink-ink)}
 .mi-ic svg{width:19px;height:19px}
-.mi-h strong{flex:1;font-weight:650}
-.opt{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.88rem}
+.mi-h strong{flex:1 1 8rem;font-weight:650}
+.opt{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 10px;font-size:.88rem}
 .opt dt{font-weight:700}
 .opt dd{margin:0;color:var(--muted)}
-.kv{display:flex;justify-content:space-between;gap:10px;font-size:.9rem}
+.kv{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 10px;font-size:.9rem}
+.kv span{overflow-wrap:anywhere}
 .kv span:last-child{color:var(--muted);text-align:right}
 
 .howto{margin:0;padding:0;list-style:none;counter-reset:h;display:flex;flex-direction:column;gap:10px;font-size:.95rem}
@@ -287,10 +303,36 @@ input:focus,select:focus,textarea:focus{border-color:var(--pink);outline:none}
 .howto li::before{content:counter(h);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--pink-soft);color:var(--pink-ink);font-weight:800;font-size:.82rem;display:grid;place-items:center}
 .howto li>span.muted{display:block;font-size:.85rem;margin-top:3px}
 
+/* escaneo */
+.scanbtn{min-height:54px;font-size:1.02rem}
+.scan-phs{display:flex;gap:8px;flex-wrap:wrap}
+.scan-ph{position:relative;width:88px;height:88px;border-radius:14px;overflow:hidden;background:var(--card-2)}
+.scan-ph img{width:100%;height:100%;object-fit:cover}
+.scan-ph .iconbtn{position:absolute;top:4px;right:4px;width:40px;height:40px;background:rgba(0,0,0,.55);color:#fff}
+.scan-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.scan-steps li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;background:var(--card);border-radius:var(--r-sm);padding:10px 12px}
+.scan-steps .si{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--card-2);color:var(--muted)}
+.scan-steps .st-ok .si{background:color-mix(in srgb,var(--both) 45%,transparent);color:var(--ok)}
+.scan-steps .st-fail .si{background:var(--err-soft);color:var(--err)}
+.scan-steps b{display:block;font-weight:650;font-size:.92rem}
+.scan-steps small{display:block;color:var(--muted);font-size:.8rem;overflow-wrap:anywhere}
+.spin{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--pink);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-q{font-size:1.05rem}
+.verify{background:var(--card);border-radius:var(--r-md);padding:12px 14px}
+.verify ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:.88rem}
+.verify li.ok{color:var(--ok)} .verify li.warn{color:var(--warn);font-weight:600}
+details.fold{background:var(--card);border-radius:var(--r-md);padding:12px 14px}
+details.fold>summary{font-weight:700;cursor:pointer}
+.sources{display:flex;flex-direction:column;gap:6px}
+.sources a{color:var(--pink-ink);font-weight:600;overflow-wrap:anywhere}
+.sources p{overflow-wrap:anywhere}
+
 /* tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.tabbar ul{list-style:none;margin:0 auto;padding:0 6px;max-width:620px;display:grid;grid-template-columns:repeat(5,1fr);height:var(--tab-h)}
-.tabbar button{width:100%;height:100%;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:.72rem;font-weight:650}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding-left:var(--safe-l);padding-right:var(--safe-r);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+.tabbar ul{list-style:none;margin:0 auto;padding:0 2px;max-width:620px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:var(--tab-h)}
+.tabbar button{width:100%;height:100%;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:11px;font-weight:650;padding:0 1px;line-height:1.1;text-align:center}
+/* La barra inferior mantiene tamaños fijos (como las apps de iPhone), así cabe con el texto ampliado */
 .tabbar svg{width:25px;height:25px}
 .tabbar button[aria-current="page"]{color:var(--pink-ink)}
 .tabbar button[aria-current="page"] .tab-ic{background:var(--pink-soft)}
@@ -298,13 +340,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--pink);outline:none}
 
 /* sheet */
 .sheet-wrap{position:fixed;inset:0;z-index:40;background:rgba(20,10,20,.38);display:flex;align-items:flex-end;justify-content:center}
-.sheet{background:var(--bg);width:100%;max-width:620px;max-height:92dvh;overflow:auto;border-radius:24px 24px 0 0;padding:8px 16px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;animation:up .22s ease}
+.sheet{background:var(--bg);width:100%;max-width:620px;max-height:92dvh;overflow:auto;border-radius:24px 24px 0 0;padding:8px max(16px,var(--safe-r)) calc(20px + var(--safe-b)) max(16px,var(--safe-l));display:flex;flex-direction:column;gap:14px;animation:up .22s ease}
 @media (min-width:700px){.sheet-wrap{align-items:center}.sheet{border-radius:24px;max-height:88vh}}
 .sheet .grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 0}
-.sheet-h{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:-8px;background:var(--bg);padding:8px 0;z-index:2}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:var(--tap);position:sticky;top:-8px;background:var(--bg);padding:8px 0;z-index:2}
 .sheet-h h2{font-size:1.2rem;font-weight:750}
 @keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 14px);z-index:60;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-size:.9rem;font-weight:600;max-width:min(92vw,520px);box-shadow:0 6px 24px rgba(0,0,0,.2);pointer-events:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + var(--safe-b) + 14px);z-index:60;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-size:.9rem;font-weight:600;max-width:min(92vw,520px);box-shadow:0 6px 24px rgba(0,0,0,.2);pointer-events:none}
 .toast.error{background:var(--err);color:#fff}
 .toast[hidden]{display:none!important}
 .reduce *{animation:none!important;transition:none!important}
@@ -335,7 +377,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--pink);outline:none}
 (function(){
 /* ===== Mi Skincare · núcleo: fechas, almacenamiento y reglas de datos ===== */
 'use strict';
-const APP_VERSION = '0.2.0';
+const APP_VERSION = '0.3.1';
 const KEY = 'miSkincare.v1';
 const CATS = ['Limpiador','Desmaquillante','Tónico','Esencia','Sérum','Tratamiento','Contorno de ojos','Hidratante','Aceite','Protector solar','Exfoliante','Mascarilla','Otro'];
 const SLOTS = { am:{label:'Rutina de mañana', short:'Mañana', emoji:'☀️'}, pm:{label:'Rutina de noche', short:'Noche', emoji:'🌙'} };
@@ -599,6 +641,287 @@ function makeDemo() {
   return d;
 }
 
+/* ===== Mi Skincare · extracción de datos (funciones puras, sin red) =====
+   Todo lo que devuelve sale literalmente de la etiqueta leída o de la página/base consultada.
+   Nada se deduce: si un dato no aparece, el campo queda vacío. */
+const XT = (() => {
+  const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const STOP = new Set(('para con sin por del las los una uno unos unas que the and for with your you des les pour avec sans aux die und von ' +
+    'piel skin peau facial face rostro cara visage corps body cuerpo ml fl oz gr mls tubo tube frasco envase new nuevo nueva nouveau formula ' +
+    'dermatologico dermatologica dermatological dermatologique hipoalergenico hypoallergenic sensible sensibles sensitive tolerance ' +
+    'made france spain espana hecho fabricado www com').split(' '));
+  // Marcas conocidas. domain = web oficial para España (se usa para buscar allí primero).
+  const BRANDS = [
+    ['La Roche-Posay', ['la roche posay', 'laroche posay', 'roche posay'], 'www.laroche-posay.es'],
+    ['CeraVe', ['cerave'], 'www.cerave.es'],
+    ['Vichy', ['vichy'], 'www.vichy.es'],
+    ['SkinCeuticals', ['skinceuticals'], 'www.skinceuticals.es'],
+    ["L'Oréal Paris", ['loreal paris', 'l oreal paris', 'loreal'], 'www.loreal-paris.es'],
+    ['Garnier', ['garnier'], 'www.garnier.es'],
+    ["Kiehl's", ['kiehls', 'kiehl s'], 'www.kiehls.es'],
+    ['Lancôme', ['lancome'], 'www.lancome.es'],
+    ['Eucerin', ['eucerin'], 'www.eucerin.es'],
+    ['Nivea', ['nivea'], 'www.nivea.es'],
+    ['Bioderma', ['bioderma'], 'www.bioderma.es'],
+    ['Avène', ['avene', 'eau thermale avene'], 'www.eau-thermale-avene.es'],
+    ['A-Derma', ['a derma', 'aderma'], 'www.aderma.es'],
+    ['ISDIN', ['isdin'], 'www.isdin.com'],
+    ['The Ordinary', ['the ordinary'], 'theordinary.com'],
+    ["Paula's Choice", ['paulas choice', 'paula s choice'], 'www.paulaschoice.es'],
+    ['Clinique', ['clinique'], 'www.clinique.es'],
+    ['Caudalie', ['caudalie'], 'es.caudalie.com'],
+    ['Neutrogena', ['neutrogena'], 'www.neutrogena.es'],
+    ['Sesderma', ['sesderma'], 'www.sesderma.com'],
+    ['Martiderm', ['martiderm'], 'www.martiderm.com'],
+    ['Uriage', ['uriage'], ''], ['Ducray', ['ducray'], ''], ['Heliocare', ['heliocare'], ''], ['Endocare', ['endocare'], ''],
+    ['Bella Aurora', ['bella aurora'], ''], ['Babaria', ['babaria'], ''], ['Deliplus', ['deliplus'], ''], ['Byoma', ['byoma'], ''],
+    ['COSRX', ['cosrx'], ''], ['Beauty of Joseon', ['beauty of joseon'], ''], ['Anua', ['anua'], ''], ['Round Lab', ['round lab'], ''],
+    ['Skin1004', ['skin1004', 'skin 1004'], ''], ['Isntree', ['isntree'], ''], ['Some By Mi', ['some by mi'], ''], ['Klairs', ['klairs'], ''],
+    ['Laneige', ['laneige'], ''], ['The Inkey List', ['inkey list'], ''], ['Olay', ['olay'], ''], ['Nuxe', ['nuxe'], ''], ['Filorga', ['filorga'], ''],
+    ['Shiseido', ['shiseido'], ''], ['Clarins', ['clarins'], ''], ['Estée Lauder', ['estee lauder'], ''], ['Weleda', ['weleda'], ''],
+    ['Erborian', ['erborian'], ''], ['Freshly Cosmetics', ['freshly cosmetics'], ''], ['Ziaja', ['ziaja'], ''], ['Mixa', ['mixa'], ''],
+    ['Rilastil', ['rilastil'], ''], ['Mustela', ['mustela'], ''], ['Cantabria Labs', ['cantabria labs'], ''], ['Medik8', ['medik8'], ''],
+    ['Dermalogica', ['dermalogica'], ''], ['Drunk Elephant', ['drunk elephant'], ''], ['Bioré', ['biore'], ''], ['Hada Labo', ['hada labo'], '']
+  ];
+  const ACTIVES = [
+    ['Niacinamida', 'niacinamida|niacinamide|vitamina b3|vitamin b3'],
+    ['Ácido hialurónico', 'acido hialuronico|hyaluronic acid|hialuronato sodico|sodium hyaluronate|acide hyaluronique'],
+    ['Retinol', 'retinol'], ['Retinal', 'retinal|retinaldehido|retinaldehyde'],
+    ['Ácido salicílico', 'acido salicilico|salicylic acid|acide salicylique'],
+    ['Ácido glicólico', 'acido glicolico|glycolic acid|acide glycolique'],
+    ['Ácido láctico', 'acido lactico|lactic acid'], ['Ácido mandélico', 'acido mandelico|mandelic acid'],
+    ['Ácido azelaico', 'acido azelaico|azelaic acid'], ['Ácido tranexámico', 'acido tranexamico|tranexamic acid'],
+    ['Ácido ferúlico', 'acido ferulico|ferulic acid'], ['Ácido poliglutámico', 'acido poliglutamico|polyglutamic acid'],
+    ['Vitamina C', 'vitamina c|vitamin c|acido ascorbico|ascorbic acid|ascorbyl glucoside|ascorbil glucosido'],
+    ['Vitamina E', 'vitamina e|vitamin e|tocoferol|tocopherol'],
+    ['Urea', 'urea'], ['Ceramidas', 'ceramidas|ceramides|ceramide'], ['Pantenol', 'pantenol|panthenol|provitamina b5|vitamina b5'],
+    ['Zinc', 'zinc pca|zinc'], ['Péptidos', 'peptidos|peptides|peptide'], ['Escualano', 'escualano|squalane'],
+    ['Centella asiática', 'centella asiatica|cica|madecassoside|madecasosido'], ['Alfa arbutina', 'alfa arbutina|alpha arbutin'],
+    ['Bakuchiol', 'bakuchiol'], ['Alantoína', 'alantoina|allantoin'], ['Cafeína', 'cafeina|caffeine'],
+    ['LHA', 'lha|lipo hidroxiacido|lipohydroxy acid'], ['Aloe vera', 'aloe vera|aloe barbadensis'],
+    ['Agua termal', 'agua termal|thermal water|eau thermale'], ['Probióticos', 'probioticos|probiotic']
+  ].map(([label, re]) => [label, new RegExp('\\b(' + re + ')\\b', 'i')]);
+  const CAT_RULES = [
+    ['Protector solar', /\b(protector solar|proteccion solar|fotoprotector|spf|fps|sunscreen|solaire|anthelios|fusion water)\b/],
+    ['Desmaquillante', /\b(agua micelar|micelar|micellar|desmaquillante|demaquillant|make-?up remover)\b/],
+    ['Limpiador', /\b(limpiador|limpiadora|gel limpiador|espuma limpiadora|cleanser|nettoyant|syndet|jabon|gel de limpieza|aceite limpiador)\b/],
+    ['Contorno de ojos', /\b(contorno de ojos|contorno ojos|eye cream|yeux|ojos)\b/],
+    ['Sérum', /\b(serum|serums|serum|concentrado|ampollas?|booster)\b/],
+    ['Tónico', /\b(tonico|locion tonica|toner|lotion tonique|astringente)\b/],
+    ['Esencia', /\b(esencia|essence)\b/],
+    ['Exfoliante', /\b(exfoliante|peeling|scrub|gommage|exfoliant)\b/],
+    ['Mascarilla', /\b(mascarilla|mask|masque)\b/],
+    ['Aceite', /\b(aceite|oil|huile)\b/],
+    ['Hidratante', /\b(hidratante|crema|moisturi[sz]er|moisturi[sz]ing|balsamo|baume|emulsion|fluido|cream|creme|gel-crema|gel crema)\b/],
+    ['Tratamiento', /\b(tratamiento|corrector|anti-?imperfecciones|anti-?manchas|treatment)\b/]
+  ];
+
+  const tokens = s => norm(s).replace(/[^a-z0-9%+]+/g, ' ').split(' ').filter(t => t.length >= 3 && !STOP.has(t) && !/^\d+$/.test(t));
+  function lev1(a, b) { // ¿distancia de edición <= 1?
+    if (a === b) return true; if (Math.abs(a.length - b.length) > 1) return false;
+    let i = 0, j = 0, e = 0;
+    while (i < a.length && j < b.length) { if (a[i] === b[j]) { i++; j++; continue; } if (++e > 1) return false; if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; } }
+    return e + (a.length - i) + (b.length - j) <= 1;
+  }
+  const tokMatch = (a, b) => a === b || (a.length >= 5 && b.length >= 5 && (a.startsWith(b) || b.startsWith(a) || lev1(a, b)));
+
+  // ----- marca -----
+  function detectBrand(text, extra = []) {
+    const t = ' ' + norm(text).replace(/[^a-z0-9]+/g, ' ') + ' ';
+    const found = [];
+    for (const [name, aliases, domain] of BRANDS) for (const a of aliases) { const i = t.indexOf(' ' + a + ' '); if (i >= 0) { found.push({ name, domain, pos: i }); break; } }
+    for (const b of extra) { const a = norm(b).replace(/[^a-z0-9]+/g, ' ').trim(); if (a.length >= 3 && t.includes(' ' + a + ' ') && !found.some(f => norm(f.name) === norm(b))) found.push({ name: b, domain: '', pos: t.indexOf(a) }); }
+    return found.sort((x, y) => x.pos - y.pos);
+  }
+  const brandInfo = name => { const n = norm(name); const b = BRANDS.find(x => norm(x[0]) === n || x[1].some(a => n.replace(/[^a-z0-9]+/g, ' ').trim() === a)); return b ? { name: b[0], domain: b[2], aliases: b[1] } : null; };
+  const brandTag = name => norm(name).replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  // ----- lectura de la etiqueta (OCR) -----
+  function parseLabel(text, lines = []) {
+    const clean = String(text || '').replace(/[|]/g, ' ');
+    const pct = [...clean.matchAll(/(\d{1,2}(?:[.,]\d{1,2})?)\s?%/g)].map(m => m[1].replace(',', '.') + ' %');
+    const spf = (clean.match(/\b(?:SPF|FPS)\s*(\d{2}\+?)/i) || [])[1] || '';
+    const paoM = [...clean.matchAll(/\b(3|6|9|12|18|24|36)\s?M\b/g)].map(m => Number(m[1]));
+    // palabras de líneas grandes (normalmente nombre y marca) valen más
+    const weighted = {};
+    const hs = lines.map(l => l.h || 0).filter(Boolean).sort((a, b) => b - a); const big = hs.length ? hs[Math.floor(hs.length * 0.25)] || hs[0] : 0;
+    let inIngr = false;
+    (lines.length ? lines : clean.split('\n').map(t => ({ text: t, h: 0 }))).forEach(l => {
+      if (/ingredient|ingr[eé]dients|composici[oó]n/i.test(l.text)) inIngr = true;
+      if (inIngr || (l.text.match(/,/g) || []).length >= 2 || /\b(aqua|water|glycerin)\b/i.test(l.text)) return; // la lista INCI no sirve para identificar
+      const w = big && l.h >= big ? 2 : 1;
+      for (const t of tokens(l.text)) weighted[t] = Math.max(weighted[t] || 0, w);
+    });
+    return { text: clean, pct: [...new Set(pct)], spf, pao: paoM.length ? paoM[0] : null, weighted, tokens: Object.keys(weighted) };
+  }
+
+  // ----- relevancia entre lo leído y un nombre/URL -----
+  function matchScore(labelTokens, targetText, idf = null, brandAliases = []) {
+    const bt = new Set(brandAliases.flatMap(a => a.split(' ')));
+    const tt = tokens(targetText).filter(t => !bt.has(t));
+    if (!tt.length) return 0;
+    let hit = 0, tot = 0;
+    for (const t of tt) {
+      const w = idf ? (idf[t] || 1) : 1; tot += w;
+      if (labelTokens.some(l => tokMatch(l, t))) hit += w;
+    }
+    return hit / tot * Math.min(1, hit / (idf ? 2 : 1.5));
+  }
+  function coverage(labelTokens, name, brandAliases = []) {
+    const bt = new Set(brandAliases.flatMap(a => a.split(' ')));
+    const nt = [...new Set(tokens(name))].filter(t => !bt.has(t));
+    const hits = nt.filter(t => labelTokens.some(l => tokMatch(l, t))).length;
+    return { cover: nt.length ? hits / nt.length : 0, hits, total: nt.length };
+  }
+  function rankUrls(urls, labelTokens, brandAliases = [], lang = 'es') {
+    const slugTok = u => { try { const p = new URL(u).pathname; return decodeURIComponent(p).split('/').filter(Boolean).slice(-2).join(' '); } catch (e) { return ''; } };
+    let list = urls.filter(u => !/\.(jpg|jpeg|png|webp|pdf)$/i.test(u) && !/\/(blog|article|articulo|noticias|sorteo|event|faq|politica|legal|cookies|tiendas|rutina|diagnostico|encuentra)/i.test(u));
+    const loc = list.filter(u => new RegExp('/(' + lang + '|' + lang + '-' + lang + ')(/|$)', 'i').test(u));
+    if (loc.length > 20) list = loc;
+    // misma página en varios idiomas: quedarse con la española
+    const bySlug = {}; for (const u of list) { const k = u.split('?')[0].replace(/\/$/, '').split('/').pop(); if (!bySlug[k] || new RegExp('/' + lang + '([-_]' + lang + ')?/', 'i').test(u)) bySlug[k] = u; }
+    list = Object.values(bySlug);
+    const df = {}; for (const u of list) for (const t of new Set(tokens(slugTok(u)))) df[t] = (df[t] || 0) + 1;
+    const idf = {}; for (const [t, n] of Object.entries(df)) idf[t] = Math.log(1 + list.length / n);
+    return list.map(u => ({ url: u, score: matchScore(labelTokens, slugTok(u), idf, brandAliases) })).filter(x => x.score > 0.15).sort((a, b) => b.score - a.score).slice(0, 6);
+  }
+  const sitemapLocs = xml => [...String(xml).matchAll(/<loc>\s*(?:<!\[CDATA\[)?([^<\]]+?)(?:\]\]>)?\s*<\/loc>/g)].map(m => m[1].replace(/&amp;/g, '&').trim());
+  const isSitemapIndex = xml => /<sitemapindex/i.test(xml);
+
+  // ----- página del fabricante -----
+  const decode = s => { const t = document.createElement('textarea'); t.innerHTML = String(s || ''); return t.value; };
+  const stripHtml = s => decode(String(s || '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|li|div|h\d)>/gi, '\n').replace(/<[^>]+>/g, ' ')).replace(/[ \t\u00a0\u200b]+/g, ' ').replace(/\s*\n\s*/g, '\n').trim();
+  function textOf(el) {
+    let out = '';
+    const walk = n => {
+      if (n.nodeType === 3) { out += n.nodeValue; return; }
+      if (n.nodeType !== 1) return;
+      const tag = n.tagName; if (/^(SCRIPT|STYLE|NOSCRIPT|SVG|BUTTON|TEMPLATE)$/.test(tag)) return;
+      const block = /^(P|LI|DIV|BR|H\d|TR|DT|DD|UL|OL|SECTION|ARTICLE)$/.test(tag);
+      if (block) out += '\n'; if (tag === 'LI') out += '• ';
+      n.childNodes.forEach(walk); if (block) out += '\n';
+    };
+    walk(el);
+    return out.replace(/[ \t\u00a0\u200b]+/g, ' ').replace(/ *\n[\n ]*/g, '\n').trim();
+  }
+  const cut = (s, n) => { s = String(s || '').trim(); if (s.length <= n) return s; const c = s.slice(0, n); const i = Math.max(c.lastIndexOf('. '), c.lastIndexOf('.\n')); return (i > n * 0.5 ? c.slice(0, i + 1) : c + '…'); };
+  const looksInci = s => (String(s).match(/[,•●·]| - /g) || []).length >= 5 && /\b(aqua|water|eau|glycerin|alcohol|parfum)\b/i.test(s);
+  const SEC = {
+    howto: /^(modo de (empleo|uso)|c[oó]mo (se )?(usar|aplicar|utilizar)(lo)?|instrucciones( de uso)?|aplicaci[oó]n|consejos de (uso|aplicaci[oó]n)|how to use|directions|mode d.emploi)\b/i,
+    inci: /^(ingredientes|lista de ingredientes|composici[oó]n|f[oó]rmula completa|inci|ingredients|composition)\b/i,
+    key: /^(ingredientes (clave|principales|activos|destacados)|activos( clave)?|principios activos|key ingredients|beneficios|benefits)\b/i
+  };
+  function sections(doc) {
+    const found = { howto: '', inci: '', key: '' };
+    const label = el => (el.getAttribute('title') || el.getAttribute('aria-label') || el.getAttribute('data-title') || '').trim();
+    const setIf = (k, txt) => { txt = (txt || '').trim(); if (!found[k] && txt.length >= 12) found[k] = txt; };
+    // 1) contenedores con título (acordeones)
+    doc.querySelectorAll('[title],[data-title]').forEach(el => {
+      const l = label(el).replace(/[\u200b]/g, ''); if (!l || l.length > 60) return;
+      for (const k of Object.keys(SEC)) if (SEC[k].test(l)) setIf(k, textOf(el).replace(l, ''));
+    });
+    // 2) encabezados seguidos de contenido
+    doc.querySelectorAll('h1,h2,h3,h4,h5,summary,dt,button,[role=tab],strong').forEach(h => {
+      const l = (h.textContent || '').replace(/[\u200b]/g, '').replace(/\s+/g, ' ').trim(); if (!l || l.length > 60) return;
+      for (const k of Object.keys(SEC)) {
+        if (!SEC[k].test(l) || found[k]) continue;
+        let txt = '';
+        const ctl = h.getAttribute('aria-controls'); if (ctl) { const t = doc.getElementById(ctl); if (t) txt = textOf(t); }
+        if (!txt && h.tagName === 'SUMMARY') txt = textOf(h.parentElement).replace(l, '');
+        if (!txt && h.tagName === 'DT') { const dd = h.nextElementSibling; if (dd) txt = textOf(dd); }
+        if (!txt) { let n = h.nextElementSibling, acc = ''; while (n && !/^H\d$/.test(n.tagName) && acc.length < 1500) { acc += '\n' + textOf(n); n = n.nextElementSibling; } txt = acc; }
+        if (!txt && h.parentElement) { const s = h.parentElement.nextElementSibling; if (s) txt = textOf(s); }
+        setIf(k, txt);
+      }
+    });
+    return found;
+  }
+  function jsonLd(doc) {
+    const out = [];
+    doc.querySelectorAll('script[type="application/ld+json"]').forEach(s => { try { const j = JSON.parse(s.textContent); (Array.isArray(j) ? j : [j]).forEach(o => { out.push(o); (o['@graph'] || []).forEach(g => out.push(g)); }); } catch (e) {} });
+    return out;
+  }
+  const typeIs = (o, t) => [].concat(o['@type'] || []).includes(t);
+  function highlights(texts) {
+    const out = []; const seen = new Set();
+    const joined = texts.filter(Boolean).join('\n');
+    const plain = norm(joined);
+    for (const [label, re] of ACTIVES) {
+      const m = plain.match(re); if (!m) continue;
+      const src = new RegExp('(\\d{1,2}(?:[.,]\\d{1,2})?)\\s?%\\s*(?:de\\s+)?(?:' + re.source.slice(3, -3) + ')|(?:' + re.source.slice(3, -3) + ')\\s*(?:al\\s+|\\(|:\\s*)?(\\d{1,2}(?:[.,]\\d{1,2})?)\\s?%', 'i');
+      const c = plain.match(src);
+      const conc = c ? (c[1] || c[2]).replace('.', ',') + ' %' : '';
+      if (!seen.has(label)) { seen.add(label); out.push(conc ? `${label} ${conc}` : label); }
+    }
+    return out;
+  }
+  function paoFrom(text) {
+    const m = norm(text).match(/(\d{1,2})\s*(?:meses|months|mois)\s*(?:despues de (?:su |la )?apertura|tras (?:su |la )?apertura|after opening|apres ouverture|una vez abierto)/)
+      || norm(text).match(/\bpao\s*:?\s*(\d{1,2})\s*m\b/);
+    return m ? Number(m[1]) : null;
+  }
+  function category(...texts) {
+    for (const t of texts) { const n = norm(t); if (!n) continue; for (const [c, re] of CAT_RULES) if (re.test(n)) return c; }
+    return '';
+  }
+  function parseProductPage(html, url, brandHint = '') {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const ld = jsonLd(doc);
+    const prod = ld.find(o => typeIs(o, 'Product')) || null;
+    const howto = ld.find(o => typeIs(o, 'HowTo'));
+    const meta = n => doc.querySelector(`meta[name="${n}"],meta[property="${n}"]`)?.getAttribute('content') || '';
+    const brandName = prod ? (typeof prod.brand === 'string' ? prod.brand : prod.brand?.name || '') : '';
+    const crumbList = ld.filter(o => typeIs(o, 'BreadcrumbList')).flatMap(o => (o.itemListElement || []).map(i => decode(i.name || i.item?.name || '').trim()));
+    const slugT = tokens(decodeURIComponent((url || '').split('/').filter(Boolean).pop() || ''));
+    const h1 = (doc.querySelector('h1')?.textContent || '').replace(/\s+/g, ' ').trim();
+    const h1ok = h1 && tokens(h1).some(t => slugT.some(s => tokMatch(s, t)));
+    let name = decode(prod?.name || '').trim() || (crumbList.length > 1 ? crumbList[crumbList.length - 1] : '') || (h1ok ? h1 : '') || meta('og:title').split('|')[0].trim() || h1;
+    const desc = cut(stripHtml(prod?.description || meta('og:description') || meta('description')), 420);
+    const sec = sections(doc);
+    let steps = '';
+    if (howto && Array.isArray(howto.step)) steps = howto.step.map(s => stripHtml(typeof s === 'string' ? s : s.text || s.name || '')).filter(Boolean).map(s => '• ' + s).join('\n');
+    const instructions = cut(steps || sec.howto, 900);
+    let inci = '';
+    const prop = [].concat(prod?.additionalProperty || []).find(p => /ingredient/i.test(p?.name || '') && looksInci(p.value || ''));
+    if (prop) inci = stripHtml(prop.value);
+    else if (looksInci(sec.inci)) inci = sec.inci;
+    else { const m = html.match(/(AQUA|WATER|EAU|Aqua|Water)\s*(?:\/\s*(?:WATER|EAU|Water)\s*)*[\s\S]{0,40}?[,•●·-][^<"]{40,3000}/); if (m && looksInci(m[0])) inci = stripHtml(m[0]); }
+    inci = cut(inci.replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' '), 3000);
+    const keyTxt = [name, desc, sec.key && !looksInci(sec.key) ? sec.key : '', !looksInci(sec.inci) ? sec.inci : ''];
+    const hl = highlights(keyTxt);
+    const bodyTxt = textOf(doc.body || doc.documentElement);
+    const pao = paoFrom([instructions, sec.inci, sec.key, bodyTxt.slice(0, 60000)].join('\n'));
+    const crumbs = crumbList.join(' ');
+    return {
+      url, name: name.replace(/\s+/g, ' '), brand: decode(brandName).trim() || brandHint, description: desc, instructions, inci, highlights: hl, pao,
+      category: category(name, crumbs, desc), isProduct: !!prod || !!howto || !!inci
+    };
+  }
+  // ----- Open Beauty Facts -----
+  function fromOBF(p) {
+    const pick = (...k) => { for (const x of k) if (p[x] && String(p[x]).trim()) return String(p[x]).trim(); return ''; };
+    const name = pick('product_name_es', 'product_name', 'product_name_en', 'product_name_fr');
+    const pao = p.periods_after_opening ? (String(p.periods_after_opening).match(/(\d{1,2})/) || [])[1] : null;
+    const cats = (p.categories_tags || []).map(c => c.replace(/^\w\w:/, '').replace(/-/g, ' ')).join(' ');
+    return {
+      code: p.code, name, brand: (p.brands || '').split(',')[0].trim(), inci: pick('ingredients_text_es', 'ingredients_text', 'ingredients_text_en', 'ingredients_text_fr').replace(/\s*\r?\n\s*/g, ' '),
+      pao: pao ? Number(pao) : null, category: category(name, cats), image: p.image_front_small_url || '', url: p.url || (p.code ? `https://world.openbeautyfacts.org/product/${p.code}` : '')
+    };
+  }
+  // ----- comprobación etiqueta ↔ ficha -----
+  function verify(label, cand, brandFromLabel) {
+    const out = [];
+    const nameTxt = norm((cand.name || '') + ' ' + (cand.description || ''));
+    if (cand.brand) out.push(brandFromLabel ? (norm(brandFromLabel) === norm(cand.brand) || norm(cand.brand).includes(norm(brandFromLabel)) ? { ok: true, t: `Marca: ${cand.brand} (coincide con la etiqueta)` } : { ok: false, t: `Marca: la etiqueta parece decir «${brandFromLabel}» y la ficha «${cand.brand}»` }) : { ok: null, t: `Marca: ${cand.brand} (no se ha leído en la foto)` });
+    const s = matchScore(label.tokens, cand.name || '');
+    out.push(s >= 0.5 ? { ok: true, t: 'Nombre: coincide con palabras de la etiqueta' } : { ok: false, t: 'Nombre: pocas palabras coinciden con la etiqueta; revisa que sea tu producto' });
+    for (const p of label.pct) { const n = p.replace(' %', ''); const ok = new RegExp('\\b' + n.replace('.', '[.,]') + '\\s?%').test(nameTxt + ' ' + (cand.highlights || []).join(' ')); out.push(ok ? { ok: true, t: `Concentración ${p}: aparece también en la ficha` } : { ok: false, t: `La etiqueta muestra ${p} y la ficha no lo menciona: revisa la variante` }); }
+    if (label.spf) { const ok = new RegExp('(spf|fps)\\s*' + label.spf.replace('+', '\\+?')).test(nameTxt); out.push(ok ? { ok: true, t: `SPF ${label.spf}: coincide` } : { ok: false, t: `La etiqueta indica SPF ${label.spf}: comprueba la variante` }); }
+    return out;
+  }
+  return { norm, tokens, coverage, detectBrand, brandInfo, brandTag, parseLabel, matchScore, rankUrls, sitemapLocs, isSitemapIndex, parseProductPage, fromOBF, verify, category, highlights, paoFrom, BRANDS };
+})();
+
 /* ===== Mi Skincare · interfaz ===== */
 const I = {
   sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',
@@ -622,6 +945,8 @@ const I = {
   shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.4" stroke-linecap="round"/></svg>',
   palette: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 1.9-1 1.4-2.1-.6-1.2.2-2.4 1.5-2.4h1.6a4 4 0 0 0 4-4c0-4.7-3.8-8.5-8.5-8.5z"/><circle cx="7.8" cy="11" r="1.2" fill="currentColor"/><circle cx="11" cy="7.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.8" r="1.2" fill="currentColor"/></svg>',
   db: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></svg>',
+  camera: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.6"/></svg>',
+  scan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M7 12h10"/></svg>',
   phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>',
   calPhone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>'
 };
@@ -650,7 +975,7 @@ function stepView(s) {
   const name = s.productId ? (s.pName ?? p?.name ?? '(producto eliminado)') : (s.title || 'Paso');
   const brand = s.productId ? (s.pBrand ?? p?.brand ?? '') : '';
   const sub = [brand, s.productId && s.title ? s.title : ''].filter(Boolean).join(' · ');
-  return { p, name, sub, instr: s.instructions || '', pInstr: s.pInstr ?? p?.instructions ?? '', notes: p?.notes || '', archived: !!p?.archived };
+  return { p, name, sub, instr: s.instructions || '', pInstr: s.pInstr ?? p?.instructions ?? '', notes: p?.notes || '', mfr: p?.mfrInstructions || '', archived: !!p?.archived };
 }
 function dayTitle(k) {
   const t = todayKey();
@@ -717,9 +1042,10 @@ function routineCard(date, slot) {
       const v = stepView(s), done = !!st.doneMap[s.id], ok = `${date}|${slot}|${s.id}`, open = !!ui.open[ok];
       const info = open ? `<div class="st-info" id="inf-${esc(s.id)}-${slot}">
           ${v.instr ? `<div><b>Instrucciones de este paso</b>${esc(v.instr)}</div>` : ''}
-          ${v.pInstr ? `<div><b>Instrucciones del producto</b>${esc(v.pInstr)}</div>` : ''}
+          ${v.pInstr ? `<div><b>Mis instrucciones del producto</b>${esc(v.pInstr)}</div>` : ''}
+          ${v.mfr ? `<div><b>Instrucciones del fabricante</b>${esc(v.mfr)}</div>` : ''}
           ${v.notes ? `<div><b>Notas</b>${esc(v.notes)}</div>` : ''}
-          ${!v.instr && !v.pInstr && !v.notes ? '<div class="muted">Aún no has escrito instrucciones. Puedes añadirlas en Productos o en Mi rutina.</div>' : ''}
+          ${!v.instr && !v.pInstr && !v.notes && !v.mfr ? '<div class="muted">Aún no has escrito instrucciones. Puedes añadirlas en Productos o en Mi rutina.</div>' : ''}
         </div>` : '';
       return `<li class="step ${done ? 'done' : ''}">
         <button class="check" role="checkbox" aria-checked="${done}" ${cm !== true ? 'disabled' : ''} data-act="toggle" data-date="${date}" data-slot="${slot}" data-step="${esc(s.id)}" data-fk="chk-${slot}-${esc(s.id)}" aria-label="${esc(v.name)}">${I.check}</button>
@@ -811,7 +1137,10 @@ function viewProducts() {
   const act = D.products.filter(p => !p.archived), arch = D.products.filter(p => p.archived);
   const cats = [...new Set(act.map(p => p.category).filter(Boolean))];
   const list = act.filter(p => !ui.cat || p.category === ui.cat).sort((a, b) => a.name.localeCompare(b.name, 'es'));
-  return `<div class="page-h"><div><h1>Productos</h1><p class="sub">${act.length} en uso${arch.length ? ` · ${arch.length} archivados` : ''}</p></div><button class="btn sm" data-act="new-product">+ Añadir</button></div>
+  const dr = SCAN_OK && typeof loadDraft === 'function' ? loadDraft() : null;
+  return `<div class="page-h"><div><h1>Productos</h1><p class="sub">${act.length} en uso${arch.length ? ` · ${arch.length} archivados` : ''}</p></div><button class="btn soft sm" data-act="new-product">+ Añadir</button></div>
+    ${SCAN_OK ? `<button class="btn block scanbtn" data-act="scan-open">${I.camera} Escanear producto</button>` : '<p class="note small">«Escanear producto» funciona en la app publicada (tu dirección de GitHub Pages o el icono del iPhone), no en esta vista previa.</p>'}
+    ${dr && dr.photos?.length && dr.status !== 'done' ? `<div class="note pink row between"><span>Tienes un escaneo sin terminar${dr.status === 'offline' ? ' (pendiente de conexión)' : ''}.</span><button class="btn sm" data-act="scan-open">Continuar</button></div>` : ''}
     ${cats.length > 1 ? `<div class="search" role="toolbar" aria-label="Filtrar por categoría"><button class="chipbtn" aria-pressed="${!ui.cat}" data-act="cat" data-v="">Todos</button>${cats.map(c => `<button class="chipbtn" aria-pressed="${ui.cat === c}" data-act="cat" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
     <div class="plist">${list.length ? list.map(productCard).join('') : `<div class="card empty">Todavía no hay productos. Añade el primero para poder usarlo en tus rutinas.<button class="btn sm" data-act="new-product">Añadir producto</button></div>`}</div>
     ${arch.length ? `<button class="linkbtn" data-act="toggle-arch">${ui.showArchived ? 'Ocultar archivados' : `Ver archivados (${arch.length})`}</button>
@@ -843,7 +1172,7 @@ function viewRutina() {
       <div class="row"><button class="btn sm" data-act="st-add" data-ctx="plan">+ Añadir paso</button><button class="btn soft sm" data-act="copy-open" ${list.length ? '' : 'disabled'}>Copiar a otros días</button></div>
     </section>
     <section class="card stack"><h2>Cambiar solo una fecha</h2><p class="small muted">Modifica un día concreto sin tocar la semana.</p>
-      <div class="row"><input type="date" id="ov-date" value="${ui.date}" style="flex:1;min-width:0"><button class="btn soft sm" data-act="ov-open-date">Editar esa fecha</button></div>
+      <div class="row"><input type="date" id="ov-date" value="${ui.date}" aria-label="Fecha que quieres cambiar"><button class="btn soft sm" data-act="ov-open-date">Editar esa fecha</button></div>
       ${ovs.length ? `<ul class="vlist">${ovs.map(k => `<li><span>${esc(cap(fmtDM(k)))} · ${['am', 'pm'].filter(s => D.overrides[k][s]).map(s => SLOTS[s].short.toLowerCase()).join(' y ')}</span><button class="linkbtn" data-act="open-override" data-date="${k}" data-slot="${D.overrides[k].am ? 'am' : 'pm'}">Ver</button></li>`).join('')}</ul>` : ''}</section>
     <section class="card stack"><h2>Historial de planificación</h2>
       ${D.plans.length ? `<ul class="vlist">${D.plans.slice().reverse().map(v => { let n = 0; for (let i = 1; i <= 7; i++) n += v.week[i].am.length + v.week[i].pm.length; return `<li><span>Desde el ${esc(fmtShort(v.from))} · ${n} pasos por semana</span>${v.from === from ? '<span class="pill pink">Viendo</span>' : `<button class="linkbtn" data-act="r-from-set" data-v="${v.from}">Ver</button>`}</li>`; }).join('')}</ul>` : '<p class="small muted">Aún no has guardado ninguna planificación.</p>'}
@@ -871,6 +1200,21 @@ function installHTML(inIframe) {
     </ol>
     <div class="note warn">La app instalada guarda sus datos aparte de Safari y de esta vista. Exporta antes una copia y, ya en la app instalada, ve a Yo → Importar copia.</div>
   </section>`;
+}
+function scanSettingsHTML(inIframe) {
+  const c = typeof scanCfg === 'function' ? scanCfg() : { proxy: '', obf: true }; const h = typeof proxyHealth !== 'undefined' ? proxyHealth : null;
+  const hs = !c.proxy ? 'Sin configurar: se usará solo Open Beauty Facts.' : !h ? 'Sin comprobar' : !h.ok ? 'No conecta: ' + h.msg : `Conectado · webs oficiales: sí · búsqueda general: ${h.search ? 'sí' : 'no'} · hoy ${h.used?.search ?? 0}/${h.limits?.search ?? '–'} búsquedas y ${h.used?.fetch ?? 0}/${h.limits?.fetch ?? '–'} consultas`;
+  return `<section class="card"><ul class="menu">
+    <li><div class="mi-h"><span class="mi-ic">${I.scan}</span><strong>Escanear productos</strong></div>
+      <p class="small muted">El texto de la etiqueta y el código de barras se leen en el teléfono. La foto nunca se envía.</p>
+      ${SCAN_OK ? `<div class="kv"><span>Lector sin conexión</span><span id="ocr-state">Comprobando…</span></div><button class="btn soft sm" data-act="y-offline-prep" style="align-self:flex-start">Descargar lector (≈ 17 MB) para usarlo sin conexión</button>` : '<p class="small muted">Disponible en la app publicada.</p>'}</li>
+    <li><label class="row" style="justify-content:space-between;font-weight:650">Buscar en Open Beauty Facts <input type="checkbox" id="y-obf" ${c.obf ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--pink)"></label>
+      <p class="small muted">Base de datos colaborativa y gratuita. Se envía el código de barras o la marca. No necesita cuenta.</p></li>
+    <li><div class="field"><label for="y-proxy">Servicio de búsqueda (web oficial)</label><input type="text" id="y-proxy" inputmode="url" autocomplete="off" placeholder="https://mi-skincare-busqueda.tu-cuenta.workers.dev" value="${esc(c.proxy)}"></div>
+      <div class="kv"><span>Estado</span><span id="proxy-state">${esc(hs)}</span></div>
+      <button class="btn soft sm" data-act="y-proxy-check" style="align-self:flex-start">Comprobar conexión</button>
+      <details class="small"><summary>Qué se envía</summary><p class="muted" style="margin-top:6px">A tu servicio (Cloudflare, tu cuenta): la marca y palabras del nombre, y las direcciones de las páginas oficiales que se consultan. Si activas la búsqueda general, esas palabras se reenvían a Tavily. Nunca se envían fotos, notas ni registros. La clave del buscador está guardada en tu servicio, no en la app.</p></details></li>
+  </ul></section>`;
 }
 function offlineState(inIframe) {
   if (inIframe) return 'No disponible en la vista previa';
@@ -904,6 +1248,7 @@ function viewYo() {
         <p class="small muted">Añadir un evento al calendario nunca marcará una rutina como realizada.</p></li>
     </ul></section>
 
+    ${scanSettingsHTML(inIframe)}
     <section class="card"><ul class="menu">
       <li><div class="mi-h"><span class="mi-ic">${I.shield}</span><strong>Copia de seguridad</strong></div>
         <p class="small muted">Guarda un archivo con productos, fotos, planificación y registros. Consérvalo en Archivos, iCloud Drive o tu ordenador.${D.lastExport ? ` Última copia: ${esc(new Date(D.lastExport).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' }))}.` : ' Aún no has exportado ninguna copia.'}</p>
@@ -927,6 +1272,350 @@ function viewYo() {
     </ul></section>
     <p class="small muted" style="text-align:center">Mi Skincare · versión ${APP_VERSION}</p>`;
 }
+
+/* ===== Mi Skincare · escanear producto =====
+   1) Lee la etiqueta en el propio teléfono (Tesseract, sin enviar la foto).
+   2) Busca el código de barras en la foto (ZXing, en el teléfono).
+   3) Con conexión, busca el producto: web oficial para España (a través de tu servicio de búsqueda),
+      buscador general opcional (Tavily, a través del mismo servicio) y Open Beauty Facts.
+   4) Rellena la ficha solo con lo que aparece en esas fuentes. */
+const VENDOR = './vendor/';
+const SCAN_OK = (() => { try { return window.self === window.top && /^https?:$/.test(location.protocol); } catch (e) { return false; } })();
+const OBF = 'https://world.openbeautyfacts.org';
+const OBF_FIELDS = 'code,product_name,product_name_es,product_name_en,product_name_fr,brands,periods_after_opening,categories_tags,ingredients_text,ingredients_text_es,ingredients_text_en,ingredients_text_fr,url,image_front_small_url';
+const draftKey = () => `${KEY}.scan.${meta.mode}`;
+let SC = null;             // escaneo en curso
+let proxyHealth = null;    // última comprobación del servicio
+
+const scanCfg = () => { D.profile.scan = Object.assign({ proxy: '', obf: true }, D.profile.scan || {}); return D.profile.scan; };
+const proxyUrl = () => (scanCfg().proxy || '').trim().replace(/\/+$/, '');
+const viaProxy = (u, sig) => `${proxyUrl()}/fetch?url=${encodeURIComponent(u)}${sig ? '&sig=' + sig : ''}`;
+
+/* ---------- red ---------- */
+async function net(url, { as = 'json', timeout = 20000 } = {}) {
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), timeout);
+  try {
+    const r = await fetch(url, { signal: c.signal, credentials: 'omit' });
+    if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) {} const err = new Error(j?.message || `Error ${r.status}`); err.status = r.status; err.code = j?.error; throw err; }
+    return as === 'json' ? await r.json() : await r.text();
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('La consulta ha tardado demasiado');
+    if (e instanceof TypeError) throw new Error(navigator.onLine ? 'No se ha podido conectar' : 'Sin conexión');
+    throw e;
+  } finally { clearTimeout(t); }
+}
+async function checkProxy() {
+  if (!proxyUrl()) { proxyHealth = null; return null; }
+  try { proxyHealth = { ok: true, ...(await net(proxyUrl() + '/health', { timeout: 10000 })) }; }
+  catch (e) { proxyHealth = { ok: false, msg: e.message, code: e.code }; }
+  return proxyHealth;
+}
+
+/* ---------- librerías del teléfono (se descargan una vez y quedan guardadas) ---------- */
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    if (document.querySelector(`script[data-src="${src}"]`)) return res();
+    const s = document.createElement('script'); s.src = src; s.dataset.src = src; s.async = true;
+    s.onload = () => res(); s.onerror = () => rej(new Error('No se ha podido cargar el lector. Abre la app con conexión una vez.'));
+    document.head.appendChild(s);
+  });
+}
+let ocrWorkerP = null, ocrProgress = null;
+function getOCR() {
+  if (!ocrWorkerP) ocrWorkerP = (async () => {
+    await loadScript(VENDOR + 'tesseract/tesseract.min.js');
+    const base = new URL(VENDOR + 'tesseract/', location.href).href;
+    return Tesseract.createWorker(['spa', 'eng'], 1, {
+      workerPath: base + 'worker.min.js', corePath: base, langPath: base + 'lang', gzip: true, workerBlobURL: false,
+      logger: m => { if (ocrProgress && m.progress != null) ocrProgress(m); }
+    });
+  })().catch(e => { ocrWorkerP = null; throw e; });
+  return ocrWorkerP;
+}
+let zxingP = null;
+function getZXing() {
+  if (!zxingP) zxingP = (async () => {
+    await loadScript(VENDOR + 'zxing/zxing-reader.js');
+    const base = new URL(VENDOR + 'zxing/', location.href).href;
+    ZXingWASM.prepareZXingModule({ overrides: { locateFile: (p, prefix) => p.endsWith('.wasm') ? base + p : prefix + p } });
+    return ZXingWASM;
+  })().catch(e => { zxingP = null; throw e; });
+  return zxingP;
+}
+const VENDOR_FILES = ['tesseract/tesseract.min.js', 'tesseract/worker.min.js', 'tesseract/tesseract-core-relaxedsimd-lstm.wasm.js', 'tesseract/tesseract-core-simd-lstm.wasm.js',
+  'tesseract/tesseract-core-lstm.wasm.js', 'tesseract/lang/spa.traineddata.gz', 'tesseract/lang/eng.traineddata.gz', 'zxing/zxing-reader.js', 'zxing/zxing_reader.wasm'];
+async function prepareOffline(onStep) {
+  let n = 0;
+  for (const f of VENDOR_FILES) { const r = await fetch(VENDOR + f, { cache: 'reload' }); if (!r.ok) throw new Error('Falta el archivo ' + f); await r.arrayBuffer(); onStep && onStep(++n, VENDOR_FILES.length); }
+  return true;
+}
+async function offlineReady() {
+  try { if (!('caches' in window)) return false; for (const f of VENDOR_FILES) if (!(await caches.match(new URL(VENDOR + f, location.href).href))) return false; return true; } catch (e) { return false; }
+}
+
+/* ---------- imágenes ---------- */
+function fileToCanvas(file, max) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error('No se pudo leer la foto.'));
+    fr.onload = () => { const img = new Image(); img.onload = () => { const sc = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c); }; img.onerror = () => rej(new Error('Formato de imagen no compatible.')); img.src = fr.result; };
+    fr.readAsDataURL(file);
+  });
+}
+function urlToCanvas(dataUrl, rotate = 0) {
+  return new Promise((res, rej) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const r = rotate % 180 !== 0; c.width = r ? img.height : img.width; c.height = r ? img.width : img.height; const x = c.getContext('2d'); x.translate(c.width / 2, c.height / 2); x.rotate(rotate * Math.PI / 180); x.drawImage(img, -img.width / 2, -img.height / 2); res(c); }; img.onerror = rej; img.src = dataUrl; });
+}
+async function shrink(dataUrl, max = 480) { const c = await urlToCanvas(dataUrl); const sc = Math.min(1, max / Math.max(c.width, c.height)); const d = document.createElement('canvas'); d.width = Math.round(c.width * sc); d.height = Math.round(c.height * sc); d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); return d.toDataURL('image/jpeg', 0.8); }
+
+/* ---------- lectura en el teléfono ---------- */
+async function ocrPhoto(w, dataUrl) {
+  // Dos lecturas (tamaño completo y reducido): el texto muy grande, como la marca, se lee mejor reducido.
+  const read = async (rot, scale) => {
+    await w.setParameters({ tessedit_pageseg_mode: scale < 1 ? '11' : '3' });
+    let c = await urlToCanvas(dataUrl, rot);
+    if (scale < 1) { const d = document.createElement('canvas'); d.width = Math.round(c.width * scale); d.height = Math.round(c.height * scale); d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); c = d; }
+    const { data } = await w.recognize(c, {}, { text: true, blocks: true });
+    const lines = [];
+    (data.blocks || []).forEach(b => (b.paragraphs || []).forEach(p => (p.lines || []).forEach(l => { if (l.confidence > 40 && l.text.trim()) lines.push({ text: l.text.trim(), h: (l.bbox.y1 - l.bbox.y0) / scale, conf: l.confidence }); })));
+    return lines;
+  };
+  const merge = (...sets) => {
+    const out = [];
+    for (const l of sets.flat()) { const k = XT.norm(l.text).replace(/[^a-z0-9]/g, ''); const prev = out.find(o => o.k === k); if (!prev) out.push({ ...l, k }); else if (l.conf > prev.conf) Object.assign(prev, l); }
+    return out;
+  };
+  const score = ls => ls.reduce((s, l) => s + l.conf * Math.min(l.text.length, 40), 0);
+  let best = merge(await read(0, 1), await read(0, 0.5));
+  if (XT.tokens(best.map(l => l.text).join(' ')).length < 3) for (const r of [90, 270]) { const x = merge(await read(r, 1), await read(r, 0.5)); if (score(x) > score(best)) best = x; }
+  return { text: best.map(l => l.text).join('\n'), lines: best };
+}
+async function readBarcode(dataUrl) {
+  const Z = await getZXing();
+  const c = await urlToCanvas(dataUrl); const id = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+  const res = await Z.readBarcodes(id, { tryHarder: true, maxNumberOfSymbols: 2 });
+  const hit = res.find(r => r.isValid !== false && /^\d{8}$|^\d{12,14}$/.test(r.text || ''));
+  return hit ? hit.text : '';
+}
+
+/* ---------- búsquedas ---------- */
+async function obfByCode(code) {
+  const j = await net(`${OBF}/api/v2/product/${encodeURIComponent(code)}.json?fields=${OBF_FIELDS}`);
+  return j.status === 1 && j.product ? XT.fromOBF(j.product) : null;
+}
+async function obfByBrand(brand, toks) {
+  const j = await net(`${OBF}/api/v2/search?brands_tags=${encodeURIComponent(XT.brandTag(brand))}&page_size=100&fields=${OBF_FIELDS}`);
+  return (j.products || []).map(XT.fromOBF).filter(p => p.name).map(p => ({ ...p, score: XT.matchScore(toks, p.name) })).filter(p => p.score >= 0.34).sort((a, b) => b.score - a.score).slice(0, 4);
+}
+async function siteUrls(domain) {
+  const ck = `${KEY}.sm.${domain}`;
+  try { const c = JSON.parse(store.get(ck) || 'null'); if (c && Date.now() - c.at < 7 * 864e5 && c.urls.length) return c.urls; } catch (e) {}
+  const bare = domain.replace(/^www\./, '');
+  let robots = ''; try { robots = await net(viaProxy(`https://${domain}/robots.txt`), { as: 'text' }); } catch (e) { if (e.code === 'origin_not_allowed' || e.code === 'daily_limit' || e.code === 'not_configured') throw e; }
+  let queue = [...robots.matchAll(/^\s*Sitemap:\s*(\S+)/gim)].map(m => m[1]).filter(u => { try { return new URL(u).hostname.endsWith(bare) && !/\.gz$/i.test(u) && !/image|video/i.test(u); } catch (e) { return false; } });
+  if (!queue.length) queue = [`https://${domain}/sitemap.xml`];
+  let urls = [], n = 0;
+  while (queue.length && n < 6) {
+    const u = queue.shift(); n++;
+    let x; try { x = await net(viaProxy(u), { as: 'text' }); } catch (e) { if (e.code === 'daily_limit') throw e; continue; }
+    const locs = XT.sitemapLocs(x);
+    if (XT.isSitemapIndex(x)) { const pri = locs.filter(l => /product|producto|pdp|catalog/i.test(l) && !/\.gz$/i.test(l)); const es = (pri.length ? pri : locs).filter(l => /es[-_]es|\/es\//i.test(l)); queue.push(...(es.length ? es : pri.length ? pri : locs).filter(l => !/\.gz$|image|video/i.test(l)).slice(0, 4)); }
+    else urls.push(...locs);
+  }
+  urls = [...new Set(urls)].slice(0, 8000);
+  if (urls.length) try { store.set(ck, JSON.stringify({ at: Date.now(), urls })); } catch (e) {}
+  return urls;
+}
+async function pageDetails(url, sig, brandName) {
+  const html = await net(viaProxy(url, sig), { as: 'text', timeout: 25000 });
+  return XT.parseProductPage(html, url, brandName);
+}
+function isOfficial(url, bi) { try { const h = new URL(url).hostname; return !!bi && ((bi.domain && h.endsWith(bi.domain.replace(/^www\./, ''))) || bi.aliases.some(a => h.replace(/[^a-z0-9]/g, '').includes(a.replace(/[^a-z0-9]/g, '')))); } catch (e) { return false; } }
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
+
+/* ---------- flujo principal ---------- */
+function newScan(target = null) { return { id: uid(), target, photos: [], status: 'capture', steps: [], label: null, barcode: '', brand: null, candidates: [], chosen: null, error: '' }; }
+function saveDraft() {
+  if (!SC) return;
+  const d = { ...SC, steps: [], candidates: SC.candidates.map(c => ({ ...c, inci: c.inci ? c.inci.slice(0, 3000) : '' })) };
+  try { store.set(draftKey(), JSON.stringify(d)); return true; } catch (e) { return false; }
+}
+function loadDraft() { try { return JSON.parse(store.get(draftKey()) || 'null'); } catch (e) { return null; } }
+function clearDraft() { store.del(draftKey()); }
+
+let scanRunning = false;
+async function runScan(opts = {}) {
+  if (!SC || !SC.photos.length || scanRunning) return;
+  scanRunning = true;
+  try { await runScanInner(opts); } finally { scanRunning = false; }
+}
+async function runScanInner({ reuseLabel = false } = {}) {
+  SC.status = 'working'; SC.steps = []; SC.candidates = []; SC.error = '';
+  const step = label => { const s = { label, state: 'run', note: '' }; SC.steps.push(s); renderScanLive(); return s; };
+  const done = (s, state, note = '') => { s.state = state; s.note = note; renderScanLive(); };
+
+  if (!reuseLabel || !SC.label || !SC.label.tokens.length) {
+    const s1 = step('Leyendo la etiqueta en el teléfono');
+    try {
+      const w = await getOCR(); let text = '', lines = [];
+      for (let i = 0; i < SC.photos.length; i++) {
+        ocrProgress = m => { s1.note = `${m.status === 'recognizing text' ? 'Foto ' + (i + 1) + ': ' : 'Preparando lector: '}${Math.round((m.progress || 0) * 100)} %`; renderScanLive(); };
+        const r = await ocrPhoto(w, SC.photos[i].data); text += '\n' + r.text; lines.push(...r.lines);
+      }
+      ocrProgress = null;
+      SC.label = XT.parseLabel(text.trim(), lines);
+      done(s1, SC.label.tokens.length ? 'ok' : 'fail', SC.label.tokens.length ? `${SC.label.tokens.length} palabras leídas` : 'No se ha podido leer texto. Prueba con más luz o más cerca.');
+    } catch (e) { SC.label = XT.parseLabel('', []); done(s1, 'fail', e.message); }
+    const s2 = step('Buscando el código de barras');
+    try { let code = ''; for (const p of SC.photos) { code = await readBarcode(p.data); if (code) break; } SC.barcode = code; done(s2, code ? 'ok' : 'skip', code || 'No aparece en las fotos (suele estar detrás)'); }
+    catch (e) { done(s2, 'fail', 'No disponible: ' + e.message); }
+    const known = D.products.map(p => p.brand).filter(Boolean);
+    const b = XT.detectBrand(SC.label.text, known)[0];
+    SC.brand = b ? { name: b.name } : null;
+    saveDraft();
+  }
+  if (!navigator.onLine) { SC.status = 'offline'; saveDraft(); renderScanLive(); return; }
+
+  const label = SC.label, cands = [];
+  const cfg = scanCfg();
+  let obfCode = null;
+  if (SC.barcode && cfg.obf) {
+    const s = step('Consultando el código en Open Beauty Facts');
+    try { obfCode = await obfByCode(SC.barcode); if (obfCode) { cands.push({ ...obfCode, source: 'obf', score: 0.9, why: 'Mismo código de barras' }); if (!SC.brand && obfCode.brand) SC.brand = { name: obfCode.brand }; done(s, 'ok', obfCode.name); } else done(s, 'skip', 'Este código no está en la base'); }
+    catch (e) { done(s, 'fail', e.message); }
+  }
+  const brandName = SC.brand?.name || '';
+  const bi = brandName ? (XT.brandInfo(brandName) || { name: brandName, domain: '', aliases: [XT.norm(brandName)] }) : null;
+  const toks = [...new Set([...label.tokens, ...(obfCode ? XT.tokens(obfCode.name) : [])])];
+  const px = proxyUrl();
+  let officialFound = false;
+
+  if (px && bi?.domain && toks.length) {
+    const s = step(`Buscando en la web oficial (${hostOf('https://' + bi.domain)})`);
+    try {
+      const urls = await siteUrls(bi.domain);
+      const ranked = XT.rankUrls(urls, toks, bi.aliases, 'es').slice(0, 3);
+      const pages = await Promise.all(ranked.map(r => pageDetails(r.url, '', bi.name).then(p => ({ ...p, urlScore: r.score })).catch(() => null)));
+      for (const p of pages) if (p && p.isProduct) { officialFound = true; cands.push({ ...p, source: 'official', score: 0.45 * p.urlScore + 0.55 * XT.matchScore(toks, p.name, null, bi.aliases) + 0.1 }); }
+      done(s, officialFound ? 'ok' : 'skip', officialFound ? `${pages.filter(p => p && p.isProduct).length} posibles` : (urls.length ? 'No he encontrado una página que coincida' : 'No he podido leer el catálogo de la web'));
+    } catch (e) { done(s, 'fail', e.message); }
+  }
+  if (px && !officialFound && toks.length && (proxyHealth?.search !== false)) {
+    const q = [brandName, ...Object.entries(label.weighted).sort((a, b) => b[1] - a[1]).map(x => x[0]).filter(t => !bi || !bi.aliases.some(a => a.includes(t))).slice(0, 5)].join(' ').trim();
+    const s = step('Buscando en internet');
+    try {
+      const dom = bi?.domain ? bi.domain.replace(/^www\./, '') : '';
+      const j = await net(`${px}/search?q=${encodeURIComponent(q)}${dom ? '&domain=' + encodeURIComponent(dom) : ''}`);
+      let res = j.results || [];
+      res.sort((a, b) => (isOfficial(b.url, bi) ? 1 : 0) - (isOfficial(a.url, bi) ? 1 : 0));
+      const pages = await Promise.all(res.slice(0, 3).map(r => pageDetails(r.url, r.sig, brandName).catch(() => null)));
+      let n = 0;
+      pages.forEach((p, i) => { if (p && p.isProduct && p.name) { n++; const off = isOfficial(p.url, bi); cands.push({ ...p, source: off ? 'official' : 'web', score: XT.matchScore(toks, p.name, null, bi ? bi.aliases : []) + (off ? 0.1 : -0.1) }); } });
+      done(s, n ? 'ok' : 'skip', n ? `${n} posibles` : 'Sin resultados útiles');
+    } catch (e) { done(s, e.code === 'search_not_configured' ? 'skip' : 'fail', e.code === 'search_not_configured' ? 'Búsqueda general no activada' : e.message); }
+  }
+  if (cfg.obf && brandName && !obfCode && toks.length) {
+    const s = step('Buscando en Open Beauty Facts');
+    try { const r = await obfByBrand(brandName, toks); r.forEach(p => cands.push({ ...p, source: 'obf', score: p.score * 0.8 })); done(s, r.length ? 'ok' : 'skip', r.length ? `${r.length} posibles` : 'Sin coincidencias'); }
+    catch (e) { done(s, 'fail', e.message); }
+  }
+  // quitar duplicados y ordenar
+  const seen = new Set();
+  SC.candidates = cands.filter(c => { const k = c.url || c.code || c.name; if (seen.has(k)) return false; seen.add(k); return true; }).sort((a, b) => b.score - a.score).slice(0, 5);
+  SC.obfCode = obfCode;
+  if (!SC.candidates.length) { SC.status = 'failed'; SC.error = !px && !cfg.obf ? 'No hay ninguna fuente de búsqueda activada.' : 'No he encontrado el producto.'; saveDraft(); renderScanLive(); return; }
+  const aliases = bi ? bi.aliases : [];
+  SC.candidates.forEach(c => { const cv = XT.coverage(label.tokens, c.name || '', aliases); c.cover = cv.cover; c.hits = cv.hits; });
+  const [a, b] = SC.candidates;
+  // Solo se elige sola si es inequívoca: mismo código de barras, o casi todas las palabras del nombre están en la etiqueta y destaca sobre la siguiente
+  const sure = x => x && (x.why === 'Mismo código de barras' || (x.cover >= 0.66 && x.hits >= Math.min(2, Math.max(1, Math.round(x.cover ? x.hits / x.cover : 1)))));
+  const clearGap = !b || (a.score - b.score >= 0.2 && !(b.cover >= 0.66 && b.hits >= a.hits));
+  if (sure(a) && clearGap) return chooseCandidate(0);
+  SC.status = 'choose'; saveDraft(); renderScanLive();
+}
+
+function chooseCandidate(i) {
+  const c = SC.candidates[i]; if (!c) return;
+  SC.chosen = c;
+  const today = todayKey(), sources = [];
+  const f = { name: c.name || '', brand: c.brand || SC.brand?.name || '', category: c.category || '', description: c.description || '', mfrInstructions: c.instructions || '', highlights: (c.highlights || []).join('\n'), inci: c.inci || '', paoMonths: c.pao || '' };
+  const srcName = c.source === 'official' ? `Web oficial (${hostOf(c.url)})` : c.source === 'web' ? `Otra web (${hostOf(c.url)})` : 'Open Beauty Facts (base colaborativa)';
+  sources.push({ name: srcName, url: c.url, date: today, fields: Object.entries({ nombre: f.name, marca: f.brand, categoría: f.category, descripción: f.description, instrucciones: f.mfrInstructions, 'ingredientes destacados': f.highlights, INCI: f.inci, 'plazo tras apertura': f.paoMonths }).filter(([, v]) => v).map(([k]) => k) });
+  // completar con Open Beauty Facts solo si es el mismo producto (mismo código y nombre coincidente)
+  const o = SC.obfCode;
+  if (o && c.source !== 'obf' && XT.matchScore(XT.tokens(o.name), c.name || '') >= 0.5) {
+    const add = [];
+    if (!f.inci && o.inci) { f.inci = o.inci; add.push('INCI'); }
+    if (!f.paoMonths && o.pao) { f.paoMonths = o.pao; add.push('plazo tras apertura'); }
+    if (add.length) sources.push({ name: 'Open Beauty Facts (base colaborativa)', url: o.url, date: today, fields: add });
+  }
+  const verifyList = XT.verify(SC.label || XT.parseLabel('', []), c, SC.brand?.name || '');
+  const prefill = { ...f, sources, verify: verifyList, labelPao: SC.label?.pao || null, labelText: SC.label?.text || '', scanPhoto: SC.photos[0]?.data || null };
+  SC.status = 'done'; saveDraft();
+  openProductFromScan(prefill);
+}
+function manualFromScan() {
+  openProductFromScan({ name: '', brand: SC.brand?.name || '', sources: [], verify: [], labelPao: SC.label?.pao || null, labelText: SC.label?.text || '', scanPhoto: SC.photos[0]?.data || null, manual: true });
+}
+async function openProductFromScan(prefill) {
+  let small = null; if (prefill.scanPhoto) try { small = await shrink(prefill.scanPhoto, 480); } catch (e) {}
+  ui.sheets = ui.sheets.filter(s => s.kind !== 'scan');
+  const existing = SC?.target ? ui.sheets.find(s => s.kind === 'product' && (s.id === SC.target || (SC.target === '__new__' && !s.id))) : null;
+  if (existing) {
+    // «Completar con escaneo»: solo campos de la ficha; nunca notas, mis instrucciones ni fecha de apertura
+    existing.draft = { ...(existing.draft || {}), ...collectProductForm(), ...pickInfo(prefill), sources: prefill.sources, verify: prefill.verify, labelPao: prefill.labelPao, labelText: prefill.labelText };
+    if (small && !existing.newPhoto && !(existing.id && product(existing.id)?.photo)) { existing.pendingPhoto = small; existing.pendingPhotoSmall = small; }
+    renderSheets();
+  } else {
+    openSheet({ kind: 'product', id: null, draft: pickInfo(prefill, true), fromScan: true, pendingPhoto: small, pendingPhotoSmall: small });
+  }
+  toast(prefill.manual ? 'Rellena la ficha a mano y pulsa Guardar.' : 'Ficha rellenada. Revísala y pulsa Guardar.');
+}
+function pickInfo(p, all = false) {
+  const keys = ['name', 'brand', 'category', 'description', 'mfrInstructions', 'highlights', 'inci', 'paoMonths'];
+  const o = {}; for (const k of keys) if (all || p[k]) o[k] = p[k] ?? '';
+  o.sources = p.sources || []; o.verify = p.verify || []; o.labelPao = p.labelPao; o.labelText = p.labelText;
+  return o;
+}
+
+/* ---------- interfaz del escaneo ---------- */
+function scanStepIcon(s) { return s.state === 'ok' ? '✓' : s.state === 'fail' ? '!' : s.state === 'skip' ? '–' : '<span class="spin" aria-hidden="true"></span>'; }
+function scanSheetHTML() {
+  const s = SC; if (!s) return '';
+  const photos = s.photos.map((p, i) => `<div class="scan-ph"><img src="${p.data}" alt="Foto ${i + 1}">${s.status === 'capture' || s.status === 'failed' || s.status === 'offline' ? `<button class="iconbtn" data-act="scan-photo-del" data-i="${i}" aria-label="Quitar foto ${i + 1}">${I.close}</button>` : ''}</div>`).join('');
+  const addBtns = (label) => `<div class="row"><label class="btn ${s.photos.length ? 'soft' : ''} filebtn">${label}<input type="file" id="scan-cam" accept="image/*" capture="environment"></label><label class="btn soft filebtn">Elegir de la galería<input type="file" id="scan-gal" accept="image/*"></label></div>`;
+  let body = '';
+  if (s.status === 'capture') body = `<p class="muted small">Haz una foto de la parte delantera, con la marca y el nombre bien visibles. La foto se analiza en el teléfono y no se envía a ningún sitio.</p>${photos ? `<div class="scan-phs">${photos}</div>` : ''}${addBtns(s.photos.length ? 'Hacer otra foto' : 'Hacer foto')}`;
+  if (s.status === 'working' || s.status === 'choose' || s.status === 'failed' || s.status === 'offline' || s.status === 'done') {
+    body += `<div class="scan-phs">${photos}</div><ol class="scan-steps" aria-live="polite">${s.steps.map(x => `<li class="st-${x.state}"><span class="si">${scanStepIcon(x)}</span><span><b>${esc(x.label)}</b>${x.note ? `<small>${esc(x.note)}</small>` : ''}</span></li>`).join('')}</ol>`;
+  }
+  if (s.status === 'choose') body += `<h3 class="scan-q">¿Cuál es tu producto?</h3><div class="plist">${s.candidates.map((c, i) => `<button class="pcard" data-act="scan-pick" data-i="${i}">${c.image ? `<div class="thumb"><img src="${esc(c.image)}" alt=""></div>` : `<div class="thumb">${esc((c.name || '?')[0])}</div>`}<span><strong>${esc(c.name || 'Sin nombre')}</strong><span class="meta">${esc([c.brand, c.category].filter(Boolean).join(' · '))}</span><span class="pao">${c.source === 'official' ? 'Web oficial' : c.source === 'web' ? 'Otra web' : 'Open Beauty Facts'} · ${esc(hostOf(c.url))}${c.why ? ' · ' + esc(c.why) : ''}</span></span><span class="muted">${I.right}</span></button>`).join('')}</div>
+    <div class="row"><button class="btn ghost sm" data-act="scan-more">Ninguno: añadir foto trasera</button><button class="linkbtn" data-act="scan-manual">Rellenar a mano</button></div>`;
+  if (s.status === 'failed' || s.status === 'offline') body += `<div class="note ${s.status === 'offline' ? '' : 'warn'}">${s.status === 'offline' ? (s.label?.tokens?.length ? 'Sin conexión: la etiqueta está leída y la foto guardada. Busca cuando vuelvas a tener conexión.' : 'Sin conexión y el lector aún no está descargado en este teléfono. La foto queda guardada y se analizará cuando vuelvas a tener conexión.') : esc(s.error) + ' Puedes añadir la etiqueta trasera, reintentar o rellenar la ficha a mano. La foto se conserva.'}</div>
+    ${s.label?.text ? `<details class="small"><summary>Texto leído en la etiqueta</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(s.label.text.slice(0, 1500))}</p></details>` : ''}
+    <div class="row"><button class="btn sm" data-act="scan-retry">${s.status === 'offline' ? 'Buscar ahora' : 'Reintentar'}</button><label class="btn soft sm filebtn">Añadir otra foto<input type="file" id="scan-back" accept="image/*"></label><button class="btn ghost sm" data-act="scan-manual">Rellenar a mano</button></div>`;
+  const busy = s.status === 'working';
+  return `${sheetHead(s.target ? 'Completar con escaneo' : 'Escanear producto', busy ? 'Analizando…' : '')}${body}
+    <div class="row between"><button class="linkbtn" data-act="scan-discard" ${busy ? 'disabled' : ''}>Descartar escaneo</button>${busy ? '' : '<button class="btn soft sm" data-act="sheet-close">Cerrar</button>'}</div>
+    <p class="small muted">Se envía a internet solo el texto necesario para buscar (marca, palabras del nombre o el código de barras). Nunca la foto.</p>`;
+}
+function renderScanLive() { if (topSheet()?.kind === 'scan') renderSheets(); }
+async function addScanPhoto(file) {
+  try {
+    const c = await fileToCanvas(file, 1280);
+    SC.photos.push({ id: uid(), data: c.toDataURL('image/jpeg', 0.78) });
+    if (!saveDraft()) toast('No hay espacio para guardar el borrador del escaneo; seguirá mientras la app esté abierta.', 'error');
+    await runScan();
+  } catch (e) { toast(e.message || 'No se pudo usar la foto.', 'error'); renderScanLive(); }
+}
+function openScan(target = null) {
+  if (!SCAN_OK) { toast('El escaneo funciona en la app publicada (tu dirección de GitHub Pages).', 'error'); return; }
+  const d = loadDraft();
+  SC = d && !target && d.status !== 'done' ? d : newScan(target);
+  if (d && SC === d && SC.status === 'working') SC.status = SC.photos.length ? 'failed' : 'capture';
+  if (target) SC.target = target;
+  openSheet({ kind: 'scan' });
+}
+window.addEventListener('online', () => { if (SC && SC.status === 'offline' && topSheet()?.kind === 'scan') runScan({ reuseLabel: true }); });
 
 /* ===== Mi Skincare · hojas, acciones y arranque ===== */
 const LIVE = new Set(['override', 'day']);
@@ -955,20 +1644,39 @@ function sheetHead(title, sub) {
   return `<div class="grab" aria-hidden="true"></div><div class="sheet-h"><div><h2 id="sheet-title">${title}</h2>${sub ? `<p class="small muted">${sub}</p>` : ''}</div><button class="iconbtn" data-act="sheet-close" aria-label="Cerrar">${I.close}</button></div>`;
 }
 function sheetHTML(sh) {
+  if (sh.kind === 'scan') return scanSheetHTML();
   if (sh.kind === 'product') {
-    const p = sh.id ? product(sh.id) : null, ph = sh.newPhoto || (!sh.removePhoto && p?.photo && photos[p.photo]);
+    const p = sh.id ? product(sh.id) : null;
+    const dv = k => (sh.draft && k in sh.draft) ? sh.draft[k] : (p?.[k] ?? '');
+    const pendingPh = !sh.newPhoto && !sh.removePhoto && sh.pendingPhoto && !(p?.photo) ? sh.pendingPhoto : null;
+    const ph = sh.newPhoto || pendingPh || (!sh.removePhoto && p?.photo && photos[p.photo]);
     const used = p ? usedIn(p.id) : [];
-    return `${sheetHead(p ? 'Editar producto' : 'Nuevo producto')}
+    const sources = (sh.draft && sh.draft.sources) || p?.sources || [];
+    const ver = sh.draft?.verify || [];
+    const infoFilled = ['description', 'mfrInstructions', 'highlights', 'inci'].some(k => dv(k));
+    return `${sheetHead(p ? 'Editar producto' : sh.fromScan ? 'Revisa la ficha' : 'Nuevo producto', sh.fromScan ? 'Todo se puede corregir antes de guardar' : '')}
+      ${ver.length ? `<section class="verify" aria-label="Comprobación con la etiqueta"><span class="label">Comprobación con tu foto</span><ul>${ver.map(v => `<li class="${v.ok === true ? 'ok' : v.ok === false ? 'warn' : ''}">${v.ok === true ? '✓' : v.ok === false ? '⚠' : '·'} ${esc(v.t)}</li>`).join('')}</ul></section>` : ''}
       <div class="photo-edit"><div class="thumb">${ph ? `<img src="${ph}" alt="Foto del producto">` : '📷'}</div>
-        <div class="stack" style="gap:6px"><label class="btn soft sm filebtn">${ph ? 'Cambiar foto' : 'Añadir foto (opcional)'}<input type="file" id="p-photo" accept="image/*"></label>${ph ? '<button class="linkbtn" data-act="p-photo-del">Quitar foto</button>' : ''}</div></div>
-      <div class="field"><label for="p-name">Nombre *</label><input type="text" id="p-name" value="${esc(p?.name || '')}" autocomplete="off"></div>
-      <div class="grid2"><div class="field"><label for="p-brand">Marca</label><input type="text" id="p-brand" value="${esc(p?.brand || '')}" autocomplete="off"></div>
-        <div class="field"><label for="p-cat">Categoría</label><select id="p-cat"><option value="">Sin categoría</option>${CATS.map(c => `<option ${p?.category === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div></div>
-      <div class="field"><label for="p-instr">Mis instrucciones</label><textarea id="p-instr" placeholder="Cómo lo usas, según tus pautas">${esc(p?.instructions || '')}</textarea></div>
-      <div class="field"><label for="p-notes">Notas personales</label><textarea id="p-notes">${esc(p?.notes || '')}</textarea></div>
-      <div class="grid2"><div class="field"><label for="p-opened">Fecha de apertura</label><input type="date" id="p-opened" value="${esc(p?.opened || '')}"></div>
-        <div class="field"><label for="p-pao">Plazo tras apertura (meses)</label><input type="number" id="p-pao" min="1" max="60" value="${esc(p?.paoMonths || '')}" placeholder="p. ej. 12"><span class="hint">El que indica el fabricante (símbolo del tarro abierto).</span></div></div>
-      ${used.length ? `<p class="small muted">En tu rutina actual: ${esc(used.join(', '))}.</p>` : ''}
+        <div class="stack" style="gap:6px"><label class="btn soft sm filebtn">${ph ? 'Cambiar foto' : 'Añadir foto (opcional)'}<input type="file" id="p-photo" accept="image/*"></label>${ph ? '<button class="linkbtn" data-act="p-photo-del">Quitar foto</button>' : ''}${pendingPh ? '<span class="small muted">Foto del escaneo</span>' : ''}</div></div>
+      ${SCAN_OK ? `<button class="btn soft sm" data-act="p-scan" style="align-self:flex-start">📷 ${p || sh.draft ? 'Completar con escaneo' : 'Rellenar escaneando'}</button>` : ''}
+      <div class="field"><label for="p-name">Nombre completo *</label><input type="text" id="p-name" value="${esc(dv('name'))}" autocomplete="off"></div>
+      <div class="grid2"><div class="field"><label for="p-brand">Marca</label><input type="text" id="p-brand" value="${esc(dv('brand'))}" autocomplete="off"></div>
+        <div class="field"><label for="p-cat">Categoría</label><select id="p-cat"><option value="">Sin categoría</option>${CATS.map(c => `<option ${dv('category') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div></div>
+      <details class="fold" ${infoFilled || sh.fromScan ? 'open' : ''}><summary>Ficha del fabricante</summary>
+        <div class="stack" style="margin-top:10px">
+        <div class="field"><label for="p-desc">Para qué sirve</label><textarea id="p-desc" placeholder="Descripción breve">${esc(dv('description'))}</textarea></div>
+        <div class="field"><label for="p-mfr">Instrucciones del fabricante</label><textarea id="p-mfr">${esc(dv('mfrInstructions'))}</textarea></div>
+        <div class="field"><label for="p-hl">Ingredientes destacados y concentraciones</label><textarea id="p-hl" placeholder="Uno por línea. Solo concentraciones que figuren en la fuente.">${esc(dv('highlights'))}</textarea></div>
+        <div class="field"><label for="p-inci">Lista de ingredientes (INCI)</label><textarea id="p-inci" style="font-size:.85rem">${esc(dv('inci'))}</textarea></div>
+        ${sources.length ? `<div class="sources"><span class="label">Fuentes</span>${sources.map(s => `<p class="small">${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)} · consultada el ${esc(fmtShort(s.date))}${s.fields?.length ? `<br><span class="muted">${esc(s.fields.join(', '))}</span>` : ''}</p>`).join('')}</div>` : ''}
+        </div></details>
+      <div class="field"><label for="p-instr">Mis instrucciones</label><textarea id="p-instr" placeholder="Cómo lo usas, según tus pautas">${esc(dv('instructions'))}</textarea></div>
+      <div class="field"><label for="p-notes">Notas personales</label><textarea id="p-notes">${esc(dv('notes'))}</textarea></div>
+      <div class="grid2"><div class="field"><label for="p-opened">Fecha de apertura</label><input type="date" id="p-opened" value="${esc(dv('opened'))}"></div>
+        <div class="field"><label for="p-pao">Plazo tras apertura (meses)</label><input type="number" id="p-pao" min="1" max="60" value="${esc(dv('paoMonths'))}" placeholder="p. ej. 12"><span class="hint">El que indica el fabricante (símbolo del tarro abierto).</span></div></div>
+      ${sh.draft?.labelPao && !dv('paoMonths') ? `<div class="note pink">En tu foto parece leerse «${sh.draft.labelPao}M» (símbolo del tarro abierto). Compruébalo en el envase. <button class="linkbtn" data-act="p-use-pao" data-v="${sh.draft.labelPao}">Usar ${sh.draft.labelPao} meses</button></div>` : ''}
+      ${sh.draft?.labelText ? `<details class="small"><summary>Texto leído en tu foto</summary><p style="white-space:pre-wrap;margin-top:6px">${esc(sh.draft.labelText.slice(0, 1500))}</p></details>` : ''}
+      ${used.length ? `<p class="small muted">En tu rutina actual: ${esc(used.join(', '))}. Guardar la ficha no cambia tu planificación.</p>` : ''}
       <div class="row between">${p ? `<button class="btn ghost sm" data-act="p-archive">${p.archived ? 'Restaurar' : 'Archivar'}</button>` : '<span></span>'}<div class="row"><button class="btn soft" data-act="sheet-close">Cancelar</button><button class="btn" data-act="p-save">Guardar</button></div></div>`;
   }
   if (sh.kind === 'step') {
@@ -1059,6 +1767,7 @@ function render(withSheets = true) {
   const sh = topSheet();
   if (withSheets && sh && LIVE.has(sh.kind)) renderSheets();
   if (fk) { const el = document.querySelector(`[data-fk="${CSS.escape(fk)}"]`); if (el) el.focus({ preventScroll: true }); }
+  if (ui.tab === 'yo' && SCAN_OK) offlineReady().then(ok => { const e = $('#ocr-state'); if (e) e.textContent = ok ? 'Listo' : 'Se descargará al escanear por primera vez'; });
 }
 function applyMeta() {
   const r = document.documentElement;
@@ -1222,17 +1931,25 @@ const A = {
   'edit-product'(el) { openSheet({ kind: 'product', id: el.dataset.id }); },
   'p-photo-del'() { const sh = topSheet('product'); sh.newPhoto = null; sh.removePhoto = true; keepForm(renderSheets); },
   'p-save'() {
-    const sh = topSheet('product'); const name = val('p-name').trim();
-    if (!name) { toast('Escribe el nombre del producto.'); $('#p-name')?.focus(); return; }
-    const f = { name, brand: val('p-brand').trim(), category: val('p-cat'), instructions: val('p-instr').trim(), notes: val('p-notes').trim(), opened: val('p-opened'), paoMonths: val('p-pao') ? Number(val('p-pao')) : '' };
+    const sh = topSheet('product'); const f0 = collectProductForm();
+    if (!f0.name) { toast('Escribe el nombre del producto.'); $('#p-name')?.focus(); return; }
+    const f = { ...f0, paoMonths: f0.paoMonths ? Number(f0.paoMonths) : '' };
+    const srcs = sh.draft?.sources;
     let p = sh.id ? product(sh.id) : null;
     if (p) { if (p.name !== f.name || (p.brand || '') !== f.brand || (p.instructions || '') !== f.instructions) freezeProductHistory(p.id); Object.assign(p, f, { updatedAt: new Date().toISOString() }); }
     else { p = { id: 'p_' + uid(), ...f, photo: null, archived: false, createdAt: new Date().toISOString() }; D.products.push(p); }
-    if (sh.newPhoto) { const id = savePhoto(sh.newPhoto); if (id) { deletePhoto(p.photo); p.photo = id; } }
+    if (srcs && srcs.length) { p.sources = srcs; p.checkedAt = todayKey(); }
+    const newPh = sh.newPhoto || (!sh.removePhoto && !p.photo && sh.pendingPhoto ? sh.pendingPhotoSmall : null);
+    if (newPh) { const id = savePhoto(newPh); if (id) { deletePhoto(p.photo); p.photo = id; } }
     else if (sh.removePhoto && p.photo) { deletePhoto(p.photo); p.photo = null; }
-    if (save()) toast(sh.id ? 'Producto actualizado' : 'Producto añadido');
+    if (save()) {
+      toast(sh.id ? 'Producto actualizado' : 'Producto añadido');
+      if (sh.fromScan || (SC && (SC.target === p.id || SC.status === 'done'))) { clearDraft(); SC = null; }
+    }
     ui.sheets.pop(); renderSheets(); render();
   },
+  'p-use-pao'(el) { const i = $('#p-pao'); if (i) i.value = el.dataset.v; el.closest('.note')?.remove(); },
+  'p-scan'() { const sh = topSheet('product'); sh.draft = { ...(sh.draft || {}), ...collectProductForm() }; if (!sh.id) sh.fromScan = true; openScan(sh.id || '__new__'); },
   'p-archive'() {
     const p = product(topSheet('product').id); p.archived = !p.archived; save();
     toast(p.archived ? 'Producto archivado. Sigue en tus registros anteriores.' : 'Producto restaurado');
@@ -1267,12 +1984,38 @@ const A = {
     try { await navigator.clipboard.writeText(appUrl()); toast('Enlace copiado. Envíatelo al iPhone y ábrelo en Safari.'); }
     catch (e) { const r = document.createRange(); r.selectNodeContents($('#app-url')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('No se pudo copiar automáticamente. El enlace está seleccionado: cópialo a mano.', 'error'); }
   },
+  'scan-open'() { openScan(); },
+  'scan-pick'(el) { chooseCandidate(Number(el.dataset.i)); },
+  'scan-more'() { SC.status = 'capture'; saveDraft(); renderSheets(); },
+  'scan-manual'() { manualFromScan(); },
+  'scan-retry'() { runScan({ reuseLabel: true }); },
+  'scan-photo-del'(el) { SC.photos.splice(Number(el.dataset.i), 1); if (!SC.photos.length) { SC.status = 'capture'; SC.label = null; } saveDraft(); renderSheets(); },
+  'scan-discard'() { clearDraft(); SC = null; ui.sheets = ui.sheets.filter(s => s.kind !== 'scan'); renderSheets(); render(false); toast('Escaneo descartado'); },
+  async 'y-proxy-check'() {
+    const i = $('#y-proxy'); if (i) { scanCfg().proxy = i.value.trim(); save(); }
+    if (!proxyUrl()) { toast('Escribe primero la dirección del servicio.'); return; }
+    const el = $('#proxy-state'); if (el) el.textContent = 'Comprobando…';
+    const h = await checkProxy(); render();
+    toast(h && h.ok ? 'Servicio conectado' : 'No se ha podido conectar: ' + (h?.msg || ''), h && h.ok ? 'info' : 'error');
+  },
+  async 'y-offline-prep'(el) {
+    el.disabled = true;
+    try { await prepareOffline((n, t) => { el.textContent = `Descargando ${n} de ${t}…`; }); toast('Lector preparado: ya funciona sin conexión.'); }
+    catch (e) { toast(e.message, 'error'); }
+    render();
+  },
   'sheet-close'() { closeSheet(); }
 };
 function resetUi() { const t = todayKey(); Object.assign(ui, { date: t, hoyMonth: ymOf(t), calMonth: ymOf(t), editFrom: t, rDay: dow(t), open: {}, sheets: [], skinOpen: false }); renderSheets(); }
 // Conserva lo escrito en el formulario de producto al re-dibujar la hoja
+function collectProductForm() {
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : undefined; };
+  const o = { name: g('p-name'), brand: g('p-brand'), category: g('p-cat'), description: g('p-desc'), mfrInstructions: g('p-mfr'), highlights: g('p-hl'), inci: g('p-inci'), instructions: g('p-instr'), notes: g('p-notes'), opened: g('p-opened'), paoMonths: g('p-pao') };
+  for (const k in o) if (o[k] === undefined) delete o[k];
+  return o;
+}
 function keepForm(fn) {
-  const ids = ['p-name', 'p-brand', 'p-cat', 'p-instr', 'p-notes', 'p-opened', 'p-pao'], v = {};
+  const ids = ['p-name', 'p-brand', 'p-cat', 'p-desc', 'p-mfr', 'p-hl', 'p-inci', 'p-instr', 'p-notes', 'p-opened', 'p-pao'], v = {};
   ids.forEach(i => { const el = document.getElementById(i); if (el) v[i] = el.value; });
   fn(); ids.forEach(i => { const el = document.getElementById(i); if (el && i in v) el.value = v[i]; });
 }
@@ -1301,6 +2044,9 @@ document.addEventListener('change', async e => {
   if (t.id === 'y-am' || t.id === 'y-pm') { if (t.value) { D.profile.reminders[t.id === 'y-am' ? 'am' : 'pm'] = t.value; save(); } return; }
   if (t.id === 'y-name') { clearTimeout(nameTimer); D.profile.name = t.value.trim(); save(); return; }
   if (t.id === 'skin-notes') { clearTimeout(skinTimer); const L = D.logs[t.dataset.date] || (D.logs[t.dataset.date] = {}); (L.skin || (L.skin = {})).notes = t.value; save(); return; }
+  if ((t.id === 'scan-cam' || t.id === 'scan-gal' || t.id === 'scan-back') && t.files[0]) { const f = t.files[0]; t.value = ''; addScanPhoto(f); return; }
+  if (t.id === 'y-proxy') { scanCfg().proxy = t.value.trim(); proxyHealth = null; save(); return; }
+  if (t.id === 'y-obf') { scanCfg().obf = t.checked; save(); return; }
   if (t.id === 'p-photo' && t.files[0]) {
     try { const url = await readImage(t.files[0]); const sh = topSheet('product'); sh.newPhoto = url; sh.removePhoto = false; keepForm(renderSheets); }
     catch (err) { toast(err.message || 'No se pudo usar la imagen.', 'error'); } return;
@@ -1333,7 +2079,7 @@ store.init(); loadMeta(); applyMeta(); loadData(meta.mode);
 ui.tab = 'hoy';
 render();
 // Acceso para pruebas automáticas (no visible en la interfaz)
-window.MiSkincare = { dayInfo: d => dayInfo(d), get data() { return D; }, get meta() { return meta; }, todayKey, version: APP_VERSION };
+window.MiSkincare = { dayInfo: d => dayInfo(d), get data() { return D; }, get meta() { return meta; }, get scan() { return SC; }, todayKey, version: APP_VERSION };
 
 })();
 </script>
